@@ -1,0 +1,23 @@
+MODE FASHION NIBUNG#
+Jln. Nibung 13, Medan#
+Telp.(061) 2446798#
+=================================#
+No.Resi: <no-resi> - <tanggal>#
+ #
+        DETAIL TRANSAKSI#
+<detail>
+<all>#
+------------------------------(+)#
+Subtotal = <subtotal>#
+<disc>
+------------------------------(-)#
+Total   : <total>#
+Tunai   : <cash>#
+Kembali : <cashback>#
+=================================#
+Kasir : <kasir>#
+Pramuniaga: <pramu>#
+ #
+          TERIMAKASIH# 
+    BERBELANJA DENGAN KAMI#
+           --o00o--#

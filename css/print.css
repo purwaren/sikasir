@@ -1,0 +1,26 @@
+body, table {
+	font-family: Arial, Helvetica;
+	font-size: 0.8em;
+}
+#container {
+	/*border: 1px solid;*/	
+	margin: 0px auto;
+}
+#header {
+	height: 2.3cm;
+	width: 100%;
+	margin: 5px auto;	
+	text-align: left;
+	border-bottom: 2px solid;
+}
+#header img {	
+	float: left;
+	height: 2.1cm;
+}
+#header h2 {	
+	margin: 0 0 0 2.5cm;	
+}
+#header p {	
+	margin: 0 0 0 2.5cm;
+	font-weight: normal;
+}

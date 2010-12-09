@@ -1,0 +1,121 @@
+body {
+	font: 80% "Trebuchet MS", sans-serif;	
+}
+.dialog-form {	
+	border: 1px solid;
+	cursor: none;
+}
+.dialog-form #container {
+	background: url('images/logo_mode.png') no-repeat;
+	overflow: auto;
+}
+.dialog-form .table-container {	
+	overflow: auto;
+	height: 370px;
+	width: 1310px;
+	padding-right: 0 20px 0 0;	
+}
+.dialog-form #identifier  {
+	width: 1310px;	
+	border-bottom: 2px solid;
+}
+.dialog-form #identifier #spacer {
+	width: 590px;	
+	display: inline-block;
+}
+.dialog-form #identifier #kassa-identifier {
+	font-size: 1em;	
+	width: 260px;
+	height: 100px;	
+	letter-spacing: 2px;
+	line-height: 1.5em;
+	display: inline-block;	
+}
+.dialog-form #identifier #toko-identifier {
+	font-size: 1em;	
+	width: 350px;
+	height: 100px;	
+	letter-spacing: 2px;	
+	display: inline-block;	
+}
+.dialog-form h2 {
+	text-align: center;
+}
+.dialog-form table.data {
+	width: 1288px;
+	margin: 0;
+	padding: 0;
+	border: 1px solid;
+}
+.dialog-form table#row-data {
+	width: 1288px;
+	margin: 0;
+	padding: 0;
+	float: left;
+	border: 1 px solid;
+}
+.dialog-form table tr.head td {
+	text-align: center;
+	border: 1px solid;
+	padding-left: 5px;
+	letter-spacing: 2px;
+	height: 40px;
+	background-color: #ffffff;
+}
+.dialog-form table tr.row td {
+	font-size: 0.9em;
+	padding-left: 5px;
+	border: 1px solid;
+	letter-spacing: 2px;
+	height: 25px;
+}
+.dialog-form #input-scanner td {
+	letter-spacing: 2px;
+}
+.dialog-form #input-scanner .pramu {
+	width: 150px; 
+	text-align: right;
+}
+.dialog-form #input-scanner .disc_total {
+	width: 970px; 
+	text-align: right;
+}
+.dialog-form #input-scanner .kasir {
+	width: 150px; 
+	height:60px; 
+	padding-right: 15px;
+	text-align: right; 
+	font-size: 1em;
+}
+.dialog-form #input-scanner #total {
+	text-align: right;
+	height: 45px;
+	font-size: 3em;
+	width: 250px;
+}
+.dialog-form .img-cc {
+	text-align: center;
+}
+table#search-result, #dialog-refund table {
+	border: 1px solid;
+}
+table#search-result tr.head, #dialog-refund table tr.head {
+	background-color: #ddd;
+	height: 30px;	
+}
+table#search-result tr.head td, #dialog-refund table tr.head td {
+	padding: 2px;
+	font-size: 1em;
+	text-align: center;
+	font-weight: bold;
+	border: 1px solid;
+}
+table#search-result tr.row, #dialog-refund table tr.row{
+	background-color: #fff;
+	height: 15px;
+}
+table#search-result tr.row td, #dialog-refund table tr.row td{
+	padding: 8px;
+	border: 1px solid;
+	letter-spacing: 2px;
+}
