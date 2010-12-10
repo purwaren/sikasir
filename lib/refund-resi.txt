@@ -6,6 +6,8 @@ No.Resi: <no-resi> - <tanggal>#
 #
         TRANSAKSI REFUND#
 <pengganti> #
+<all>#
+--------------------------------(+)#
 Total  : Rp <total>#
 Tunai  : Rp <cash>#
 Kembali: Rp <cashback>#

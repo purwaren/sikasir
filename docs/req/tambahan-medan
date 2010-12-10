@@ -1,0 +1,14 @@
+Tambahan:
+1. Mutasi masuk -> kode barang pake autocomplete -- ok ok 
+2. Refund barang -> yang boleh direfund klo mutasi keluar > 0 --- ok
+
+Tambahan: 
+- Laporan Akumulasi Harian: yang per kode label dihilangkan, 
+    taro di akumulasi bulanan
+- Laporan Retur Barang -ok
+
+
+Target Medan :
+1. Mutasikeluar with autocomplete -- ok, only 15 first
+2. Print laporan mutasi keluar / retur -- ok
+2. Stok opname -- ok

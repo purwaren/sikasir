@@ -53,8 +53,8 @@ class Barang extends Model
     */
     function search_barang($keywords)
     {
-        $this->db->like('id_barang',$keywords,'both');
-        $this->db->or_like('nama',$keywords,'both');
+        $this->db->like('id_barang',$keywords,'after');
+        //$this->db->or_like('nama',$keywords,'both');
         return $this->db->get('barang');
     }
     /**

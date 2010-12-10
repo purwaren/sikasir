@@ -1,0 +1,45 @@
+INSTALASI SIKASIR
+
+SPESIFIKASI SOFTWARE KOMPUTER SERVER
+1. Terinstall aplikasi apache, php dan mysql (LAMP untuk linux atau WAMP untuk windows)
+2. Terkoneksi ke jaringan (driver network card harus sudah diinstall dan dikonfigurasi)
+
+SPESIFIKASI SOFTWARE KOMPUTER CLIENT
+1. Terinstall browser Google Chrome : ini digunakan untuk mengakses aplikasi pada server
+2. Terinstall Java (JRE), ini untuk kebutuhan print resi
+3. Terinstall driver printer EPSON TMU-220, ini untuk printer resi
+4. Terinstall PDF reader, ini untuk membaca laporan dalam bentuk PDF
+5. Terkoneksi ke server (driver network card harus sudah diinstall dan dikonfigurasi)
+
+
+Petunjuk instalasi pada server (Baca bismillah dulu ya, biar berhasil)
+1. Copy aplikasi sikasir ke dalam directory / folder : 
+   C:\wamp\www =>windows
+   /var/www => linux
+2. Buka folder applikasi => system/application/config
+   ubah konfigurasi => database.php : sesuaikan dengan konfigurasi server
+   - ubah server, database, username dan password
+   ubah konfigurasi => config.php: 
+   - ubah config url dengan url yang mengarah ke applikasi di server, misakan: http://192.168.1.1/sikasir   
+   ubah konfigurasi => custom.php
+   - masukan data toko yang diminta
+   - masukkan data screen yang diminta
+3. Buka folder js => /js
+   ubah konfigurasi => config.js
+   - isikan data screen seperti di petunjuk sebelumnya.
+   - masukkan konfigurasi untuk komputer kassa
+     kassaServer[1] = 192.168.1.1, untuk kassa 1 berarti harus setting IP nya 192.168.1.1
+4. Konfigurasi java, buka C:\Program Files\Java\jre\
+   - edit file java.policy,
+   - lihat bagian Socket Permission, tambahkan baris berikut
+     --------------------------------------------------------------------------------
+     permission java.net.SocketPermission "192.168.1.1:1234-", "connect, resolve";
+     --------------------------------------------------------------------------------
+     192.168.1.1 ==> Ip komputer kassa
+3. buka applikasi phpmyadmin
+   - buat database kasir
+   - import file database-kasir.sql yang ada di folder lib.
+4. buka google chrome, setting home page nya ke alamat aplikasi
+5. coba jalankan aplikasi, klo belum berhasil bersabar aja, ulangi dari langkah 1 hehe . .
+
+-- SELAMAT MENCOBA --

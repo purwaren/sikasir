@@ -1,0 +1,35 @@
+1. Edit barang, per hari tampilin. --ok
+2. Total penjualan hari ini. --ok
+3. Stok opname, isinya sama dengan akumulasi barang masuk sebelum checking. --ok
+4. Stok barang, isinya = stok barang + stok opname, --ok
+NB34: Kalau sudah checking, stok opname dikosongkan dan table barang masuk dikosongkan
+5. Tambah 1 field di table barang, total_barang. --ok
+6. Fungsi untuk membulatkan, atau meng-cut --ok
+
+kondisi awal, stok_barang = total_barang . (blm checking barang)
+
+Urgent:
+1. Lap Akumulasi Penjualan Bulanan -ok
+2. Lap Akumulasi Penjualan Harian -ok
+3. Lap Stok Barang per Kelompok barang --ok
+4. Edit Barang -ok
+5. List hasil penginputan per tanggal - ok
+
+lagi : 
+- diskon all -- ganti shortcut / fullscreen ok
+- refund --ok
+- total omset -- ok
+- pemotongan rupiah --ok
+===========
+23/08/2010
+==========
+Pembayaran via kartu kredit
+- catat nomor dan tipe kartu kreditnya-ok
+- nomor kartu 16 digit 4-4-4-4-ok
+
+Tampilkan data penjualan untuk kelompok barang tertentu ada berapa yang terjual dalam 1 hari
+- Pilih tanggal dulu, masukkan kode kelompk barang trus search, lalu tampil data sbb.
+No Kode Barang Nama Harga  Jumlah terjual. ok
+
+TIKET KA.
+Muna Bina Insani 	Jl. Darmajaya Pejaten No.59 Psr. Minggu  	021-79196551 	Jakarta Selatan

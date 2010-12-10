@@ -1,0 +1,40 @@
+MANUAL SIKASIR
+
+Prosedur insert barang manual
+1. Login sebagai supervisor
+2. Pilih menu Data
+3. Pilih submenu Input manual
+4. Input data satu persatu
+
+Prosedur menjalankan POS (Point of Sales)
+1. Login sebagai kasir
+2. Pilih menu Launch POS
+3. Isikan data untuk no shift dan no kassa
+4. Tekan tombol launch atau enter
+
+Shortcut menu pada POS
+F2 => Fokus ke teks box barcode / input barang manual
+F4 => Ubah diskon per item
+F5 => Membatalkan semua transaksi / Refresh
+F7 => Ubah Qty per item
+F8 => Input pramuniaga
+F9 => Mencetak Ulang resi terakhir
+F10 => Diskon all item
+F12 => Keluar dari aplikasi
+Space => Bayar / Cash
+Alt => Bayar / Kartu Kredit
+Delete => Membatalkan transaksi ke-n
+Home => Refund barang
+Insert => Search barang
+End => Total Penjualan Sementara
+Page Down => Memotong 2 angka terkecil, pembulatan kebawah pada total 
+Page Up => Diskon All item
+PrtScr/r => Refund
+
+Shortcut yang udah dipake chrome (Shortcut ini gak dipake, nanti dipikirin gmn untuk disablenya) : 
+F1
+F3
+F5
+F6
+F11
+Enter -> submit data

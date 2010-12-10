@@ -54,17 +54,25 @@
     <table id="search-result" cellspacing="0" cellpadding="0"></table>
 </div>
 <!--dialog refund -->
-<div id="dialog-refund" title="Tukar Barang (Refund)" style="display:none">
+<div id="dialog-refund" title="Tukar Barang (Refund)" style="display:none">    
     Barang ditukar &nbsp;: <input type="text" id="barang-tukar" onfocus="setFocus()" onblur="removeFocus()"/> 
-    <input type="button" value="GO" onclick="getItem(1)"/><span id="err-tukar" style="color:red"></span>
+    <input type="button" value="GO" onclick="getItem(1)"/><span id="err-tukar" style="color:red"></span>    
     <hr style="border:1px solid"/>
     <table id="detail-tukar"></table><br />
     Ditukar dengan : <input type="text" id="barang-pengganti" onfocus="setFocus()" onblur="removeFocus()"/> 
-    <input type="button" value="GO" onclick="getItem(2)"/><span id="err-pengganti" style="color:red"></span>Pramuniaga : <input type="text" id="ref_pramu" /><input type="hidden" id="refpramu_list" value="" />
+    <input type="button" value="GO" onclick="getItem(2)"/><span id="err-pengganti" style="color:red"></span>
     <hr style="border:1px solid"/>
-    <table id="detail-pengganti"></table>    
+    <table id="detail-pengganti"></table>
+    <table style="border:none">
+        <tr>
+            <td style="width:85px">Diskon</td><td> : <select name="disc" id="disc_refund" style="width:138px;" onchange="countRefund();countPengganti();"><option value="0">Tidak</option><option value="10">10%</option></select> </td>
+        </tr>
+        <tr>
+            <td>Pramuniaga</td><td> : <input type="text" id="ref_pramu" /><input type="hidden" id="refpramu_list" value="" /></td>
+        </tr>
+    </table>
     <br /><span id="err-refund" style="color:red"></span>
-    <p id="kurang-bayar" style="font-size:2em; color:red;text-align:right;width: 720px; display:none"><input type="hidden" id="bill-refund"/></p>
+    <p id="kurang-bayar" style="font-size:2em; color:red;text-align:right;width: 720px; display:none"></p>
     <input type="hidden" id="total_tukar" /><input type="hidden" id="total_pengganti" />
     <button id="button-refund" style="display:none" onclick="trigerButtonRefund()">REFUND</button>
 </div>

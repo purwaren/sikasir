@@ -1,0 +1,15 @@
+Must Do (Finalize)
+- Presence (absensi) - finish
+- Manage Account - in progress
+- fitur di manage item, delete dan detail - finish
+- search barang, berdasar kode barang - not yet
+- msalah refund untuk orang mode/partner yang beli barangnya diskon -finish
+- di transaksi refund udh ditampilin sisa uangnya -finish   
+- di resi refund sudah ditampilkan jumlah itemnya - finish
+- grafik presetasi : omset, jumlah item terjual, jumlah konsumen dilayani - finish
+- cetak temp sales -- finish
+
+Checking2..
+check konsistensi data, beberapa rule yang harus dipenuhi adalah
+1. Stok barang, mutasi masuk, total barang, stok awal tidak boleh terisi minus
+2. Jumlah penjualan atau mutasi keluar harus lebih besar atau sama dengan 0

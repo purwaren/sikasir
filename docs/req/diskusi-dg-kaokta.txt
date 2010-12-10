@@ -1,0 +1,37 @@
+klo yang sekarang udh dipake emang g jauh beda sm program lama.. karena memang fitur2 yang selesai baru sebatas memenuhi kebutuhan operasional
+dan awak akui, awak buat programnya emang sebisa mungkin tidak beda jauh alur kerjanya dengan program lama, dengan pertimbangan supaya penggunanya tidak merasa ksulitan ketika menggunakan
+tapi ada beberapa hal yang berusaha dibenahi dari program lama
+1. Mengenai data barang, klo untuk program baru sebenarnya nanti terintegrasi dengan program gudang (untuk saat ini belum). 
+Maksudnya terintegrasi, proses penginputan data barang hanya dilakukan di gudang, dan toko2 nantinya akan menerima data dari gudang dan tidak perlu menginput ulang.
+ada dua cara yang kami rencanakan yaitu dengan cara offline dan online
+klo dengan cara offline, data dipindahkan melalui perangkat usb flashdisk, lalu program kasir langsung bisa membaca data yang ada di fd, dan supervisor tinggal mengecek apakah data yang tampil di program kasir (yang dibaca dari flashdiks) sudah sesuai dengan barang yang diantarkan ke toko (qty nya)
+kemudian dengan cara online, syaratnya harus ada akses internet baik di program gudang maupun di program kasir, jadi kedua program ini bisa saling komunikasi lewat internet dan program kasir bisa langsung mengambil data dari barang dari program gudang
+2. Grafik Penjualan (Saat ini baru omset yang dibuat)
+grafik penjualan ini nantinya ditujukan sebagai alat bantu orang gudang dalam menentukan belanja barang
+program yang baru akan mencatat statistik data penjualan barang, barang mana yang paling laku, yang paling gak laku, dll
+trus grafik ini juga bisa digunakan sebagai parameter kinerja toko
+apakah kinerja toko cenderung membaik atw justru memburuk
+3. Grafik prestasi karyawan, 
+fitur ini digunakan untuk mencatat omset penjualan pramuniaga per harinya, berapa item yang berhasil dia jual, dan kepada berapa konsumen dia menjual
+dengan adanya fitur ini, diharapkan tidak perlu lagi dicatat secara manual.
+dan kasir cukup mencantumkan nama pramuniaga disetiap penjualan yang dilakukan, dan data tersebut sudah tersimpan di dalam data base
+4. kemudian fitur absensi  atw di program tertulis presence
+sesuai dengan namanya fitur ini dipakai untuk absensi, rencananya nanti masing2 karyawan akan punya id card yang digunakan untuk absensi
+jadi semua data absensi tercatat di dalam komputer
+5. Masalah backup data,
+masalah yang paling krusial pada mesin kasir lama adalah kesulitan  untuk memindahkan data dari mesin lama ke mesin baru. Ternyata untuk memindahkan data dari mesin lama ke mesin baru harus dilakukan input ulang. dan hal ini tidak efektif. untuk mesin baru backup data lebih mudah karena sudah memakai database, jadi tidak perlu input ulang
+tinggal backup data dari komputer lama lalu pindahkan ke komputer yang baru
+6. Masalah biaya, mesin lama membutuhkan biaya perawatan yang mahal jika dibandingkan dengan program baru yang sekarang.
+salah satu alasannya karena mesin lama memakai sistem yang masih dos, dan sekarang peralatan / hardware yang mendukung dos harganya lebih mahal bila dibanding yang mendukung windows
+mungkin diantaranya itu kak
+sama ada 1 hal lagi :
+Awak sama irsyad punya rencana untuk membuat sistem yang terintegrasi untuk mode, antar sistem terhubung satu sama lain, sistem2 yang kami rencanakan :
+- sistem gudang
+- sistem kasir
+- sistem keuangan (tante ani)
+- sistem gaji (penggajian)
+- sistem manajemen fasilitas (pencatatan aset perusahaan)
+- sistem keamanan
+itu kak... jadi untuk awalnya kita baru fokus untuk kasir dan gudang... klo dilihat progresnya masih kurang dari 20%
+jadi mohon maaf kalau masih banyak kekurangan di sana-sini
+maka dari itu, kami butuh saran dan bantuan dari orang2 yang terlibat langsung dalam pemakaian program2 tsb

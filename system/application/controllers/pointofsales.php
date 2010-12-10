@@ -228,11 +228,61 @@ class PointOfSales extends Controller {
     {
         $this->load->model('transaksi');
         $now = date('Y-m-d');
+        $print = $this->input->post('print');
+        //ambil temp sales dalam sehari
         $query = $this->transaksi->total_sales_a_day($now);
         if($query->num_rows())
         {
-            $sales = $query->row();
-            _e($sales->temp_sales);
+            $sales = $query->row();            
+        }
+        //klo print tampilin lengkap+ penjualan per kode barang
+        if(isset($print) && $print==1) 
+        {
+            $query = $this->transaksi->total_qty_sales_by_cat($now);
+            if($query->num_rows() > 0)
+            {
+                $detail = '';
+                $total_qty = 0;
+                $i=0;
+                foreach($query->result() as $row)
+                {
+                    $i++;
+                    if($i%3 == 0)
+                    {
+                        $detail .= $row->kelompok_barang.' : '.$row->total_jual.'# ';
+                    }
+                    else
+                    {
+                        $detail .= $row->kelompok_barang.' : '.$row->total_jual.',  ';
+                    }
+                    $total_qty += $row->total_jual;
+                }
+            }
+            //rapihin yang mau dicetak
+            //open template file
+            $file = fopen('lib/temp-sales.txt','r');
+            $report = '';
+            while(!feof($file))                    
+            {
+                $report .= fgets($file);
+            }
+            fclose($file);
+            //masuk2in datanya
+            $report = str_replace('<tanggal>',$now,$report);
+            $report = str_replace('<omset>',number_format($sales->temp_sales,0,',','.').',-',$report);
+            $report = str_replace('<total>',$total_qty,$report);
+            $report = str_replace('<detail>',$detail,$report);
+            //tulis ke file txt             
+            $filename = 'lib/receipt-'.$this->session->userdata('nik').'-'.$this->session->userdata('no_shift').'.txt';
+            $file = fopen($filename,'w');
+            fwrite($file,$report);
+            fclose($file);
+            //output to ajax
+            _e($report);
+        }
+        else
+        {
+           _e($sales->temp_sales); 
         }
     }
     /**
@@ -450,6 +500,7 @@ class PointOfSales extends Controller {
                     $this->load->model('barang');        
                     
                     //susun barang pengganti untuk ditaro resi
+                    $total_item = 0;
                     foreach($query->result() as $row) 
                     {
                         $brg_query = $this->barang->get_barang($row->id_barang,2);
@@ -465,6 +516,7 @@ class PointOfSales extends Controller {
                             $harga_pengganti = $row->qty * $barang->harga;
                             $pengganti.='  '.$row->qty.' @'.number_format($barang->harga,2,',','.').' = '.number_format($harga_pengganti,2,',','.').'#'.chr(10); 
                         }
+                        $total_item += $row->qty;
                         $total_pengganti += $harga_pengganti;
                     }
                     //susun barang tukar untuk ditaro resi
@@ -513,6 +565,7 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
                     $resi = str_replace('<tukar>',$tukar,$resi);//tulis detail barang ditukar
                     $resi = str_replace('<pengganti>',$pengganti,$resi);//tulis detail barang ditukar               
+                    $resi = str_replace('<all>',$total_item.' items',$resi);         
                     $resi = str_replace('<total>',number_format($total,2,',','.'),$resi);           
                     $resi = str_replace('<kasir>',$this->data['userinfo'],$resi);                                        
                     $resi = str_replace('<pramu>',$pramu,$resi);                                        

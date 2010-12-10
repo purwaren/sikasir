@@ -222,10 +222,10 @@ try {
                         $('#dialog-sales').dialog({                     
                             modal: true,
                             buttons: {
-                                Ok : function() {
-                                    $(this).dialog('close');                                    
-                                },
                                 Cetak : function() {
+                                    printTempSales();                                    
+                                },
+                                Batal : function() {
                                     $(this).dialog('close');
                                 }
                             }
@@ -481,10 +481,15 @@ function runPos() {
 */
 function appendRow(data){ 
     if(data != null) {    
-        var num = $('input[name="num\\[\\]"]').length;
-        if(num == null) num = 0;
+        var num = $('#row-data tr:last-child td:first-child').html();
+        if(num == null) { 
+            num = 0;
+        }
+        else {
+            num = parseInt(num);
+        }
         var row = '<tr class="row">';
-		row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+'<input type="hidden" name="num[]" value="'+num+'"/></td>';
+		row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+ '</td>';
 		row += '<td width="15%"style=" text-align: center;">'+data.id_barang+'</td>';
 		row += '<td width="25%">'+data.nama+'</td>';
 		row += '<td width="15%" style=" text-align: right;">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'<input type="hidden" id="harga_'+num+'" value="'+data.harga+'"/></td>';
@@ -492,8 +497,19 @@ function appendRow(data){
 		row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" id="qty_'+num+'" value="1" onkeyup="countTotal('+num+');validateQty('+num+');"><input type="hidden" id="stok_'+num+'" value="'+data.stok_barang+'"/></td>';
 		row += '<td width="20%" style=" text-align: right;"><span id="jumlah_'+num+'">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'</span><input type="hidden" id="jmlh_'+num+'" value="'+data.harga+'"/></td>';
 		row += '</tr>';
-        $('#row-data').append(row);
-        countTotal(num);
+        //check apakah id barang tersebut sudah ada di dalam baris
+        var check = $('#row-data tr:contains('+data.id_barang+') td:nth-child(1)').html();
+        if(check != null) {
+            check = parseInt(check) - 1;
+            var new_qty = parseInt($('#qty_'+check).val()) + 1;
+            $('#qty_'+check).val(new_qty);
+            countTotal(check);
+        }
+        else {            
+            $('#row-data').append(row);
+            countTotal(num);
+        }        
+        
         $('#barcode').val('');	
     }
     else{
@@ -600,6 +616,25 @@ function printRefundReceipt(mode,tunai,brg_tukar,qty_tukar) {
     );
 }
 /**
+*Print temporary sales 
+*/
+function printTempSales() {
+    $.post(
+        "temp_sales",
+        {print: '1'}, 
+        function(receipt){
+            $.post(
+                    "get_kassa",                     
+                    function(kassa){                        
+                        $('#appletPrinter')[0].sendReceipt(receipt,kassaServer[kassa]);
+                        //alert(receipt);
+                    }        
+            );             
+        }        
+    );
+    $('#dialog-sales').dialog('close');
+}
+/**
 * Membatalkan transaksi ke n
 */
 function cancelTrans() {
@@ -635,7 +670,13 @@ function cancelTrans() {
 */
 function payTrans(mop) {
     //retrieve data transaksi
-    var num = $('input[name="num\\[\\]"]');
+    var num = $('#row-data tr:last-child td:first-child').html();
+    if(num == null) { 
+        num = 0;
+    }
+    else {
+        num = parseInt(num);
+    }
     var rowData = $('#row-data tr');
     var id_barang = new Array();
     var nama_barang = new Array();
@@ -650,7 +691,7 @@ function payTrans(mop) {
     total = total*(1- (disc_all/100));
     total = Math.floor(total/100) * 100;
     var check = "";
-    for(i=0; i<num.length; i++) {        
+    for(i=0; i<num; i++) {        
         cek = $('#row-data tr:nth-child('+(i+1)+')').css('text-decoration');        
         if(cek == "none") {            
             id_barang[i] = $('#row-data tr:nth-child('+(i+1)+') td:nth-child(2)').html();
@@ -779,7 +820,7 @@ function transRefund() {
     for(i=1;i<tukar.length;i++) {
         brg_tukar[i-1] = $('#detail-tukar tr:nth-child('+(i+1)+') td:nth-child(2)').html();
         qty_tukar[i-1] = $('#qty_refund_'+i).val();
-        //disc_tukar[i-1] = 0;
+        //disc_tukar[i-1] = $('#disc_refund').val();
     }    
     var brg_pengganti = new Array();
     var qty_pengganti = new Array();
@@ -788,7 +829,7 @@ function transRefund() {
     for(i=1;i<pengganti.length;i++) {
         brg_pengganti[i-1] = $('#detail-pengganti tr:nth-child('+(i+1)+') td:nth-child(2)').html(); 
         qty_pengganti[i-1] = $('#qty_ganti_'+i).val();
-        disc_pengganti[i-1] = $('#disc_ganti_'+i).val();
+        disc_pengganti[i-1] = $('#disc_refund').val();
     }
     var id_pramu = $('#refpramu_list').val();
     //bayar kurangan ketika tukar barang
@@ -867,7 +908,7 @@ function countTotal(num) {
     var harga = $('#harga_'+num).val();
     var total = (harga * (1- (disc/100)))*qty;
     $('#jumlah_'+num).html($.currency(total,{s:".",d:",",c:0})+',-');
-    $('#jmlh_'+num).val(total); 
+    $('#jmlh_'+num).val(total);     
     countAllTotal();    
     countAllWithDisc();
 }
@@ -876,7 +917,13 @@ function countTotal(num) {
 */
 function countAllTotal() {
     //count for all total
-    var num = $('input[name="num\\[\\]"]').length;
+    var num = $('#row-data tr:last-child td:first-child').html();
+    if(num == null) { 
+        num = 0;
+    }
+    else {
+        num = parseInt(num);
+    }
     var totalAll = 0;
     for(i=0;i<num;i++){
         totalAll += parseFloat($('#jmlh_'+i).val());        
@@ -959,19 +1006,19 @@ function getItem(option) {
                         row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+temp.length+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund('+temp.length+','+data.mutasi_keluar+');"/></td></tr>';                    
                     }
                     else {
-                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+1+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+1+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyRefund(1,'+data.mutasi_keluar+');"/></td></tr>';                    
+                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+1+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+1+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund(1,'+data.mutasi_keluar+');"/></td></tr>';                    
                     }
                     $('#detail-tukar').append(row);
                     countRefund();
                 }
                 if(option==2) {
-                    var row = '<tr class="head"><td style="width:40px">N0</td><td style="width:150px">KODE BARANG</td><td style="width:230px">NAMA BARANG</td><td style="width:170px">HARGA BARANG (Rp)</td><td style="width:90px">STOK BARANG</td><td style="width:90px">DISKON</td><td style="width:90px">QTY</td></tr>';
+                    var row = '<tr class="head"><td style="width:40px">N0</td><td style="width:150px">KODE BARANG</td><td style="width:230px">NAMA BARANG</td><td style="width:170px">HARGA BARANG (Rp)</td><td style="width:90px">STOK BARANG</td><td style="width:90px">QTY</td></tr>';
                     var temp = $('#detail-pengganti tr');
                     if(temp.length > 0) {                    
-                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="disc_ganti_'+temp.length+'" style="width:25px" value="0" onkeyup="countPengganti()"/></td><td style="text-align:center"><input type="text" id="qty_ganti_'+temp.length+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti('+temp.length+','+data.stok_barang+');"/></td></tr>';
+                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+temp.length+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti('+temp.length+','+data.stok_barang+');"/></td></tr>';
                     }
                     else {
-                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_1" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="disc_ganti_'+1+'" style="width:25px" value="0" onkeyup="countPengganti()"/></td><td style="text-align:center"><input type="text" id="qty_ganti_'+1+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti(1,'+data.stok_barang+');"/></td></tr>';
+                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_1" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+1+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti(1,'+data.stok_barang+');"/></td></tr>';
                     }
                     $('#detail-pengganti').append(row);
                     countPengganti();
@@ -997,7 +1044,8 @@ function countRefund() {
         else {
             qty = parseFloat(qty);
         }
-        total_tukar += (harga * qty);        
+        disc = parseFloat($('#disc_refund').val())
+        total_tukar += (harga *(1 - disc/100)* qty);         
     }  
     $('#total_tukar').val(total_tukar);
     displayRefundInfo();
@@ -1017,7 +1065,7 @@ function countPengganti() {
         else {
             qty = parseFloat(qty);
         }
-        disc = parseFloat($('#disc_ganti_'+i).val())
+        disc = parseFloat($('#disc_refund').val())
         total_ganti += (harga *(1 - disc/100)* qty);        
     }    
     $('#total_pengganti').val(total_ganti);
@@ -1035,11 +1083,10 @@ function displayRefundInfo() {
         kurang = Math.floor(kurang/100) * 100;
         if(total_pengganti >= total_tukar) {
             $('#button-refund').css('display','block');                            
-            $('#err-refund').html('');
+            $('#kurang-bayar').css('display','block');
             $('#kurang-bayar').html('Kurang : Rp '+$.currency(kurang,{s:".",d:",",c:0}) + ',- <input type="hidden" id="bill-refund" value="'+kurang+'"/>');                        
         }
-        else {
-            $('#err-refund').html('Harga barang pengganti harus lebih besar atau sama dengan harga barang yang ditukar');
+        else {            
             $('#button-refund').css('display','none');
             $('#kurang-bayar').css('display','block'); 
             $('#kurang-bayar').html('Sisa : Rp '+ $.currency(kurang,{s:".",d:",",c:0}) + ',-');

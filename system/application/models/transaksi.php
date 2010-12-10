@@ -74,6 +74,19 @@ class Transaksi extends Model
         return $this->db->query($query);
     }
     /**
+    *ambil penjualan sementara per kode kelompok barang
+    */
+    function total_qty_sales_by_cat($date)
+    {
+        $query = 'select barang.kelompok_barang, sum(penjualan.qty) as total_jual 
+                    from 
+                    (select itp.* as total from transaksi_penjualan tp left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi where tanggal="'.$date.'")
+                    as penjualan 
+                  left join barang on penjualan.id_barang = barang.id_barang 
+                  group by barang.kelompok_barang';
+        return $this->db->query($query);
+    }
+    /**
     *Akumulasi penjualan hrian, per kode label
     *opsi 1 -> per kode label
     *opsi 2 -> per kelompok barang
