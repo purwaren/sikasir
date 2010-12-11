@@ -87,7 +87,7 @@ try {
                 printReceipt(2);
             }
             //F10 / page up disc all item
-            if(event.keyCode == 121 || event.keyCode == 33) {
+            if(event.keyCode == 121) {
                 $('#disc_all').focus();
             }                
 			//Space, pay bill and print receipt - Cash
@@ -434,9 +434,9 @@ try {
                 $('#err-pengganti').html('');
             }
         });
-        //handling saat mau proses transaksi refund
+        //handling saat mau proses transaksi refund, pencet tombol Page Up untuk bayar refund
         $('#dialog-refund').keyup(function(event){            
-            if(event.keyCode == 44) {
+            if(event.keyCode == 33) {
                 //tampilin total harga setelah dibulatkan dulu                
                 var harga_tukar = parseFloat($('#total_tukar').val());
                 var harga_pengganti = parseFloat($('#total_pengganti').val());

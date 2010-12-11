@@ -249,7 +249,7 @@ class PointOfSales extends Controller {
                     $i++;
                     if($i%3 == 0)
                     {
-                        $detail .= $row->kelompok_barang.' : '.$row->total_jual.'# ';
+                        $detail .= $row->kelompok_barang.' : '.$row->total_jual.'#';
                     }
                     else
                     {
@@ -430,7 +430,7 @@ class PointOfSales extends Controller {
                     }
                     fclose($file);
                     //do resi stuff ..hehe apalah namanya itu..nyusun resinye...
-                    $resi = str_replace('<no-resi>',$transaksi->id_transaksi,$resi); //tulis no resi
+                    $resi = str_replace('<jam>',$transaksi->jam,$resi); //tulis no resi
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
                     $resi = str_replace('<detail>',$detail,$resi);//tulis detail transaksi                    
                     $resi = str_replace('<all>',$all.' items',$resi);//all item                     
@@ -561,7 +561,7 @@ class PointOfSales extends Controller {
                     }
                     fclose($file);
                     //do resi stuff ..hehe apalah namanya itu..nyusun resinye...
-                    $resi = str_replace('<no-resi>',$transaksi->id_transaksi,$resi); //tulis no resi
+                    $resi = str_replace('<jam>',$transaksi->jam,$resi); //tulis no resi
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
                     $resi = str_replace('<tukar>',$tukar,$resi);//tulis detail barang ditukar
                     $resi = str_replace('<pengganti>',$pengganti,$resi);//tulis detail barang ditukar               

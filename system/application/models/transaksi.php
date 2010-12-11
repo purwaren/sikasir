@@ -40,10 +40,8 @@ class Transaksi extends Model
     */
     function last_transaksi()
     {
-        $this->db->order_by('id_transaksi','desc');
-        $this->db->limit(1);
-        $query = $this->db->get('transaksi_penjualan');
-        return $query;
+        $query = 'select time(from_unixtime(id_transaksi)) as jam,tp.* from transaksi_penjualan tp order by id_transaksi desc limit 1';
+        return $this->db->query($query);
     }
     /**
     *Ambil transaksi plus item2nya yang terjadi dalam satu hari, urutkan berdasarkan jam transaksi
