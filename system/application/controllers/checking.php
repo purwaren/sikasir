@@ -304,16 +304,15 @@ class Checking extends Controller {
             $config['base_url'] = base_url().'checking/confirm/';
             $config['total_rows'] = count($list);
             $config['per_page'] = '1';
-            $this->pagination->initialize($config);
-            
-            $pagination = $this->pagination->create_links();
+            $this->pagination->initialize($config);         
+            $this->data['pages'] = $this->pagination->create_links();
             if(empty($param)) 
             {
-                $this->data['search_result'] = $head.$list[0].$row_total.$foot.$pagination;
+                $this->data['search_result'] = $head.$list[0].$row_total.$foot;
             }
             else
             {
-                $this->data['search_result'] = $head.$list[$param].$row_total.$foot.$pagination;
+                $this->data['search_result'] = $head.$list[$param].$row_total.$foot;
             }
         }
         else

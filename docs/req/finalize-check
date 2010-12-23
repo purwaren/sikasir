@@ -13,3 +13,12 @@ Checking2..
 check konsistensi data, beberapa rule yang harus dipenuhi adalah
 1. Stok barang, mutasi masuk, total barang, stok awal tidak boleh terisi minus
 2. Jumlah penjualan atau mutasi keluar harus lebih besar atau sama dengan 0
+
+
+Checking2 untuk yang bukan point of sales
+- Absensi OK
+- Data 
+  + import data masih ada bug, untuk klik ok yang pertama kali, message/notifikasi gak muncul, pas di klik dua kali baru muncul.
+  + manage item baru fungsi edit saja, ubah sama hapus belum diimplementasi
+  + retur OK
+  + add item OK

@@ -20,18 +20,20 @@
         <?php _e(form_close()) ?>
         <?php if(isset($search_result)) { ?>
         <?php _e(form_open(base_url().'checking/manage'))?>
-        <table class="table-data" cellspacing="0" cellpadding="0">
+        <table class="table-data" cellspacing="0" cellpadding="0" style="margin:10px">
             <tr>
                 <td class="head">No</td><td class="head">Kode Barang</td><td class="head">Nama Barang</td>
                 <td class="head">Mutasi Masuk </td><td class="head">Mutasi Keluar</td><td class="head"> Stok Awal </td><td class="head">Stok Barang</td>
                 <td class="head">Stok Opname</td><td class="head">Beda Stok</td><td class="head">Harga Jual</td>
             </tr>           
             <?php _e($search_result) ?>            
-        </table><br />
+        </table>
+        <p style="text-align:center">
         <span class="button">
             <input type="submit" value="Cetak PDF" name="submit_cetak_opname" class="button" />
             <input type="button" value="Print" onclick="printOpname('<?php _e(base_url().'checking/manage/'.$kel_barang) ?>')" class="button" />
         </span>
+        </p>
         <?php _e(form_close()) ?>
         <?php } ?>
 </div>

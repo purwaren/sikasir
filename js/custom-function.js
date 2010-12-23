@@ -39,13 +39,33 @@ function findValue(li) {
     else var sValue = li.selectValue;
 
     //ketika select item, update row untuk nama, harga dll
-    var line = checkFocus();
-    $('#nama_'+line).val(li.extra[0]);
-    $('#kel_barang_'+line).val(li.extra[1]);
-    $('#harga_'+line).val(li.extra[2]);    
-    $('#disc_'+line).val(li.extra[3]);
-    $('#stok_barang_'+line).val(li.extra[4]);
-    $('#qty_'+line).focus();    
+    var check = $('.table-data tr:contains('+li.selectValue+') td:first-child').html();
+    var line = checkFocus(); 
+    if(check == null) {               
+        //check dulu apakah kode item sudah ada di baris
+        $('#id_barang_'+line).html(li.selectValue);    
+        $('#nama_'+line).val(li.extra[0]);
+        $('#kel_barang_'+line).val(li.extra[1]);
+        $('#harga_'+line).val(li.extra[2]);    
+        $('#disc_'+line).val(li.extra[3]);
+        $('#stok_barang_'+line).val(li.extra[4]);
+        $('#qty_'+line).focus();
+    }
+    else {
+        $('#dialog-msg p').html('<span style="color:red">Anda sudah menambahkan kode barang ini pada baris ke-'+check+'</span>');
+        $('#dialog-msg').dialog({
+            autoOpen: true,
+            modal: true,
+            buttons: {            
+                OK : function() {                    
+                    $(this).dialog('close');
+                    $('#qty_'+check).focus();
+                    $('#id_barang_'+check).html('');
+                    $('.table-data tr:nth-child('+(line+1)+') td input').val('');
+                }
+            }
+        });        
+    }
 }
 //check where is the focus
 function checkFocus() {
@@ -338,7 +358,8 @@ function checkPresence(id_karyawan) {
             }
             else {
                 $('#err_msg').html('');
-                appendRowAbsensi(data);                
+                appendRowAbsensi(data);
+                $('#id_karyawan').val('');
             }
         },
         "json"
@@ -347,7 +368,9 @@ function checkPresence(id_karyawan) {
 /**
 *Menampilkan data absensi karyawan
 */
-function appendRowAbsensi(data) {  
+function appendRowAbsensi(data) {
+    $('.table-data').css('display','table');  
+       
     var i = $('.table-data tr').length; 
     //check data karyawan udah ada di baris blom    
     if($('.table-data tr:contains("'+data.NIK+'")').length == 0) {
@@ -384,6 +407,7 @@ function confirmPresence() {
         }
     });
 }
+ 
 /**
 *fungsi doConfirmPresence
 */
@@ -407,11 +431,29 @@ function doConfirmPresence() {
             {'id_karyawan': id_karyawan,'status': status_absensi},
             function(data) {            
                 if(data == 0) {
-                    alert('Terjadi kesalahan atau anda bukan supervisor');
+                    $('#dialog-msg p').html('<span style="color:red">Terjadi kesalahan, atau anda bukan supervisor</span>');
+                    $('#dialog-msg').dialog({
+                        autoOpen: true,
+                        modal: true,
+                        buttons: {            
+                            OK : function() {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
                 }
                 if(data == 1) {
-                    alert('Status absensi telah disimpan');
-                    window.location.replace('check');
+                    $('#dialog-msg p').html('<span style="color:green">Status absensi telah disimpan</span>');
+                    $('#dialog-msg').dialog({
+                        autoOpen: true,
+                        modal: true,
+                        buttons: {            
+                            OK : function() {
+                                $(this).dialog('close');
+                                window.location.replace('check');
+                            }
+                        }
+                    });                    
                 }
             }
         );
@@ -605,4 +647,55 @@ function doRemovePengguna(nik) {
             }
         }
     );    
+}
+/**
+* Fungsi untuk save import data
+*/
+function saveImport(line) {
+    var idx_save = line + 1;
+    var item_code = $('.table-data tr:nth-child('+idx_save+') td:nth-child(2)').html();    
+    var item_name = $('.table-data tr:nth-child('+idx_save+') td:nth-child(3)').html();    
+    var cat_code = $('.table-data tr:nth-child('+idx_save+') td:nth-child(4)').html();    
+    var item_disc = $('.table-data tr:nth-child('+idx_save+') td:nth-child(5)').html();    
+    var quantity = $('.table-data tr:nth-child('+idx_save+') td:nth-child(7)').html();    
+    var item_hj = $('#item_hj_'+line).val();
+    var kode_bon = $('#kode_bon').val();
+    var tgl_bon = $('#date_bon').val();
+    //do post
+    if(kode_bon != "" && tgl_bon != "") {
+        $.post(
+            "import",
+            {'item_code': item_code, 'item_name':item_name, 'cat_code':cat_code, 'item_disc':item_disc, 'quantity':quantity, 'item_hj':item_hj,'kode_bon':kode_bon, 'tgl_bon':tgl_bon},
+            function(data) {            
+                if(data == '1') { //sukses
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:green">Tersimpan</span>');
+                    });                    
+                }
+                else if(data == '-1') { //duplikasi data
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Sudah Diproses</span>');
+                    }); 
+                }
+                else if(data == '0') { //error saat insert
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Error Database</span>');
+                    });
+                }
+            }
+        );
+    }
+    else {
+        $('#dialog-msg p').html('<span style="color:red">Kode BON dan Tanggal BON tidak boleh dikosongkan</span>');
+        $('#dialog-msg').dialog({
+            autoOpen: true,
+            modal: true,
+            width: 320,
+            buttons: {
+                OK : function() {
+                    $(this).dialog('close');
+                }
+            }
+        });
+    }
 }

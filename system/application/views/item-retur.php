@@ -24,7 +24,7 @@
             for($i=0; $i<15;)
             echo '<tr class="row-data">
                 <td style="width: 20px;">'.++$i.'</td>
-                <td style="width: 80px;"><input type="text" name="id_barang[]" maxlength="10" style="width:80px;" class="item_code" onkeyup="setFocus('.$i.')"></td>
+                <td style="width: 80px;"><input type="text" name="id_barang[]" maxlength="10" style="width:80px;" class="item_code" onkeyup="setFocus('.$i.')"><span id="id_barang_'.$i.'" style="display:none"></span></td>
                 <td style="width: 150px;"><input type="text" name="nama[]" readonly="readonly" style="width:150px;" id="nama_'.$i.'"/></td>
                 <td style="width: 30px;"><input type="text" name="kel_barang[]" readonly="readonly" style="width:30px;" id="kel_barang_'.$i.'"/></td>
                 <td style="width: 120px;"><input type="text" name="harga[]" readonly="readonly" id="harga_'.$i.'" style="width:120px;" onkeyup="hitungJumlah('.$i.')" /></td>
@@ -39,6 +39,7 @@
         <span class="button">&nbsp;<input type="submit" name="submit_mutasi_keluar" value="Simpan" class="button"/></span>
         <span class="button">&nbsp;<input type="button" class="button" onclick="appendRowMutasi()" value="Lagi"/></span><br />        
         </form>
+        <div id="dialog-msg" title="Notifikasi" style="display:none"><p></p></div>
     </div>    
 </div>
 <?php include 'layout/footer.php'; ?>

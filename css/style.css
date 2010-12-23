@@ -136,3 +136,10 @@ table#report input[type=text] {
 
 /* footer  */
 .footer { clear: both; text-align: center; line-height: 1.8em; padding: 10px 0 10px 0; border-top: 1px solid #ccc; }
+
+/*custom style*/
+p img {
+	border: 4px solid;
+	background: #fff;
+	padding: 2px;
+}

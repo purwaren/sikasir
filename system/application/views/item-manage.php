@@ -19,7 +19,7 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
         <?php if(isset($_POST['submit_item_manage'])) { ?>        
-        <table class="table-data" cellspacing="0" cellpadding="0">
+        <table class="table-data" cellspacing="0" cellpadding="0" style="width:950px">
             <tr>
                 <td class="head"> No </td><td class="head"> Kode BON </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td>
                 <td class="head"> Kelompok Barang </td><td class="head">Harga Barang</td><td class="head">Mutasi Masuk</td>

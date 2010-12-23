@@ -151,6 +151,14 @@ class Barang extends Model
         return $this->db->query($query);
     }
     /**
+    * check barang masuk untuk import
+    */
+    function check_barang_masuk_for_import($param)
+    {
+        $this->db->where($param);
+        return $this->db->get('barang_masuk');
+    }
+    /**
     *Ambil detail barang masuk, sesuai id bon dan id barang
     */
     function get_detail_barang_masuk($id_mutasi_masuk, $id_barang)

@@ -10,11 +10,10 @@
         <p class="description">Konfirmasi untuk penggantian barang, apabila sudah tetap maka supervisor tinggal menyetujui untuk dibuatkan laporannya</p>
         <br />        
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p> 
+        <p style="text-align:center"><?php if(!empty($page))echo 'Page : '.$pages ?></p>
         <?php if(isset($search_result)) { ?>
-        <?php _e(form_open(base_url().'checking/confirm'))?>
-                   
-            <?php _e($search_result) ?>            
-        
+        <?php _e(form_open(base_url().'checking/confirm'))?>                   
+            <?php _e($search_result) ?>     
         <br />
         <div style="display:none" id="dialog-confirm-checking" Title="Konfirmasi Checking Barang">
             Silahkan melakukan otorisasi, <br />
@@ -23,9 +22,12 @@
                 <tr><td>Password</td><td><input type="password" id="passwd"/></td></tr>
             </table>
         </div>
+        <p style="text-align:center;color:#000;margin-bottom:10px"><?php if(!empty($page))echo 'Page : '.$pages ?></p>
+        <p style="text-align:center;">        
         <span class="button"><input type="button" value="Konfirm" class="button" onclick="confirmChecking()" /></span>&nbsp;&nbsp;
         <span class="button"><input type="submit" value="Cetak" name="submit_cetak_ganti" class="button" /></span>&nbsp;&nbsp;
         <span class="button"><input type="button" value="Batal"  class="button" onclick="batalChecking()" /></span>
+        </p>
         <?php _e(form_close()) ?>
         <?php } ?>
 </div>

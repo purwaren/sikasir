@@ -20,13 +20,13 @@
         <?php _e(form_close()) ?>
         <?php if(isset($search_result)) { ?>
         <?php _e(form_open(base_url().'checking/add'))?>
-        <table class="table-data" cellspacing="0" cellpadding="0">
+        <table class="table-data" cellspacing="0" cellpadding="0" style="margin:10px">
             <tr>
                 <td class="head">Kode Barang</td><td class="head">Nama Barang</td><td class="head"> Stok Barang </td><td class="head">Stok Opname </td><td class="head">Beda Stok</td>
             </tr>           
             <?php _e($search_result) ?>            
-        </table><br />
-        <span class="button"> <input type="submit" value="Simpan" name="submit_save_opname" class="button" /></span>
+        </table>
+        <p style="text-align:center;"><span class="button"> <input type="submit" value="Simpan" name="submit_save_opname" class="button" /></span></p>
         <?php _e(form_close()) ?>
         <?php } ?>
 </div>

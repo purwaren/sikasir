@@ -330,9 +330,9 @@ class Item extends Controller {
                         $row_data .= '<tr>
                                         <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td><td>'.$row->kelompok_barang.'</td><td style="text-align:right;padding-right:15px;">Rp '.number_format($row->harga,2,',','.').'</td><td>'.$row->qty.'</td>
                                         <td>
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                    
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                    
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="deleteBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                    
+                                            <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span> 
+                                            <!--<span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                                                               
+                                            <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="deleteBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>-->                   
                                         </td>
                                     </tr>';
                     }
@@ -351,6 +351,131 @@ class Item extends Controller {
         }
         $this->load->view('item-manage',$this->data);
     }
+    /**
+    *Fungsi import data dari csv
+    */
+    function import()
+    {
+        //display import data
+        if($this->input->post('submit_import'))
+        {
+            //upload datanya terlebih dahulu
+            $config['upload_path'] = 'data/';
+            $config['allowed_types'] = 'csv';
+            $config['overwrite'] = TRUE;
+            $config['file_name'] = 'temp';
+            $this->load->library('upload', $config);
+            //do upload            
+            if($this->upload->do_upload('csv_file'))
+            {            
+                $this->load->library('csvreader');
+                $file_name = 'data/temp.csv';
+                $item = $this->csvreader->parse_file($file_name);
+                $this->data['row_data'] = '';
+                $i=0;
+                foreach($item as $row)
+                {
+                    $this->data['row_data'] .= '<tr>
+                                                    <td>'.++$i.'</td>
+                                                    <td>'.$row['item_code'].'</td>
+                                                    <td>'.$row['item_name'].'</td>
+                                                    <td>'.$row['cat_code'].'</td>
+                                                    <td>'.$row['item_disc'].'</td>
+                                                    <td style="text-align:right;padding-right:10px;"><input type="hidden" id="item_hj_'.$i.'" value="'.$row['item_hj'].'">'.number_format($row['item_hj'],0,',','.').',-</td>
+                                                    <td>'.$row['quantity'].'</td>
+                                                    <td><span class="button"><input type="button" class="button" value="O K" onclick="saveImport('.$i.')"/></span></td>
+                                                </tr>';
+                }
+            }
+            else
+            {
+                $this->data['err_msg'] = '<span style="color:red">Gagal upload data! Pastikan file yang di upload adalah CSV</span>';
+            }
+            $this->load->view('item-import',$this->data);
+        }        
+        //saving import data
+        else if($this->input->post('item_code'))
+        {
+            $this->load->model('barang');
+            //check apakah barang sudah ada di dalam table barang masuk, untuk menghindari import 2x atau lebih
+            $param = array('id_mutasi_masuk'=>$this->input->post('kode_bon'),'id_barang'=>$this->input->post('item_code'));
+            $query = $this->barang->check_barang_masuk_for_import($param);
+            if($query->num_rows() == 0) 
+            {
+                //check apakah barang sudah ada di table barang
+                $query = $this->barang->get_barang($this->input->post('item_code'),2);
+                //populate data barang
+                $barang = array(
+                        'id_barang'=>$this->input->post('item_code'),                        
+                        'nama'=>$this->input->post('item_name'),                        
+                        'harga'=>$this->input->post('item_hj'),                        
+                        'kelompok_barang'=>$this->input->post('cat_code'),                        
+                        'diskon'=>$this->input->post('item_disc'),                        
+                        'total_barang'=>$this->input->post('quantity'),                        
+                        'stok_barang'=>$this->input->post('quantity'),                        
+                        'mutasi_masuk'=>$this->input->post('quantity'),                        
+                        'stok_awal'=>0,                        
+                        'stok_opname'=>0,                        
+                        'mutasi_keluar'=>0,                        
+                        'jumlah_terjual'=>0                        
+                    ); 
+                $barang_masuk = array(
+                        'id_mutasi_masuk'=>$this->input->post('kode_bon'),
+                        'id_barang'=>$this->input->post('item_code'),
+                        'tanggal'=>$this->input->post('tgl_bon'),
+                        'qty'=>$this->input->post('quantity'),
+                    );
+                //belum ada ditable barang, buat baru
+                if($query->num_rows() == 0)
+                {                                       
+                    if($this->barang->insert_barang($barang))
+                    {
+                        if($this->barang->insert_barang_masuk($barang_masuk))
+                        {
+                            echo '1';
+                        }
+                        else
+                        {
+                            echo '0';
+                        }
+                    }
+                    else
+                    {
+                        echo '0';
+                    }
+                }
+                //yang udah ada ditable barang kita update, trus nulis ke barang masuk juga
+                else
+                {
+                    if($this->barang->update_barang_gudang($barang))
+                    {
+                        if($this->barang->insert_barang_masuk($barang_masuk))
+                        {
+                            echo '1';
+                        }
+                        else
+                        {
+                            echo '0';
+                        }
+                    }
+                    else
+                    {
+                        echo '0';
+                    }
+                }
+            }
+            else
+            {
+                echo '-1';//sudah ada di barang masuk
+            }
+        }
+        //tampilin form import
+        else
+        {
+            $this->load->view('item-import',$this->data);
+        }
+        
+    }    
     /**
     * validasi form input item
     */

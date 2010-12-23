@@ -11,7 +11,7 @@
         <input type="hidden" name="id_mutasi_masuk" value="<?php if(isset($barang)) _e($barang->id_mutasi_masuk) ?>" />
         <table cellspacing="0" cellpadding="0">
             <tr>
-                <td>Kode Barang </td><td class="head"> : <input type="text" name="id_barang" maxlength="10" value="<?php if(isset($barang)) _e($barang->id_barang) ?>"> <input type="hidden" value="<?php if(isset($barang)) _e($barang->id_barang) ?>" name="id_barang_old" /></td>
+                <td>Kode Barang </td><td class="head"> : <input type="text" name="id_barang" maxlength="10" readonly="readonly" value="<?php if(isset($barang)) _e($barang->id_barang) ?>"> <input type="hidden" value="<?php if(isset($barang)) _e($barang->id_barang) ?>" name="id_barang_old" /></td>
             </tr>
             <tr>
                 <td>Nama Barang </td><td> : <input type="text" name="nama" value="<?php if(isset($barang)) _e($barang->nama) ?>"></td>
