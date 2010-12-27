@@ -12,12 +12,12 @@
         <table>
             <tr>
                 <td>Tanggal</td>                
-                <td> :<input type="text" name="date-report" id="date-report" readonly="readonly"/>                           
+                <td> : <input type="text" name="date-report" id="date-report" readonly="readonly"/>                           
                 </td>
             </tr>   
             <tr>
                 <td>Berdasarkan</td><td> :  
-                    <select name="based_on" style="width:157px;" onfocus="displayForm()" onkeyup="displayForm()" onchange="displayForm()" id="based_on">
+                    <select name="based_on" style="width:155px;margin:0 0 0 1px;" onfocus="displayForm()" onkeyup="displayForm()" onchange="displayForm()" id="based_on">
                         <option value="">--Pilih--</option>
                         <option value="1">Kelompok Barang</option>
                         <option value="2">Kode Barang</option>
@@ -26,12 +26,12 @@
             </tr>
             <tr id="kb" style="display:none">
                 <td>Kelompok Barang</td><td> :  
-                    <input type="text" name="kb_low" style="width:50px;" maxlength="2"/> s.d. <input type="text" name="kb_high" style="width:50px" maxlength="2"/>
+                    <input type="text" name="kb_low" style="width:61px;" maxlength="2"/> s.d. <input type="text" name="kb_high" style="width:61px" maxlength="2"/>
                 </td>
             </tr>
             <tr id="kl" style="display:none">
                 <td>Kode Barang</td><td> :  
-                    <input type="text" name="ib_low" style="width:75px;" maxlength="10"/> s.d. <input type="text" name="ib_high" style="width:75px" maxlength="10"/>
+                    <input type="text" name="ib_low" style="width:61px;" maxlength="10"/> s.d. <input type="text" name="ib_high" style="width:61px" maxlength="10"/>
                 </td>
             </tr>
             <tr>

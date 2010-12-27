@@ -54,7 +54,7 @@ class Report extends Controller {
             $this->load->model('karyawan');
             if(!empty($tipe) && (!empty($tanggal) || isset($bulan)))
             {
-                //laporan penjualan harian per kode barang
+                //laporan penjualan harian 
                 if($tipe ==  1)
                 {                    
                      //ambil data transaksi hari yang diminta, 
@@ -62,7 +62,7 @@ class Report extends Controller {
                     $query_per_bon = $this->transaksi->trans_based_bon($tanggal);
                     if(isset($query_per_bon) && $query_per_bon->num_rows() > 0)                    {
                                               
-                        $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENJUALAN HARIAN <br /> MODE FASHION GROUP </h3>
+                        $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENJUALAN HARIAN</h3>
                                 <table style="text-align:left">
                                     <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 50px">TANGGAL </td><td>: '.$this->convert_date($tanggal).'</td></tr>
@@ -200,30 +200,34 @@ class Report extends Controller {
                             $line2 .= '<td style="text-align:center"><br />('.strtoupper($row->nama).')</td>';
                         }
                         $foot ='</table>
-                                <br />
-                                <table>
+                                    <br /><table>
                                     <tr>'.$line1.'</tr>
                                     <tr>'.$line2.'</tr>
-                                </table></div>';                        
-                        $this->data['report_sales']=$head.$list[0].$foot;
+                                </table></div>';
+                        //tampilin semuanya aje... memanjang kebawah gak papa
+                        $this->data['report_sales']=$head;
+                        foreach($list as $row)
+                        {
+                            $this->data['report_sales'] .= $row;
+                        }
+                        $this->data['report_sales'] .= $row_total.'</table></div>';
                         if(isset($list) && $this->input->post('submit_report_sales_pdf'))
                         {                            
                             $this->cetak_pdf(1,$head,$list,$row_total,$foot);
-                        }
-                        
+                        }                        
                     }
                     else
                     {
                         $this->data['report_sales'] = '<p style="color:red">Tidak ada transaksi untuk tanggal tersebut</p>';   
                     }                     
                 }
-                //laporan penjualan harian per BON
+                //laporan akumulasi penjualan harian
                 else if($tipe==2)
                 {
                     $query = $this->transaksi->acc_sales_a_day($tanggal,1);
                     if($query->num_rows() > 0)
                     {
-                        $head[0] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN HARIAN <br /> MODE FASHION GROUP </h3>
+                        $head[0] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN HARIAN</h3>
                                 <table style="text-align:left">
                                     <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 50px">TANGGAL </td><td>: '.$this->convert_date($tanggal).'</td></tr>
@@ -244,7 +248,7 @@ class Report extends Controller {
                         $i=0;
                         $j=0;
                         $temp ="";
-                        
+                        $total_harian = 0;
                         foreach($query->result() as $row)
                         {
                             $temp .= '<tr>
@@ -255,7 +259,8 @@ class Report extends Controller {
                                         <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($row->harga,2,',','.').'&nbsp;&nbsp;</td>
                                         <td style="width:75px;border: 1px solid;">'.$row->stok_barang.'</td>                                        
                                         <td style="width:75px;border: 1px solid;">'.$row->jml_terjual.'</td>                                        
-                                    </tr>';                            
+                                    </tr>';
+                            $total_harian += $row->jml_terjual;
                             if($i%50 == 0)
                             {
                                 $list[]= $temp;
@@ -264,6 +269,7 @@ class Report extends Controller {
                             }
                         }
                         $list[]= $temp;
+                        $row_total[0] = '<tr><td  colspan="6" style="text-align:right;width:425px;border: 1px solid;">T O T A L &nbsp;</td><td style="width:75px;border: 1px solid;">'.$total_harian.'</td></tr>';
                         //ambil data supervisor sama data kasir
                         $query = $this->transaksi->get_kasir($tanggal);
                         foreach($query->result() as $row)
@@ -299,7 +305,7 @@ class Report extends Controller {
                     
                     if($query->num_rows() > 0)
                     {
-                        $head[1] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN HARIAN <br /> MODE FASHION GROUP </h3>
+                        $head[1] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN HARIAN</h3>
                                 <table style="text-align:left">
                                     <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 50px">TANGGAL </td><td>: '.$this->convert_date($tanggal).'</td></tr>
@@ -307,7 +313,7 @@ class Report extends Controller {
                                 </table>
                                <br />
                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <table style="width: 940px;border: 1px solid;text-align: center;" cellspacing="0" cellpadding="0" >
+                                <table style="width: 250px;border: 1px solid;text-align: center; margin: 0px auto" cellspacing="0" cellpadding="0" >
                                     <tr>
                                         <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">No</td>                                        
                                         <td style="width:120px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kelompok Barang</td>
@@ -315,14 +321,16 @@ class Report extends Controller {
                                     </tr>';
                         $i=0;
                         $j=0;
-                        $temp ='';                        
+                        $temp ='';
+                        $total_terjual = 0;
                         foreach($query->result() as $row)
                         {
                             $temp .= '<tr>
                                         <td style="width:30px;border: 1px solid;">'.++$i.'</td>                                        
                                         <td style="width:120px;border: 1px solid;text-align: center;padding-left:5px;">&nbsp;&nbsp;'.$row->kelompok_barang.'</td>
                                         <td style="width:100px;border: 1px solid;">'.$row->acc_terjual.'</td>                                                                             
-                                    </tr>';                            
+                                    </tr>';
+                            $total_terjual += $row->acc_terjual;
                             if($i%50 == 0)
                             {
                                 $acc_kb[$j]= $temp;
@@ -330,17 +338,28 @@ class Report extends Controller {
                             }
                         }
                         $acc_kb[$j]= $temp;
+                        $row_total[1] = '<tr><td colspan="2" style="text-align:right;width:150px;border: 1px solid;">T O T A L &nbsp;</td><td style="width:100px;border: 1px solid;">'.$total_terjual.'</td></tr>';
                     }
                     if(isset($list))
                     {
-                        $this->data['report_sales']=$head.$list[0].$foot;
+                        $this->data['report_sales']=$head[0];
+                        foreach($list as $row)
+                        {
+                            $this->data['report_sales'] .= $row;
+                        }
+                        $this->data['report_sales'] .= $row_total[0].'</table></div>'.$head[1];
+                        foreach($acc_kb as $row)
+                        {
+                            $this->data['report_sales'] .= $row;
+                        }
+                        $this->data['report_sales'] .= $row_total[1].'</table></div>';
                     }
                     if(!empty($list) && $this->input->post('submit_report_sales_pdf'))
                     {                            
                         $itemreport[0] = $list;
-                        //echo count($list);
+                        //echo count($itemreport[1]);exit;
                         $itemreport[1] = $acc_kb;
-                        $row_total="";
+                        //$row_total="";
                         $this->cetak_pdf(2,$head,$itemreport,$row_total,$foot);
                     }
                     
@@ -353,14 +372,14 @@ class Report extends Controller {
                     $tahun = $this->input->post('tahun');
                     //ambil data akumulasi bulanan
                     $query = $this->barang->get_kel_barang();
-                    $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN BULANAN <br /> MODE FASHION GROUP </h3>
+                    $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN AKUMULASI PENJUALAN BULANAN </h3>
                                 <table style="text-align:left">
                                     <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 50px">BULAN </td><td>: '.$this->month_to_string($bulan).' '.$tahun.'</td></tr>
                                 </table><br />
                                 <table style="width: 940px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
                                     <tr>
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;"></td>
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;"></td>
                                         <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">01</td>                                    
                                         <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">02</td>                                    
                                         <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">03</td>                                    
@@ -402,7 +421,7 @@ class Report extends Controller {
                         $qry_sales = $this->transaksi->acc_sales_a_month($row->kelompok_barang,$bulan,$tahun);                        
                         $sales_aday = $qry_sales->result();                        
                         $j=0;
-                        $temp = '<tr><td style="width:20px; border: 1px solid;">'.$row->kelompok_barang.'</td>';
+                        $temp = '<tr><td style="width:25px; border: 1px solid;">'.$row->kelompok_barang.'</td>';
                         $total = 0;
                         for($i=1; $i<=31; $i++)
                         {                   
@@ -451,12 +470,18 @@ class Report extends Controller {
                                 <tr>'.$line1.'</tr>
                                 <tr>'.$line2.'</tr>
                             </table></div>';
-                    
+                    //tampilin sebagai preview
+                    $this->data['report_sales']=$head;
+                    foreach($list as $row)
+                    {
+                        $this->data['report_sales'] .= $row;
+                    }
+                    $this->data['report_sales'] .= $foot;
+                    //cetak ke pdf
                     if(isset($list) && $this->input->post('submit_report_sales_pdf'))
                     {                            
                         $this->cetak_pdf(4,$head,$list,'',$foot);
-                    }
-                    $this->data['report_sales']=$head.$row_data.$foot;
+                    }                   
                 }
             }
             else
@@ -500,19 +525,25 @@ class Report extends Controller {
                 foreach($query->result() as $row)
                 {
                     $this->data['row_data'] .= '<tr>
-                                                    <td>'.++$i.'</td><td>'.$row->kelompok_barang.'</td><td>'.$row->total_stok.'</td>
-                                                    <td>'.$row->masuk.'</td><td>'.$row->terjual.'</td><td>'.$row->stok.'</td>               
+                                                    <td>'.++$i.'</td><td>'.$row->kelompok_barang.'</td><td>'.$row->total_stok.'</td><td>'.$row->terjual.'</td>
+                                                    <td>'.$row->masuk.'</td><td>'.$row->keluar.'</td><td>'.$row->stok.'</td>               
                                                 </tr>';
                 }
             }
             else if($this->input->post('opsi') == 2)
             {
+                //tulis opsi ke session untuk pagination
+                $this->session->set_userdata('opsi','2');
                 $query = $this->barang->get_barang_all();
-                $data = '';
+                $this->data['row_data'] = '';
                 $i=0;
                 foreach($query->result() as $row)
                 {
-                    ;
+                    $this->data['row_data'] .= '<tr>
+                                                    <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
+                                                    <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->total_barang.'</td>
+                                                    <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
+                                                </tr>';
                 }
             }
         }
@@ -920,6 +951,7 @@ class Report extends Controller {
         // ---------------------------------------------------------
         
         $i = 0;
+        $j = 0;
         if($opsi == 1)
         {
             foreach($row as $data)
@@ -940,16 +972,27 @@ class Report extends Controller {
             foreach($row[0] as $data)
             {
                 // add a page
-                $pdf->AddPage();                
-                $pdf->writeHTML($head[0].$data.$foot, true, 0, true, 0);
-                
+                $pdf->AddPage();
+                $foot1 = $foot;
+                if($i == (count($row[0]) - 1))
+                {
+                    $foot1 = $row_total[0].$foot;
+                }                
+               $pdf->writeHTML($head[0].$data.$foot1, true, 0, true, 0);
+                $i++;
             }
             //acc per kel barang
             foreach($row[1] as $data)
             {
                 $pdf->AddPage();
-                $pdf->writeHTML($head[1].$data.$foot, true, 0, true, 0);                
-            }
+                $foot2 = $foot;
+                if($j == (count($row[1]) - 1))
+                {
+                    $foot2 = $row_total[1].$foot;
+                }                 
+                $pdf->writeHTML($head[1].$data.$foot2, true, 0, true, 0);     
+                $j++;
+            }            
         }
         if($opsi == 3 || $opsi == 5)
         {

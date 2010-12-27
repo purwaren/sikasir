@@ -22,3 +22,7 @@ Checking2 untuk yang bukan point of sales
   + manage item baru fungsi edit saja, ubah sama hapus belum diimplementasi
   + retur OK
   + add item OK
+- Reporting
+  + search sales sama laporan penjualan udh OK
+  + laporan stok barang tinggal yang per kode barang saja, atau yang perkode barang dihilangkan saja
+  

@@ -27,17 +27,25 @@
         <p>Catatan : <br />
             1. Stok Barang = Jumlah barang yang terdapat di komputer. <br />
             2. Jumlah Terjual = Jumlah total barang yang telah berhasil terjual. <br />
-            3. Total Stok = Jumlah total barang yang tercatat ditoko baik yang sudah terjual atau belum.<br />
+            3. Total Barang = Jumlah total barang yang tercatat ditoko baik yang sudah terjual atau belum.<br />
+            4. Mutasi Masuk = Jumlah barang yang masuk toko selama satu periode checking barang.<br />
+            5. Mutasi Keluar = Jumlah barang yang terjual oleh toko selama satu periode checking barang.<br />
         </p>
         <table class="table-data" cellspacing="0" cellpadding="0">
             <tr>
-                <td class="head"> No </td><td class="head"> Kelompok Barang </td><td class="head"> Total Barang </td>
-                <td class="head"> Mutasi Masuk </td><td class="head"> Jumlah Terjual </td><td class="head">Stok Barang </td>              
+                <td class="head"> No </td><td class="head"> Kelompok Barang </td><td class="head"> Total Barang </td><td class="head"> Jumlah Terjual </td>
+                <td class="head"> Mutasi Masuk </td><td class="head">Mutasi Keluar</td><td class="head">Stok Barang </td>              
             </tr>
             <?php _e($row_data) ?>            
         </table>
         <?php } if($_POST['opsi'] == 2) { ?>
-        Opsi dua
+        <table class="table-data" cellspacing="0" cellpadding="0">
+            <tr>
+                <td class="head"> No </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td><td class="head"> Harga (Rp) </td><td class="head"> Total Barang </td>
+                <td class="head">Stok Barang </td> <td class="head"> Mutasi Masuk </td><td class="head">Mutasi Keluar</td>           
+            </tr>
+            <?php _e($row_data) ?>            
+        </table>
         <?php }} ?>
     </div>    
 </div>

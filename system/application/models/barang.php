@@ -171,7 +171,7 @@ class Barang extends Model
     */
     function get_stok_by_kb()
     {
-        $query = 'select kelompok_barang,sum(stok_barang) as stok, sum(jumlah_terjual) as terjual, sum(total_barang) as total_stok, sum(mutasi_masuk) as masuk from barang group by kelompok_barang';
+        $query = 'select kelompok_barang,sum(stok_barang) as stok, sum(jumlah_terjual) as terjual, sum(total_barang) as total_stok, sum(mutasi_masuk) as masuk, sum(mutasi_keluar) as keluar from barang group by kelompok_barang';
         return $this->db->query($query);
     }
     /**
