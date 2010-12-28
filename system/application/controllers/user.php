@@ -357,6 +357,6 @@ class User extends Controller {
         {
             _e(0);
         }
-    }
+    }    
 }
 //End of file user.php

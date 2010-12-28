@@ -26,7 +26,7 @@
             <h3 style="text-align:center">BULAN : <?php _e($bulan)?>
             <br />
             DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>
-            <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance-all.png" alt="Grafik Omset"/></p>
+            <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance-all.png" alt="Grafik Omset" style="border:none" /></p>
             <h3 style="text-align:center">TABEL OMSET <?php _e($bulan)?> <br /> (Rupiah)</h3>        
             <div style="width: 100%; overflow:auto;">
             <?php if(isset($table)) _e($table) ?>

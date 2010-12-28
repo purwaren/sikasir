@@ -14,16 +14,15 @@
                 <td>Pilihan</td>
                 <td>: 
                 <select name="opsi">
-                    <option value="1">Tampilkan Per Kelompok Barang</option>
-                    <option value="2">Tampilkan Per Kode Barang</option>                    
+                    <option value="1">Kelompok Barang</option>
+                    <option value="2">Kode Barang</option>                    
                 </select>
                 <span class="button">&nbsp;<input type="submit" name="submit_item_view" value="Display" class="button"/></span>            
             </td></tr>          
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
-        <?php _e(form_close()) ?>
-        <?php if(isset($_POST['submit_item_view'])) { ?> 
-        <?php if($_POST['opsi'] == 1) { ?>        
+        <?php _e(form_close()) ?>        
+        <?php if($this->input->post('opsi') == 1) { ?>        
         <p>Catatan : <br />
             1. Stok Barang = Jumlah barang yang terdapat di komputer. <br />
             2. Jumlah Terjual = Jumlah total barang yang telah berhasil terjual. <br />
@@ -31,22 +30,28 @@
             4. Mutasi Masuk = Jumlah barang yang masuk toko selama satu periode checking barang.<br />
             5. Mutasi Keluar = Jumlah barang yang terjual oleh toko selama satu periode checking barang.<br />
         </p>
-        <table class="table-data" cellspacing="0" cellpadding="0">
+        <table class="table-data" cellspacing="0" cellpadding="0" style="width:100%">
             <tr>
                 <td class="head"> No </td><td class="head"> Kelompok Barang </td><td class="head"> Total Barang </td><td class="head"> Jumlah Terjual </td>
                 <td class="head"> Mutasi Masuk </td><td class="head">Mutasi Keluar</td><td class="head">Stok Barang </td>              
             </tr>
             <?php _e($row_data) ?>            
         </table>
-        <?php } if($_POST['opsi'] == 2) { ?>
-        <table class="table-data" cellspacing="0" cellpadding="0">
+        <?php } else if($this->input->post('opsi') == '2' || $this->session->userdata('opsi') == '2'){ ?>
+        <table>
+            <tr><td>Total Barang</td><td>: <?php echo $total_item ?> macam</td></tr>
+            <tr><td>Total Jumlah</td><td>: <?php echo $total_qty ?> items</td></tr>
+            <tr><td colspan="2"><?php if(isset($pages)) echo 'Page : '.$pages ?> </td></tr>
+        </table>
+        <table class="table-data" cellspacing="0" cellpadding="0" style="width:100%">
             <tr>
-                <td class="head"> No </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td><td class="head"> Harga (Rp) </td><td class="head"> Total Barang </td>
+                <td class="head"> No </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td><td class="head"> Harga (Rp) </td><td class="head">Disc (%) </td><td class="head"> Total Barang </td>
                 <td class="head">Stok Barang </td> <td class="head"> Mutasi Masuk </td><td class="head">Mutasi Keluar</td>           
             </tr>
             <?php _e($row_data) ?>            
         </table>
-        <?php }} ?>
+        <p><?php if(isset($pages)) echo 'Page : '.$pages ?> </p>
+        <?php } ?>
     </div>    
 </div>
 <?php include 'layout/footer.php'; ?>

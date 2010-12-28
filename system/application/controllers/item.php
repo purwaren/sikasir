@@ -340,7 +340,7 @@ class Item extends Controller {
                 }
                 else
                 {
-                   $this->data['row_data'] = '</table><p style="color:red">Tidak ada data penginputan pada tanggal tersebut</p>'; 
+                   $this->data['err_msg'] = '<p style="color:red">Tidak ada data penginputan pada tanggal tersebut</p>'; 
                 }
             }
             else

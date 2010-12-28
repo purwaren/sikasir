@@ -529,23 +529,104 @@ class Report extends Controller {
                                                     <td>'.$row->masuk.'</td><td>'.$row->keluar.'</td><td>'.$row->stok.'</td>               
                                                 </tr>';
                 }
+                $this->session->unset_userdata('opsi');
             }
             else if($this->input->post('opsi') == 2)
             {
                 //tulis opsi ke session untuk pagination
                 $this->session->set_userdata('opsi','2');
                 $query = $this->barang->get_barang_all();
+                $this->data['total_item'] = $query->num_rows();                
+                //create paginations
+                //setting up pagination
+                $this->load->library('pagination');
+                $config['base_url'] = base_url().'report/stok/';
+                $config['total_rows'] = $this->data['total_item'];
+                $config['per_page'] = 50;
+                $this->pagination->initialize($config);
+                $this->data['pages'] = $this->pagination->create_links();
+                //applying pagination on displaying result            
+                if(isset($param) && intval($param) > 0)
+                {
+                    $page_min = $param;
+                    $page_max = $page_min + $config['per_page'];
+                }
+                else
+                {
+                    $page_min = 0;
+                    $page_max = $config['per_page'];
+                }
+                $this->data['total_qty'] = 0;
                 $this->data['row_data'] = '';
-                $i=0;
+                $i=0;                
                 foreach($query->result() as $row)
                 {
-                    $this->data['row_data'] .= '<tr>
-                                                    <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
-                                                    <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->total_barang.'</td>
-                                                    <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
-                                                </tr>';
+                    if($i>=$page_min && $i <$page_max)
+                    {
+                        $this->data['row_data'] .= '<tr>
+                                                        <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
+                                                        <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->diskon.'</td><td>'.$row->total_barang.'</td>
+                                                        <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
+                                                    </tr>';                        
+                    }
+                    else
+                    {
+                        $i++;
+                    }
+                    $this->data['total_qty'] += $row->stok_barang;
                 }
             }
+        }
+        else 
+        {
+            if($this->session->userdata('opsi'))
+            {
+                $this->load->model('barang');
+                $query = $this->barang->get_barang_all();
+                //echo $query->num_rows();exit;
+            }
+            if(isset($query) && $query->num_rows() > 0)
+            {
+                $this->data['total_item'] = $query->num_rows();                    
+                //create paginations
+                //setting up pagination
+                $this->load->library('pagination');
+                $config['base_url'] = base_url().'report/stok/';
+                $config['total_rows'] = $this->data['total_item'];
+                $config['per_page'] = 50;
+                $this->pagination->initialize($config);
+                $this->data['pages'] = $this->pagination->create_links();
+                //applying pagination on displaying result            
+                if(isset($param) && intval($param) > 0)
+                {
+                    $page_min = $param;
+                    $page_max = $page_min + $config['per_page'];
+                }
+                else
+                {
+                    $page_min = 0;
+                    $page_max = $config['per_page'];
+                }
+                $this->data['total_qty'] = 0;
+                $this->data['row_data'] = '';
+                $i=0;                
+                foreach($query->result() as $row)
+                {
+                    if($i>=$page_min && $i <$page_max)
+                    {
+                        $this->data['row_data'] .= '<tr>
+                                                        <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
+                                                        <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->diskon.'</td><td>'.$row->total_barang.'</td>
+                                                        <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
+                                                    </tr>';                    
+                    }
+                    else
+                    {
+                        $i++;
+                    }
+                    $this->data['total_qty'] += $row->stok_barang;
+                }
+            }        
         }
         $this->load->view('item-view',$this->data);
     }

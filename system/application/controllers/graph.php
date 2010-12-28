@@ -510,7 +510,7 @@ class Graph extends Controller {
         $DataSet->SetXAxisName($param['x_axis_name']);
         
         // Initialise the graph
-        $Test = new pChart(1000,350);
+        $Test = new pChart(960,350);
         //$Test->setFixedScale(-2,8);
         $Test->setFontProperties("lib/chart/Fonts/tahoma.ttf",8);
         $Test->setGraphArea(60,30,940,300);

@@ -69,5 +69,5 @@
     </p>
     <?php } ?>
     
-    <p style="float:right;text-align:right;"><a href=""><?php _e($userinfo.' ('.$jabatan.')')?></a> .:. <a href="<?php _e(base_url().'home/logout')?>">Log Out</a></p>
+    <p style="float:right;text-align:right;"><a href="<?php _e(base_url().'profile') ?>"><?php _e($userinfo.' ('.$jabatan.')')?></a> .:. <a href="<?php _e(base_url().'home/logout')?>">Log Out</a></p>
   </div>

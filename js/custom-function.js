@@ -258,11 +258,21 @@ function validateQtyRetur(num) {
     var stok = parseInt($('#stok_barang_'+num).val());
     var qty_retur = parseInt($('#qty_'+num).val());
     if(qty_retur > stok) {
-        alert('Qty retur melebihi stok yang ada di database');
-        $('#qty_'+num).val(stok);
-        $('#qty_'+num).focus();
-        hitungJumlah(num);
-        hitungTotal();
+        $('#dialog-msg p').html('<span style="color:red">Qty retur melebih jumlah barang yang ada di database</span>');
+        $('#dialog-msg').dialog({
+            autoOpen: true,
+            modal: true,
+            width: 320,
+            buttons: {
+                OK : function() {
+                    $(this).dialog('close');
+                    $('#qty_'+num).val(stok);
+                    $('#qty_'+num).focus();
+                    hitungJumlah(num);
+                    hitungTotal();
+                }
+            }
+        });        
     }
 }
 //fungsi untuk menampilkan pilihan kode barang / kode kelompok barang

@@ -107,6 +107,26 @@ class Home extends Controller {
     {
         $this->load->view('error_404',$this->data);
     }
+    /**
+    *Menampilkan profile pengguna yang sedang login
+    */
+    function profile()
+    {
+        if($this->session->userdata('logged_in') != TRUE)
+        {
+            redirect('home/login');
+        }
+        else 
+        {
+            //retrieve data karyawan and pengguna
+            $this->load->model('pengguna');
+            $this->load->model('karyawan');
+            $query = $this->pengguna->get_pengguna($this->session->userdata('nik'));
+            $pengguna = $query->row();
+            $query = $this->karyawan->get_karyawan($this->session->userdata('nik'));
+            $karyawan = $query->row();
+        }
+    }
 }
 
 /* End of file welcome.php */

@@ -18,7 +18,7 @@
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
-        <?php if(isset($_POST['submit_item_manage'])) { ?>        
+        <?php if(isset($row_data)) { ?>        
         <table class="table-data" cellspacing="0" cellpadding="0" style="width:950px">
             <tr>
                 <td class="head"> No </td><td class="head"> Kode BON </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td>
