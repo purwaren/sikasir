@@ -56,6 +56,10 @@ class Checking extends Controller {
                                                         <td><input type="text" name="beda_stok" id="beda_stok" value="'.($brg->stok_barang - $brg->stok_opname).'"/></td>                                                        
                                                     </tr>';
                 }
+                else
+                {
+                    $this->data['err_msg'] = 'Data tidak ditemukan';
+                }
             }
             else
             {
@@ -198,7 +202,7 @@ class Checking extends Controller {
                     $query = $this->barang->get_opname($kel_barang);
                     if($query->num_rows() > 0)
                     {
-                        $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN STOK OPNAME <br /> MODE FASHION GROUP </h3>
+                        $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN STOK OPNAME</h3>
                                     <table style="text-align:left">
                                         <tr><td style="width: 100px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                         <tr><td style="width: 100px">KELOMPOK BARANG </td><td>: '.$kel_barang.'</td></tr>                                    
@@ -253,7 +257,7 @@ class Checking extends Controller {
         }
     }
     /**
-    *Fungsi untuk konfirmasi ganti barang, jika sudah  ok, akan dilaporkan sebagai laporan penggantian barang
+    *Fungsi untuk konfirmasi ganti barang, jika sudah  ok, akan dilaporkan sebagai  barang
     */
     function confirm($param='')
     {
@@ -356,7 +360,18 @@ class Checking extends Controller {
                 }
                 else
                 {
-                    _e(-1);
+                    $query = $this->barang->get_ganti_barang(3);
+                    if($query->num_rows() > 0)
+                    {
+                        if($this->barang->update_after_checking())
+                        {
+                            _e(1);
+                        } 
+                    }
+                    else
+                    {
+                        _e(-1);
+                    }
                 }
             }
             else

@@ -24,5 +24,11 @@ Checking2 untuk yang bukan point of sales
   + add item OK
 - Reporting
   + search sales sama laporan penjualan udh OK
-  + laporan stok barang tinggal yang per kode barang saja, atau yang perkode barang dihilangkan saja
+  + laporan stok barang tinggal yang per kode barang saja, atau yang perkode barang dihilangkan saja OK
+  + Search stok barang belom
+  
+Target yang harus dikerjain
+- Rapihin fungsi checking barang -ok
+- Rapihin fungsi laporan stok opname -ok
+- bikin search stok barang - in progress
   

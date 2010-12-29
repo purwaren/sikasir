@@ -250,8 +250,10 @@ class Barang extends Model
     {
         if($opsi == 1)
             $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.beda_stok !=0 ';
-        if($opsi == 2)
+        else if($opsi == 2)
             $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.beda_stok !=0 and ganti.stok_opname !=0';
+        else if($opsi == 3)
+            $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.stok_opname !=0';
         return $this->db->query($query);
     }
     /**

@@ -757,7 +757,7 @@ class Report extends Controller {
             if($query->num_rows() > 0)
             {
                 //langsung cetak ke pdf saja
-                $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENGGANTIAN BARANG <br /> MODE FASHION GROUP </h3>
+                $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENGGANTIAN BARANG</h3>
                                 <table style="text-align:left">
                                     <tr><td style="width: 100px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 100px">TANGGAL CHECKING</td><td>: '.$this->convert_date($tanggal).'</td></tr>

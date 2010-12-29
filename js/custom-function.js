@@ -310,6 +310,7 @@ function confirmChecking() {
     $('#dialog-confirm-checking').dialog({
         autoOpen: true,
         modal: true,
+        height: 210,
         buttons: {
             Setuju : function() {
                 doConfirmChecking();                                  
@@ -332,15 +333,45 @@ function doConfirmChecking() {
         function(data){
             //update ke table row
             if(data == 1) {
-                alert('Proses checking telah selesai');
-                window.location.replace('confirm');
+                $('#dialog-confirm-checking').dialog('close');
+                $('#msg').html('<span style="color:green">Proses checking barang berhasil dilakukan.</span>');
+                $('#dialog-msg').dialog({
+                    autoOpen: true,
+                    modal: true,                    
+                    buttons: {                        
+                        OK : function() {
+                            $(this).dialog('close');
+                            window.location.replace('confirm');
+                        }
+                    }
+                });               
             }
-            else if(data == 0){
-                alert('Otorisasi gagal');
+            else if(data == 0){                
+                $('#dialog-confirm-checking').dialog('close');
+                $('#msg').html('<span style="color:red">Otorisasi gagal, coba lagi !</span>');
+                $('#dialog-msg').dialog({
+                    autoOpen: true,
+                    modal: true,                    
+                    buttons: {                        
+                        OK : function() {
+                            $(this).dialog('close');
+                        }
+                    }
+                }); 
             }
             else if(data == -1)
             {
-                alert('Belum ada checking barang');
+                $('#dialog-confirm-checking').dialog('close');
+                $('#msg').html('<span style="color:red">Belum ada checking barang !</span>');
+                $('#dialog-msg').dialog({
+                    autoOpen: true,
+                    modal: true,                    
+                    buttons: {                        
+                        OK : function() {
+                            $(this).dialog('close');
+                        }
+                    }
+                }); 
             }
         }
     );    

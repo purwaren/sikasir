@@ -20,12 +20,15 @@
             <table>
                 <tr><td>Username</td><td><input type="text" id="username" /></td></tr>
                 <tr><td>Password</td><td><input type="password" id="passwd"/></td></tr>
-            </table>
+            </table>            
+        </div>
+        <div style="display:none" id="dialog-msg" title="Notifikasi">
+            <p id="msg"></p>
         </div>
         <p style="text-align:center;color:#000;margin-bottom:10px"><?php if(!empty($page))echo 'Page : '.$pages ?></p>
         <p style="text-align:center;">        
         <span class="button"><input type="button" value="Konfirm" class="button" onclick="confirmChecking()" /></span>&nbsp;&nbsp;
-        <span class="button"><input type="submit" value="Cetak" name="submit_cetak_ganti" class="button" /></span>&nbsp;&nbsp;
+        <!--<span class="button"><input type="submit" value="Cetak" name="submit_cetak_ganti" class="button" /></span>&nbsp;&nbsp;-->
         <span class="button"><input type="button" value="Batal"  class="button" onclick="batalChecking()" /></span>
         </p>
         <?php _e(form_close()) ?>

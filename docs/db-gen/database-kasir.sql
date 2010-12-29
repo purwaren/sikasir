@@ -3,14 +3,14 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Waktu pembuatan: 04. Desember 2010 jam 10:31
+-- Waktu pembuatan: 28. Desember 2010 jam 21:36
 -- Versi Server: 5.1.36
 -- Versi PHP: 5.3.0
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 --
--- Database: `kotabaru`
+-- Database: `sikasir`
 --
 
 -- --------------------------------------------------------
@@ -96,11 +96,8 @@ CREATE TABLE IF NOT EXISTS `karyawan` (
   PRIMARY KEY (`NIK`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Default karyawan
---
-INSERT INTO karyawan(NIK,nama,alamat,telepon,divisi) 
-VALUES('00000','PuRwa ReN','Jln. Kecapi, Depok','02134249',1);
+INSERT INTO karyawan VALUES('0000','Administrator','Depok','0',1);
+
 -- --------------------------------------------------------
 
 --
@@ -133,11 +130,8 @@ CREATE TABLE IF NOT EXISTS `pengguna` (
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `NIK` (`NIK`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=19 ;
---
--- Default pengguna admin admin
---
-INSERT INTO pengguna(userid,NIK,username,passwd,jabatan,status,flag_hapus) 
-VALUES(1,'00000','admin',md5('admin'),1,1,0);
+
+INSERT INTO pengguna VALUES(1,'0000','admin',md5('admin'),1,1,0);
 -- --------------------------------------------------------
 
 --
