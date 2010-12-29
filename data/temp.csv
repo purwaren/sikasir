@@ -1,9 +1,9 @@
 item_code,item_name,cat_code,item_hj,item_disc,quantity
-00100001,"Tetra Bits Complete",001,25000,0,10
+00100001,"Tetra Bits Complete",001,25000,0,5
 00100002,"Mouse Tikus",001,20000,0,5
-00100003,"Mouse Tikus",001,20000,0,10
-00100004,"Rice Cooker",001,120000,0,10
+00100004,"Rice Cooker",001,120000,0,5
 00100005,"Rice Cooker",001,125000,0,5
+00100006,"Rice Cooker",001,125000,0,5
 00300002,"Celana Pendek Anak",003,29900,10,2
 00300002,"Celana Pendek Anak",003,29900,0,1
 00300001,"Celana Anak ",003,25900,10,2

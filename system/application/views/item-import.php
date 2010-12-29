@@ -23,10 +23,10 @@
         <form>
         <table cellspacing="0" cellpadding="0">
             <tr>
-                <td>Kode BON </td><td class="head"> : <input type="text" id="kode_bon" maxlength="10"> </td>
+                <td> Kode BON &nbsp;</td><td class="head"> : <input type="text" id="kode_bon" maxlength="10"> </td>
             </tr>
             <tr>
-                <td>Tanggal </td><td class="head"> : <input type="text" name="date_bon" id="date_bon" readonly="readonly"/> </td>
+                <td> Tanggal </td><td class="head"> : <input type="text" name="date_bon" id="date_bon" readonly="readonly"/> </td>
             </tr>                    
         </table>
         <br />

@@ -58,6 +58,15 @@ class Barang extends Model
         return $this->db->get('barang');
     }
     /**
+    * search stok barang
+    */
+    function search_stok($keywords)
+    {
+        $this->db->like('id_barang',$keywords,'after');
+        $this->db->or_like('nama',$keywords,'both');
+        return $this->db->get('barang');
+    }
+    /**
     *Search barang untuk autocomplete
     */
     function search_autocomplete($keywords)

@@ -479,6 +479,62 @@ class Item extends Controller {
     /**
     * validasi form input item
     */
+    function cari($param='')
+    {
+        $this->load->model('barang');
+        if($this->input->post('submit_cari'))
+        {
+            $keywords = $this->input->post('keywords');
+            $this->session->set_userdata('keywords',$keywords);
+            $query = $this->barang->search_stok($keywords);            
+        }
+        else 
+        {
+            $query = $this->barang->search_stok($this->session->userdata('keywords'));            
+        }
+        if(isset($query) && $query->num_rows() > 0)
+        {
+            $this->data['total_item'] = $query->num_rows();           
+            //setting up pagination
+            $this->load->library('pagination');
+            $config['base_url'] = base_url().'item/cari/';
+            $config['total_rows'] = $this->data['total_item'];
+            $config['per_page'] = 25;
+            $this->pagination->initialize($config);
+            $this->data['pagination'] = $this->pagination->create_links();
+            //applying pagination on displaying result            
+            if(isset($param) && intval($param) > 0)
+            {
+                $page_min = $param;
+                $page_max = $page_min + $config['per_page'];
+            }
+            else
+            {
+                $page_min = 0;
+                $page_max = $config['per_page'];
+            }
+            $this->data['total_qty'] = 0;
+            $this->data['row_data'] = '';
+            $i=0;
+            foreach($query->result() as $row)
+            {
+                if($i>=$page_min && $i <$page_max)
+                {
+                    $this->data['row_data'] .= '<tr>
+                                                    <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
+                                                    <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->diskon.'</td><td>'.$row->total_barang.'</td>
+                                                    <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
+                                                </tr>';                    
+                }
+                else
+                {
+                    $i++;
+                }
+                $this->data['total_qty'] += $row->stok_barang;
+            }
+        }
+        $this->load->view('item-cari',$this->data);
+    }
     function validate_form_input()
     {
         $this->load->library('form_validation');

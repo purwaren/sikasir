@@ -587,8 +587,7 @@ class Report extends Controller {
             }
             if(isset($query) && $query->num_rows() > 0)
             {
-                $this->data['total_item'] = $query->num_rows();                    
-                //create paginations
+                $this->data['total_item'] = $query->num_rows();           
                 //setting up pagination
                 $this->load->library('pagination');
                 $config['base_url'] = base_url().'report/stok/';

@@ -15,12 +15,12 @@
       <li><a href="#" accesskey="h"><span class="key">H</span>elp</a></li>
     </ul>    
     <div id="search">
-      <form method="post" action="#">
+      <?php _e(form_open('item/cari')) ?>
         <p>
-          <input type="text" id="search_input" name="search" class="search" value="Cek stok barang" onfocus="clearText()" onblur="fillText()"/>
-          <span class="button"><input type="submit" value="Cari" class="button" /></span>
+          <input type="text" id="search_input" name="keywords" class="search" value="Cek persediaan barang" onfocus="clearText()" onblur="fillText()"/>
+          <span class="button"><input type="submit" name="submit_cari" value="Cari" class="button" /></span>
         </p>
-      </form>
+      <?php _e(form_close()) ?>
     </div>
 </div>
   <div class="gboxtop"></div>
