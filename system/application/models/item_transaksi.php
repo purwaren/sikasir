@@ -23,7 +23,7 @@ class Item_transaksi extends Model
     */
     function get_item_transaksi($id_transaksi)
     {
-        $query = 'select id_transaksi,id_barang, sum(qty) as qty,diskon from item_transaksi_penjualan where id_transaksi="'.$id_transaksi.'" group by id_barang';
+        $query = 'select id_transaksi,id_barang, sum(qty) as qty,diskon from item_transaksi_penjualan where id_transaksi="'.$id_transaksi.'" group by id_barang, diskon';
         return $this->db->query($query);
     }
 }

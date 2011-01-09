@@ -247,9 +247,23 @@ class Barang extends Model
     /**
     *Ambil data opname, dgn cattan stok != 0
     */
-    function get_opname($kel_brg)
+    function get_opname($kel_brg,$opsi)
     {
-        $query = 'select * from barang where kelompok_barang="'.$kel_brg.'" and stok_barang != 0';
+        //belum pernah opname, atw stok opname masih nol
+        if($opsi == 1)
+        {
+            $query = 'select * from barang where kelompok_barang="'.$kel_brg.'" and stok_barang > 0 and stok_opname = 0';
+        }
+        //yang sudah pernh opname
+        else if($opsi == 2)
+        {
+            $query = 'select * from barang where kelompok_barang="'.$kel_brg.'" and stok_barang > 0 and stok_opname > 0';
+        }
+        //ambil dua duanya
+        else if($opsi == 3)
+        {
+            $query = 'select * from barang where kelompok_barang="'.$kel_brg.'" and stok_barang > 0';
+        }
         return $this->db->query($query);
     }
     /**
@@ -258,9 +272,7 @@ class Barang extends Model
     function get_ganti_barang($opsi)
     {
         if($opsi == 1)
-            $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.beda_stok !=0 ';
-        else if($opsi == 2)
-            $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.beda_stok !=0 and ganti.stok_opname !=0';
+            $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.beda_stok !=0 and ganti.stok_barang > 0 order by ganti.id_barang asc';        
         else if($opsi == 3)
             $query = 'select * from (select barang.*, (barang.stok_barang - barang.stok_opname) as beda_stok from barang) as ganti where ganti.stok_opname !=0';
         return $this->db->query($query);
@@ -296,10 +308,11 @@ class Barang extends Model
     * mutasi_masuk = 0
     * mutasi_keluar = 0
     * Stok_opname = 0
+    * berlaku untuk semua barang, baik yang ada penggantian barangnya atau tidak.
     */
     function update_after_checking()
     {
-        $query = 'update barang set stok_barang=stok_opname, stok_awal=stok_opname, mutasi_masuk=0, mutasi_keluar=0, stok_opname=0 where stok_opname !=0';
+        $query = 'update barang set stok_barang=stok_opname, stok_awal=stok_opname, mutasi_masuk=0, mutasi_keluar=0, stok_opname=0 ';
         return $this->db->query($query);
     }
 }

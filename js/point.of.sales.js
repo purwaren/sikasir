@@ -17,11 +17,11 @@ try {
         /**
         *Retrieve screen configuration
         */        
-        if(screen_config == 14) {
+        if(screenConfig == 14) {
             screenWidth = 1014;
             screenHeigth = 635;
         }
-        if(screen_config == 17) {
+        if(screenConfig == 17) {
             screenWidth = 1350;
             screenHeight = 760;
         }    
@@ -62,7 +62,7 @@ try {
 		*Listen event keyup, untuk shortcut dan lain lain.
 		*/        
 		$(window).keyup(function(event){               
-			$('#trigger').html(event.keyCode); 
+			//$('#trigger').html(event.keyCode); 
             //F2 -- fokus ke text box kode label / barcode
 			if(event.keyCode == 113) {
 				$('#barcode').focus();
@@ -102,7 +102,7 @@ try {
                     $('#dialog-prompt-cash').dialog({
                         resizeable: false,
                         width: 250,
-                        height: 190,                        
+                        height: 200,                        
                         modal: true,
                         buttons : {
                             Cancel: function() {
@@ -339,8 +339,8 @@ try {
                 minLength: 1,
                 select: function(event,ui){
                             var temp = $('#pramu_list').val();
-                            if(temp=="") {
-                                $('#pramu_list').val(ui.item.value);
+                            if(allowPramu == 0 || temp=="") {
+                                $('#pramu_list').val(ui.item.value);                               
                             }
                             else {
                                 $('#pramu_list').val(temp +','+ui.item.value);
@@ -349,6 +349,7 @@ try {
             });
             if(event.keyCode == 13){
                 $('#id_pramu').val($('#pramu_list').val());
+                $('#barcode').focus();
             }
         });
         /*Pramuniaga untuk proses refund*/
@@ -373,7 +374,7 @@ try {
                 minLength: 1,
                 select: function(event,ui){
                             var temp = $('#refpramu_list').val();
-                            if(temp=="") {
+                            if(allowPramu==0 || temp=="") {
                                 $('#refpramu_list').val(ui.item.value);
                             }
                             else {
@@ -446,7 +447,7 @@ try {
                     $('#dialog-prompt-refund').dialog({
                         resizeable: false,
                         width: 250,
-                        height: 190,                        
+                        height: 200,                        
                         modal: true,
                         buttons : {
                             Cancel: function() {
@@ -499,7 +500,7 @@ function appendRow(data){
 		row += '</tr>';
         //check apakah id barang tersebut sudah ada di dalam baris
         var check = $('#row-data tr:contains('+data.id_barang+') td:nth-child(1)').html();
-        if(check != null) {
+        if(rowType == 1 && check != null) {
             check = parseInt(check) - 1;
             var new_qty = parseInt($('#qty_'+check).val()) + 1;
             $('#qty_'+check).val(new_qty);
@@ -793,7 +794,7 @@ function trigerButtonRefund() {
     //tampilkan dialog untuk jumlah pembayaran kurangnya berapa    
     $('#dialog-prompt-refund').dialog({
         resizeable: false,
-        height: 190,                        
+        height: 200,                        
         modal: true,
         buttons : {
             Cancel: function() {

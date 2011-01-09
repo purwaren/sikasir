@@ -53,5 +53,59 @@ if( ! function_exists('max_day'))
         }
     }
 }
+/**
+*Nampilin tanggal sekarang
+*
+*/
+if(!function_exists('date_to_string')) 
+{
+    function date_to_string($date)
+    {
+        $date_arr = explode('-',$date);
+        $date = $date_arr[2].' ';
+        switch($date_arr[1])
+        {
+            case '01': $date .= 'Januari';break;
+            case '02': $date .= 'Februari';break;
+            case '03': $date .= 'Maret';break;
+            case '04': $date .= 'April';break;
+            case '05': $date .= 'Mei';break;
+            case '06': $date .= 'Juni';break;
+            case '07': $date .= 'Juli';break;
+            case '08': $date .= 'Agustus';break;
+            case '09': $date .= 'September';break;
+            case '10': $date .= 'Oktober';break;
+            case '11': $date .= 'November';break;
+            case '12': $date .= 'Desember';break;
+        }
+        return $date.' '.$date_arr[0];
+    }
+}
+/**
+*konversi bulan dari angka ke string
+*/
+if(!function_exists('month_to_string')) 
+{
+    function month_to_string($month)
+    {
+        $str = '';
+        switch($month)
+        {
+            case 1 : $str = 'Januari';break;
+            case 2 : $str = 'Februari';break;
+            case 3 : $str = 'Maret';break;
+            case 4 : $str = 'April';break;
+            case 5 : $str = 'Mei';break;
+            case 6 : $str = 'Juni';break;
+            case 7 : $str = 'Juli';break;
+            case 8 : $str = 'Agustus';break;
+            case 9: $str = 'September';break;
+            case 10 : $str = 'Oktober';break;
+            case 11 : $str = 'November';break;
+            case 12 : $str = 'Desember';break;
+        }
+        return $str;
+    }
+}
 //Helper sikasir
 //Location: system/application/helper

@@ -13,6 +13,7 @@ Checking2..
 check konsistensi data, beberapa rule yang harus dipenuhi adalah
 1. Stok barang, mutasi masuk, total barang, stok awal tidak boleh terisi minus
 2. Jumlah penjualan atau mutasi keluar harus lebih besar atau sama dengan 0
+ 
 
 
 Checking2 untuk yang bukan point of sales
@@ -30,5 +31,5 @@ Checking2 untuk yang bukan point of sales
 Target yang harus dikerjain
 - Rapihin fungsi checking barang -ok
 - Rapihin fungsi laporan stok opname -ok
-- bikin search stok barang - in progress
+- bikin search stok barang - ok
   

@@ -23,7 +23,7 @@
         <?php _e(form_close()) ?>
         
         <?php if(isset($nik) && $nik == 'all' && isset($table)) { ?>
-            <h3 style="text-align:center">BULAN : <?php _e($bulan)?>
+            <h3 style="text-align:center">BULAN : <?php _e($bulan.' '.$tahun)?>
             <br />
             DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>
             <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance-all.png" alt="Grafik Omset" style="border:none" /></p>
@@ -32,7 +32,7 @@
             <?php if(isset($table)) _e($table) ?>
             </div>
         <?php } if(isset($nik) && $nik != 'all' && isset($row_data)) { ?>
-        <h3 style="text-align:center">BULAN : <?php _e($bulan)?><br /> 
+        <h3 style="text-align:center">BULAN : <?php _e($bulan.' '.$tahun)?><br /> 
         <?php if(isset($pramuniaga))  ?>NAMA KARYAWAN : <?php _e(strtoupper($pramuniaga->nama)) ?><br /><br />
         DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>
         <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance.png" alt="Grafik Omset"/></p>

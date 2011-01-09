@@ -105,73 +105,81 @@ class Report extends Controller {
                             for($k=$bon->jml_item;$k>0;$k--)
                             {                                
                                 $query_brg = $this->barang->get_barang($row[$i]->id_barang,2);
-                                $query_kry = $this->karyawan->get_karyawan($row[$i]->id_kasir);
-                                $barang = $query_brg->row();
-                                $kasir = $query_kry->row();
-                                $jumlah = $row[$i]->qty * $barang->harga;
-                                $jumlah = $jumlah * (1 - ($row[$i]->diskon_item/100));
-                                $jumlah = $jumlah * (1 - ($row[$i]->diskon/100));
-                                $total_jumlah += $jumlah;
-                                $total_qty += $row[$i]->qty;
-                                $temp .= '<tr>
-                                                <td style="width:30px;border: 1px solid;">'.($i+1).'</td>';
-                                if(!empty($kurang))
+                                if($query_brg->num_rows() > 0)
                                 {
-                                    if(($i+1)>30 && ($i+1)%30==1)
+                                    $query_kry = $this->karyawan->get_karyawan($row[$i]->id_kasir);
+                                    $barang = $query_brg->row();
+                                    $kasir = $query_kry->row();                                
+                                    $jumlah = $row[$i]->qty * $barang->harga;
+                                    $jumlah = $jumlah * (1 - ($row[$i]->diskon_item/100));
+                                    $jumlah = $jumlah * (1 - ($row[$i]->diskon/100));
+                                    $total_jumlah += $jumlah;
+                                    $total_qty += $row[$i]->qty;
+                                    $temp .= '<tr>
+                                                    <td style="width:30px;border: 1px solid;">'.($i+1).'</td>';
+                                    if(!empty($kurang))
                                     {
-                                       $temp .='<td rowspan="'.$kurang.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                <td rowspan="'.$kurang.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>'; 
-                                    }                                    
-                                    if(($i+1)==$n)
+                                        if(($i+1)>30 && ($i+1)%30==1)
+                                        {
+                                           $temp .='<td rowspan="'.$kurang.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$kurang.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>'; 
+                                        }                                    
+                                        if(($i+1)==$n)
+                                        {
+                                            $temp .='<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+                                        }
+                                    }
+                                    else
                                     {
-                                        $temp .='<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                <td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+                                        if($k==$bon->jml_item)
+                                        {
+                                            $temp .='<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$bon->jml_item.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+                                        }
+                                    }
+                                    $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
+                                                <td style="width:120px;border: 1px solid;">'.$barang->nama.'</td>
+                                                <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>
+                                                <td style="width:40px;border: 1px solid;">'.$row[$i]->diskon_item.'</td>
+                                                <td style="width:40px;border: 1px solid;">'.$row[$i]->diskon.'</td>
+                                                <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($barang->harga,2,',','.').'&nbsp;&nbsp;</td>
+                                                <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
+                                                <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah,2,',','.').'&nbsp;&nbsp;</td>';
+                                                       
+                                    //menyisipkan total sebenarnya, dibuat colspan
+                                    if(!empty($kurang))
+                                    {
+                                        if(($i+1)>30 && ($i+1)%30==1)
+                                        {
+                                            $temp .= '<td rowspan="'.$kurang.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
+                                        }
+                                        if(($i+1)==$n)
+                                        {
+                                            $temp .= '<td rowspan="'.$ada.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+                                        }
+                                    }
+                                    else 
+                                    {
+                                        if($k==$bon->jml_item)
+                                        {
+                                            $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+                                        }
+                                    }
+                                    $temp .='</tr>';
+                                    $i++;                                
+                                    if($i%30 == 0)
+                                    {
+                                        $list[$j] = $temp;
+                                        $j++;
+                                        $temp = "";
                                     }
                                 }
                                 else
                                 {
-                                    if($k==$bon->jml_item)
-                                    {
-                                        $temp .='<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                <td rowspan="'.$bon->jml_item.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
-                                    }
+                                    print_r($row[$i]);
+                                    echo $this->db->last_query();exit;
                                 }
-                                $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
-                                            <td style="width:120px;border: 1px solid;">'.$barang->nama.'</td>
-                                            <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>
-                                            <td style="width:40px;border: 1px solid;">'.$row[$i]->diskon_item.'</td>
-                                            <td style="width:40px;border: 1px solid;">'.$row[$i]->diskon.'</td>
-                                            <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($barang->harga,2,',','.').'&nbsp;&nbsp;</td>
-                                            <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
-                                            <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah,2,',','.').'&nbsp;&nbsp;</td>';
-                                                   
-                                //menyisipkan total sebenarnya, dibuat colspan
-                                if(!empty($kurang))
-                                {
-                                    if(($i+1)>30 && ($i+1)%30==1)
-                                    {
-                                        $temp .= '<td rowspan="'.$kurang.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
-                                    }
-                                    if(($i+1)==$n)
-                                    {
-                                        $temp .= '<td rowspan="'.$ada.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
-                                    }
-                                }
-                                else 
-                                {
-                                    if($k==$bon->jml_item)
-                                    {
-                                        $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
-                                    }
-                                }
-                                $temp .='</tr>';
-                                $i++;                                
-                                if($i%30 == 0)
-                                {
-                                    $list[$j] = $temp;
-                                    $j++;
-                                    $temp = "";
-                                }                                
                             }
                             $total_tunai += $bon->total;                            
                         }
@@ -380,42 +388,43 @@ class Report extends Controller {
                                 <table style="width: 940px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
                                     <tr>
                                         <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;"></td>
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">01</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">02</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">03</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">04</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">05</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">06</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">07</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">08</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">09</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">10</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">11</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">12</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">13</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">14</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">15</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">16</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">17</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">18</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">19</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">20</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">21</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">22</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">23</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">24</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">25</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">26</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">27</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">28</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">29</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">30</td>                                    
-                                        <td style="width:20px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">31</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">01</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">02</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">03</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">04</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">05</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">06</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">07</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">08</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">09</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">10</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">11</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">12</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">13</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">14</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">15</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">16</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">17</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">18</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">19</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">20</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">21</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">22</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">23</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">24</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">25</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">26</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">27</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">28</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">29</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">30</td>                                    
+                                        <td style="width:25px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">31</td>                                    
                                         <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Total</td>
                                     </tr>';                    
                     $list = '';
                     $row_data = '';
                     $k=0;
+                    $total_all = 0;
                     foreach($query->result() as $row)
                     {
                         $qry_sales = $this->transaksi->acc_sales_a_month($row->kelompok_barang,$bulan,$tahun);                        
@@ -427,26 +436,48 @@ class Report extends Controller {
                         {                   
                             if(isset($sales_aday[$j]) && $i==$sales_aday[$j]->tgl)
                             {
-                                $temp .= '<td style="width:20px;border: 1px solid; background-color: #aaaaaa">'.$sales_aday[$j]->jumlah.'</td>';
+                                $temp .= '<td style="width:25px;border: 1px solid; background-color: #aaaaaa">'.$sales_aday[$j]->jumlah.'</td>';
                                 $total += $sales_aday[$j]->jumlah;
                                 $j++;
                             }
                             else 
                             {
-                                $temp .= '<td style="width:20px;border: 1px solid;"> 0 </td>';
+                                $temp .= '<td style="width:25px;border: 1px solid;"> 0 </td>';
                             }
                         }
+                        $total_all += $total;
                         $temp .= '<td style="width:50px; border: 1px solid;">'.$total.'</td></tr>';
                         $row_data .= $temp;
                         $k++;
-                        if($k%20==0)
+                        if($k%25==0)
                         {
                             $list[] = $row_data;
                             $row_data = '';
                         }                                                
-                    }                                                 
+                    }
                     $list[] = $row_data;
-                     //ambil data supervisor sama data kasir
+                    //tampilin totalnya                    
+                    $query = $this->transaksi->total_qty_sales($bulan,$tahun);
+                    if($query->num_rows() > 0)
+                    {
+                        $row_total = '<tr><td style="width:25px; background-color:#dedede; font-weight:bold; text-transform: uppercase; border:1px solid;">TOT</td>';
+                        $total = $query->result();
+                        $j=0;
+                        for($i=1;$i<=31;$i++)
+                        {
+                            if(isset($total[$j]) && $total[$j]->tgl == $i)
+                            {
+                                $row_total .= '<td  style="width:25px;border: 1px solid; background-color: #aaaaaa">'.$total[$j]->total.'</td>';
+                                $j++;
+                            }
+                            else
+                            {
+                                $row_total .= '<td style="width:25px;border: 1px solid;"> 0 </td>';
+                            }
+                        }
+                        $row_total .= '<td  style="width:50px;border: 1px solid; background-color: #dedede">'.$total_all.'</td></tr>';
+                    }                    
+                    //ambil data supervisor sama data kasir
                     $query = $this->transaksi->get_kasir($tanggal);
                     foreach($query->result() as $row)
                     {
@@ -457,14 +488,14 @@ class Report extends Controller {
                     $supervisor = $query->row();
                     //nyusun data untuk ditampilkan
                     $line1 = '<td style="text-align:center">S U P E R V I S O R</td>';
-                    $line2 = '<td style="text-align:center"><br />('.strtoupper($supervisor->nama).')</td>';
+                    $line2 = '<td style="text-align:center">('.strtoupper($supervisor->nama).')</td>';
                     $i=0;
                     /*foreach($data_kasir as $row)
                     {
                         $line1 .= '<td style="text-align:center">K A S I R '.++$i.'</td>';
                         $line2 .= '<td style="text-align:center"><br />('.strtoupper($row->nama).')</td>';
                     }*/
-                    $foot ='</table>
+                    $foot = '</table>
                             <br />
                             <table>
                                 <tr>'.$line1.'</tr>
@@ -476,11 +507,11 @@ class Report extends Controller {
                     {
                         $this->data['report_sales'] .= $row;
                     }
-                    $this->data['report_sales'] .= $foot;
+                    $this->data['report_sales'] .= $row_total.$foot;
                     //cetak ke pdf
                     if(isset($list) && $this->input->post('submit_report_sales_pdf'))
                     {                            
-                        $this->cetak_pdf(4,$head,$list,'',$foot);
+                        $this->cetak_pdf(4,$head,$list,$row_total,$foot);
                     }                   
                 }
             }
@@ -566,7 +597,7 @@ class Report extends Controller {
                         $this->data['row_data'] .= '<tr>
                                                         <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
                                                         <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->diskon.'</td><td>'.$row->total_barang.'</td>
-                                                        <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td><td>'.$row->stok_barang.'</td>
+                                                        <td>'.$row->stok_barang.'</td><td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td>
                                                     </tr>';                        
                     }
                     else
@@ -986,7 +1017,7 @@ class Report extends Controller {
         //set margins
         $pdf->SetMargins(PDF_MARGIN_LEFT, 20, PDF_MARGIN_RIGHT);       
         $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
-        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+        $pdf->SetFooterMargin(10);
 
         //set auto page breaks
         $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
@@ -1012,9 +1043,11 @@ class Report extends Controller {
         }
         else if($opsi == 4)
         {
-            //set font
+            //set font            
             $pdf->SetFont('dejavusans', '', 10);
-            $pdf->setPageFormat('A4','L');
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);
+            $pdf->setPageFormat($size,'L');
             
         }
         else if($opsi == 5)
@@ -1090,10 +1123,19 @@ class Report extends Controller {
         }
         if($opsi == 4)
         {
+            $i = 0;
             foreach($row as $data)
             {
                 $pdf->AddPage();
-                $pdf->writeHTML($head.$data.$foot, true, 0, true, 0);
+                if($i == count($row)-1)
+                {                    
+                    $pdf->writeHTML($head.$data.$row_total.$foot, true, 0, true, 0);
+                }
+                else
+                {
+                    $pdf->writeHTML($head.$data.'</table>', true, 0, true, 0);
+                }
+                $i++;
             }
         }
         // ---------------------------------------------------------

@@ -35,10 +35,10 @@
             <tr>
                 <td>Nama</td><td class="head"> : <input type="text" name="nama" value="<?php _e($pengguna->nama) ?>" /></td>
             </tr>
-            <tr>
+            <tr style="display:none">
                 <td>Jabatan</td>
                 <td class="head"> : 
-                    <select name="jabatan" style="width: 157px;">
+                    <select name="jabatan" style="width: 157px;" readonly="readonly">
                         <option value="1" <?php if($pengguna->jabatan == 'admin') _e('selected="selected"') ?>>Admin</option>
                         <option value="2" <?php if($pengguna->jabatan == 'supervisor') _e('selected="selected"') ?>>Supervisor</option>
                         <option value="3" <?php if($pengguna->jabatan == 'kasir') _e('selected="selected"') ?>>Kasir</option>

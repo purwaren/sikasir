@@ -2,6 +2,7 @@
 *JQuery Stuff
 */
 var focusStatus;
+var ajaxStat;
 $(function(){
     
     $('#date-report').datepicker({dateFormat: 'yy-mm-dd'});
@@ -313,7 +314,8 @@ function confirmChecking() {
         height: 210,
         buttons: {
             Setuju : function() {
-                doConfirmChecking();                                  
+                $('.ui-dialog-buttonpane').hide();
+                doConfirmChecking(1);                   
             },
             Batal : function() {
                 $(this).dialog('close');
@@ -322,31 +324,45 @@ function confirmChecking() {
     }); 
 }
 //function untuk konfirmasi checking barang
-function doConfirmChecking() {
+function doConfirmChecking(i) {    
     //ambil username sama password
+    $('#progressbar').css('display','block');
+    var total_brg = $('#total_brg').val();
+    var total_iterasi = Math.ceil(total_brg/50);
+    var progress = Math.round(i/total_iterasi*1000);
+    $('#progress').html(progress/10+'%');    
     var username = $('#username').val();
-    var passwd = $('#passwd').val();
-    //do check passwd and username
-     $.post(
+    var passwd = $('#passwd').val();        
+    //initialize progress bar
+    $('#dialog-confirm-checking p').html('Silahkan menunggu ....');
+    $('#dialog-confirm-checking p').css('text-align','center');
+    $('#dialog-confirm-checking table').hide();           
+    //do check passwd and username        
+    $.post(
         "confirm_checking",
-        {'username': username, 'passwd': passwd}, 
-        function(data){
-            //update ke table row
-            if(data == 1) {
-                $('#dialog-confirm-checking').dialog('close');
-                $('#msg').html('<span style="color:green">Proses checking barang berhasil dilakukan.</span>');
-                $('#dialog-msg').dialog({
-                    autoOpen: true,
-                    modal: true,                    
-                    buttons: {                        
-                        OK : function() {
-                            $(this).dialog('close');
-                            window.location.replace('confirm');
+        {'username': username, 'passwd': passwd,'iterasi':i}, 
+        function(data){               
+            //update ke table row           
+            if(data.status == 1) {                
+                if(data.progress <= total_iterasi) {                    
+                    doConfirmChecking(data.progress);                    
+                }
+                else {                    
+                    $('#dialog-confirm-checking').dialog('close');
+                    $('#msg').html('<span style="color:green">Proses checking telah selesai</span>');
+                    $('#dialog-msg').dialog({
+                        autoOpen: true,
+                        modal: true,                    
+                        buttons: {                        
+                            OK : function() {                               
+                                window.location.replace('confirm');
+                            }
                         }
-                    }
-                });               
+                    }); 
+                    return false;
+                }
             }
-            else if(data == 0){                
+            else if(data == 0){                    
                 $('#dialog-confirm-checking').dialog('close');
                 $('#msg').html('<span style="color:red">Otorisasi gagal, coba lagi !</span>');
                 $('#dialog-msg').dialog({
@@ -354,28 +370,17 @@ function doConfirmChecking() {
                     modal: true,                    
                     buttons: {                        
                         OK : function() {
-                            $(this).dialog('close');
+                            stop();
+                            window.location.replace('confirm');
                         }
                     }
-                }); 
-            }
-            else if(data == -1)
-            {
-                $('#dialog-confirm-checking').dialog('close');
-                $('#msg').html('<span style="color:red">Belum ada checking barang !</span>');
-                $('#dialog-msg').dialog({
-                    autoOpen: true,
-                    modal: true,                    
-                    buttons: {                        
-                        OK : function() {
-                            $(this).dialog('close');
-                        }
-                    }
-                }); 
-            }
-        }
-    );    
+                });                    
+            }                
+        },
+        'json'
+    );        
 }
+
 //fungsi untuk cetak laporan penggantian barang
 function cetakGantiBarang(tanggal){
     window.location.replace('checking/'+tanggal);

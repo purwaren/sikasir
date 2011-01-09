@@ -32,7 +32,7 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
         <?php 
-            if(isset($_POST['submit_report_sales'])) 
+            if(!empty($report_sales)) 
             {        
                 _e($report_sales);
             }

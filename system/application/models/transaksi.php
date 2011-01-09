@@ -71,6 +71,13 @@ class Transaksi extends Model
         $query = 'select sum(total) as temp_sales from transaksi_penjualan where tanggal="'.$date.'"';
         return $this->db->query($query);
     }
+    function total_qty_sales($month,$year)
+    {
+        $query = 'select day(tp.tanggal) as tgl, sum(qty) as total from transaksi_penjualan tp 
+        left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi
+        where month(tp.tanggal) = "'.$month.'" and year(tp.tanggal)="'.$year.'" group by tp.tanggal order by tgl asc';
+        return $this->db->query($query);
+    }
     /**
     *ambil penjualan sementara per kode kelompok barang
     */

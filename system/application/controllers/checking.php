@@ -44,7 +44,7 @@ class Checking extends Controller {
             if(!empty($id_barang))
             {
                 $this->load->model('barang');            
-                $query = $this->barang->get_barang($id_barang, 2);
+                $query = $this->barang->get_barang($id_barang, 1);
                 if($query->num_rows() > 0)
                 {
                     $brg = $query->row();
@@ -58,7 +58,7 @@ class Checking extends Controller {
                 }
                 else
                 {
-                    $this->data['err_msg'] = 'Data tidak ditemukan';
+                    $this->data['err_msg'] = 'Data tidak ditemukan atau stok barang sudah habis';
                 }
             }
             else
@@ -102,7 +102,7 @@ class Checking extends Controller {
         {
             $kel_barang = $param;
             $this->load->model('barang');
-            $query = $this->barang->get_opname($kel_barang);
+            $query = $this->barang->get_opname($kel_barang,3);
             if($query->num_rows > 0)
             {
                 $head ='<div><h3 style="text-align:center;margin:0;">LAPORAN STOK OPNAME</h3>
@@ -154,11 +154,12 @@ class Checking extends Controller {
             if($this->input->post('submit_view_opname'))
             {
                 $kel_barang = $this->input->post('kel_barang');
+                $opsi = $this->input->post('opsi');
                 $this->data['kel_barang'] = $kel_barang;
                 if(!empty($kel_barang))
                 {
                     $this->load->model('barang');
-                    $query = $this->barang->get_opname($kel_barang);                    
+                    $query = $this->barang->get_opname($kel_barang,$opsi);                    
                     if($query->num_rows() > 0)
                     {
                         $row_data = '';
@@ -180,7 +181,7 @@ class Checking extends Controller {
                             $total_opname += $row->stok_opname;
                             $total_stok += $row->stok_barang;
                         }
-                        $row_total = '<tr><td colspan="6"><input type="hidden" name="kel_barang" value="'.$kel_barang.'"/> T O T A L</td><td>'.$total_stok.'</td><td>'.$total_opname.'</td><td>'.$total_beda.'</td><td></td></tr>';
+                        $row_total = '<tr><td colspan="6"><input type="hidden" name="opsi" value="'.$opsi.'"/><input type="hidden" name="kel_barang" value="'.$kel_barang.'"/> T O T A L</td><td>'.$total_stok.'</td><td>'.$total_opname.'</td><td>'.$total_beda.'</td><td></td></tr>';
                         $this->data['search_result'] = $row_data.$row_total;
                     }
                     else
@@ -196,10 +197,11 @@ class Checking extends Controller {
             if($this->input->post('submit_cetak_opname'))
             {            
                 $kel_barang = $this->input->post('kel_barang');            
+                $opsi = $this->input->post('opsi');            
                 if(!empty($kel_barang))
                 {
                     $this->load->model('barang');
-                    $query = $this->barang->get_opname($kel_barang);
+                    $query = $this->barang->get_opname($kel_barang,$opsi);
                     if($query->num_rows() > 0)
                     {
                         $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN STOK OPNAME</h3>
@@ -266,6 +268,7 @@ class Checking extends Controller {
         $query = $this->barang->get_ganti_barang(1);
         if($query->num_rows() > 0)
         {
+            $this->data['total_brg'] = $query->num_rows();
             $head = '<table class="table-data" cellspacing="0" cellpadding="0">
                     <tr>
                         <td class="head">No</td><td class="head">Kode Barang</td><td class="head">Nama Barang</td>
@@ -330,6 +333,7 @@ class Checking extends Controller {
     {
         $username = $this->input->post('username');
         $passwd = $this->input->post('passwd');
+        $iterasi = $this->input->post('iterasi');         
         $this->load->model('accounting');
         $check = $this->accounting->get_pengguna($username,$passwd);
         if($check->num_rows() ==  1)
@@ -338,41 +342,45 @@ class Checking extends Controller {
             if($person->jabatan == 'supervisor')
             {
                 $this->load->model('barang');
-                //sebelum update after checking, catat dulu data penggantian barang, yaitu data dengan beda stok != 0, taro di table ganti barang
-                $query = $this->barang->get_ganti_barang(2);
+                //sebelum update after checking, catat dulu data penggantian barang, yaitu data dengan beda stok != 0 dan stok_barang > 0, taro di table ganti barang
+                $query = $this->barang->get_ganti_barang(1);
                 if($query->num_rows() > 0)
-                {
-                    foreach($query->result() as $row)
-                    {
-                        $harga_ganti = $row->harga * (1 - 10/100);
-                        $data = array(
-                            'id_barang'=>$row->id_barang,
-                            'tanggal'=>date('Y-m-d'),
-                            'harga_ganti'=>$harga_ganti,
-                            'qty'=>$row->beda_stok
-                        );
-                        $this->barang->insert_ganti_barang($data);
-                    }
-                    if($this->barang->update_after_checking())
-                    {
-                        _e(1);
-                    }                
-                }
-                else
-                {
-                    $query = $this->barang->get_ganti_barang(3);
-                    if($query->num_rows() > 0)
-                    {
-                        if($this->barang->update_after_checking())
-                        {
-                            _e(1);
-                        } 
+                {                    
+                    $total_barang = $query->num_rows();
+                    $perIterasi = 50;
+                    $total_iterasi = ceil($total_barang / $perIterasi);                    
+                    $start = ($iterasi-1)*$perIterasi ;
+                    if($iterasi < $total_iterasi)
+                    {                        
+                        $end = $iterasi*$perIterasi - 1;
                     }
                     else
                     {
-                        _e(-1);
+                        $end = $iterasi*$perIterasi;
                     }
-                }
+                    $i = 0;
+                    foreach($query->result() as $row)
+                    {
+                        if($i>= $start && $i<=$end)
+                        {
+                            $harga_ganti = $row->harga * (1 - 10/100);
+                            $data = array(
+                                'id_barang'=>$row->id_barang,
+                                'tanggal'=>date('Y-m-d'),
+                                'harga_ganti'=>$harga_ganti,
+                                'qty'=>$row->beda_stok
+                            );
+                            $this->barang->insert_ganti_barang($data);
+                        }
+                        $i++;
+                    }
+                    _e(json_encode(array('status'=>1,'progress'=>++$iterasi,'end'=>$end)));
+                    //klo udh iterasi ke 100 update stoknya
+                    if($end >= $total_barang)
+                    {                    
+                        $this->barang->update_after_checking();                        
+                    }                    
+                }                
             }
             else
             {

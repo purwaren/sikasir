@@ -98,21 +98,26 @@ class Graph extends Controller {
                 $file = @fopen('lib/omset.csv','w');
                 fwrite($file,$line);
                 fclose($file);                
+            
+                $this->data['bulan'] = strtoupper($this->month_to_string($bulan)).' '.$tahun;
+                //initialize config
+                $config['file_name'] = 'css/chart/sales.png';
+                $config['data'] = 'lib/omset.csv';
+                $config['month'] = $this->month_to_string($bulan);
+                $config['title'] = 'Grafik Omset';
+                $config['y_axis_name'] = 'Jumlah Omset (Rp 1.000)';
+                $config['x_axis_name'] = 'Tanggal';
+                $config['type'] = 'bar';
+                $config['idx_max'] = $idx_max;
+                $config['idx_min'] = $idx_min;
+                $config['max_omset'] = $max_omset;            
+                $config['min_omset'] = $min_omset;            
+                $this->generate_graph($config);
             }
-            $this->data['bulan'] = strtoupper($this->month_to_string($bulan)).' '.$tahun;
-            //initialize config
-            $config['file_name'] = 'css/chart/sales.png';
-            $config['data'] = 'lib/omset.csv';
-            $config['month'] = $this->month_to_string($bulan);
-            $config['title'] = 'Grafik Omset';
-            $config['y_axis_name'] = 'Jumlah Omset (Rp 1.000)';
-            $config['x_axis_name'] = 'Tanggal';
-            $config['type'] = 'bar';
-            $config['idx_max'] = $idx_max;
-            $config['idx_min'] = $idx_min;
-            $config['max_omset'] = $max_omset;            
-            $config['min_omset'] = $min_omset;            
-            $this->generate_graph($config);
+            else
+            {
+                $this->data['err_msg'] = '<span style="color:red">Tidak ada penjualan pada bulan tersebut</span>';
+            }
         }        
         //ambil bulan dan tahun
         $query = $this->transaksi->month_of_trans();
@@ -163,7 +168,7 @@ class Graph extends Controller {
         if($query->num_rows() > 0)
         {
             $this->data['pramu'] = $query->result();
-            $karyawan = '<select name="nik" style="width:178px;"><option value="all">Semua</option>';
+            $karyawan = '<select name="nik" style="width:178px;">';
             foreach($query->result() as $row)
             {
                 $karyawan .= '<option value="'.$row->NIK.'">'.$row->nama.'</option>';
@@ -178,6 +183,7 @@ class Graph extends Controller {
             $nik = $this->input->post('nik');            
             $this->data['bulan'] = strtoupper($this->month_to_string($bulan));
             $this->data['nik'] = $nik;
+            $this->data['tahun'] = $tahun;
             //menampilkan grafik semua karyawan
             if($nik == 'all')
             {

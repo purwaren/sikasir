@@ -268,7 +268,7 @@ class PointOfSales extends Controller {
             }
             fclose($file);
             //masuk2in datanya
-            $report = str_replace('<tanggal>',$now,$report);
+            $report = str_replace('<tanggal>',date_to_string($now),$report);
             $report = str_replace('<omset>',number_format($sales->temp_sales,0,',','.').',-',$report);
             $report = str_replace('<total>',$total_qty,$report);
             $report = str_replace('<detail>',$detail,$report);
@@ -359,6 +359,7 @@ class PointOfSales extends Controller {
     {
         //baca input parameter
         $cash = $this->input->post('cash');
+        //resi transaksi normal
         if($this->input->post('option')==1)
         {
             //siapkan data resi yang akan diprint
@@ -467,6 +468,7 @@ class PointOfSales extends Controller {
                 }
             }
         }
+        //resi transaksi terakhir
         if($this->input->post('option')==2)
         {
             //read receipt from file
@@ -476,6 +478,7 @@ class PointOfSales extends Controller {
             //output resi for printing
             _e($resi);
         }
+        //resi untuk refund
         if($this->input->post('option')==3)
         {
             //baca input parameter
@@ -526,7 +529,7 @@ class PointOfSales extends Controller {
                         $barang = $brg_query->row();
                         $harga_tukar = $qty_tukar[$i] * $barang->harga;                        
                         $tukar .=$barang->id_barang.' '.$barang->nama.'#'.chr(10);
-                        $tukar.='  1 @'.number_format($barang->harga,2,',','.').' = '.number_format($harga_tukar,2,',','.').'#'.chr(10);
+                        $tukar.='  '.$qty_tukar[$i].'@'.number_format($barang->harga,2,',','.').' = '.number_format($harga_tukar,2,',','.').'#'.chr(10);
                         $total_tukar += $harga_tukar;
                     }
                     $total = $transaksi->total;

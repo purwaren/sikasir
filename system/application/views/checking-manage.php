@@ -10,10 +10,17 @@
         <p class="description">Untuk melihat stok opname, data dengan stok barang tidak nol saja yang ditampilkan</p>
         <br />
         <?php _e(form_open(base_url().'checking/manage'))?>
-        <table id="report">            
-            <tr id="harian">
-                <td>Kelompok Barang </td><td> : <input type="text" name="kel_barang"  style="width: 100px" maxlength="3"/></td>
-                <td><span class="button"> <input type="submit" value="G O" name="submit_view_opname" class="button" /></span></td>
+        <table id="report">
+            <tr>
+                <td>Pilihan</td>
+                <td>: <select name="opsi" style="width:105px">
+                    <option value="1">Belum Opname</option>
+                    <option value="2">Sudah Opname</option>
+                </select> *) Belum opname sama dengan stok opname 0</td>
+            </tr>
+            <tr>
+                <td>Kelompok Barang </td><td> : <input type="text" name="kel_barang"  style="width: 100px" maxlength="3"/>
+                <span class="button"> <input type="submit" value="G O" name="submit_view_opname" class="button" /></span></td>
             </tr>            
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
