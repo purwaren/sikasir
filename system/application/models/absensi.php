@@ -52,7 +52,7 @@ class Absensi extends Model
     */
     function get_presence($tanggal)
     {
-        $query = 'select * from absensi a left join karyawan k on a.NIK = k.NIK where tanggal="'.$tanggal.'"';
+        $query = 'select * from karyawan k left join absensi a on k.NIK = a.NIK where tanggal="'.$tanggal.'"';
         return $this->db->query($query);
     }
     /**

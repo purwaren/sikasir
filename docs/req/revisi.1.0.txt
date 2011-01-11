@@ -12,6 +12,7 @@ Revisi 1.0
     - yang boleh ngotak atik absen hanya supervisor, jadi dimenu admin dan yang lain dihilangkan
     - untuk karyawan yang tidak datang statusnya awalnya masih kosong, supervisor/login absen yang berhak mengisi
     - cetak absensi dan rekap absensi
+    - absensi ada 2 jenis, absensi datang dan absensi pulang
 4. Cetak grafik penjualan dan grafik prestasi
 5. Rekap omset dalam satu bulan
 6. Rapihin resi untuk refund.
