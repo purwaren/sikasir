@@ -7,7 +7,7 @@
 
 //--APLIKASI UTAMA POINT OF SALES --//
 var searchFocus=false;
-var statusQty=true;
+var statusQty=false;
 var screenWidth;
 var screenHeight;
 /**
@@ -892,11 +892,11 @@ function validateQty(num) {
         }
         total_qty += temp;
     }
-    if(total_qty > stock) {
-        displayNotification('Qty melebihi stok barang dalam database');
-        $('#qty_'+num).val('');
+    if(total_qty > stock) {        
+        $('#dialog-message').html('Total Qty <b>'+id_barang+'</b> melebihi stok barang dalam database');       
+        $('#dialog-message').dialog('open');
+        $('#qty_'+num).val('');        
         $('#qty_'+num).focus();
-        statusQty = false;
     }
     else {
         statusQty = true;
@@ -919,14 +919,17 @@ function validateQtyById(id_barang,stock) {
                 temp = parseFloat(temp);
             }
             total_qty += temp;
-        }
-        if(total_qty > stock) {
-            displayNotification('Qty melebihi stok barang dalam database');        
+        }        
+        if(total_qty >= stock) {
             statusQty = false;
+            displayNotification('Total Qty <b>'+id_barang+'</b> melebihi stok barang dalam database');          
         }
         else {
             statusQty = true;
         }
+    }
+    else {
+        statusQty = true;
     }
 }
 /**
