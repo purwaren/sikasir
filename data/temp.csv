@@ -1,12 +1,15 @@
 item_code,item_name,cat_code,item_hj,item_disc,quantity
-00100001,"Tetra Bits Complete",001,25000,0,5
-00100002,"Mouse Tikus",001,20000,0,5
-00100004,"Rice Cooker",001,120000,0,5
-00100005,"Rice Cooker",001,125000,0,5
-00100006,"Rice Cooker",001,125000,0,5
-00300002,"Celana Pendek Anak",003,29900,10,2
-00300002,"Celana Pendek Anak",003,29900,0,1
-00300001,"Celana Anak ",003,25900,10,2
-00300004,"Setrika Listrik",003,124900,0,1
-10000001,"Spidol Item Jelek",100,3400,0,1
-10000002,"Spidol Rusak Merah",100,1200,0,1
+00100002,"Bola Warna Kuning",001,36000,0,2
+00100001,"Hape 1",001,700000,0,1
+00100003,"Helm Putih",001,200000,0,1
+00100004,"Buku Agenda",001,25000,0,2
+00100005,"Map Besar Coklat",001,10000,0,1
+00200001,"Jam Tangan",002,50000,0,1
+00100009,"Kerudung Anak",001,25000,0,1
+00100006,"Kerudung Mesir",001,200000,0,1
+00100008,"Jilbab Turki",001,225000,0,2
+00200002,"Mouse Jelek",002,25000,0,2
+00200003,"Helm Batok Kelapa",002,10000,0,3
+07200001,"Blues Warna Biru",072,73900,0,1
+07200002,"Blues Warna Biru",072,89000,0,2
+07200003,"Blues Warna Merah",072,60000,0,1

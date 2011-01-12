@@ -24,3 +24,13 @@ body, table {
 	margin: 0 0 0 2.5cm;
 	font-weight: normal;
 }
+.table-data {
+	margin:0 auto;
+	width:100%;
+	text-align:center
+}
+.table-data td.head {
+	background-color:#dedede;
+	text-transform: uppercase;
+	font-weight: bold;
+}

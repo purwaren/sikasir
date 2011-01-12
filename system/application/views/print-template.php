@@ -10,8 +10,8 @@
         <img src="<?php _e(base_url()) ?>css/images/logo_mode.png" />   
         <h2>MODE FASHION GROUP</h2>
         <p>
-            Kantor Pusat : <br />
-            Jalan Nibung Baru 63-64, Medan. <br />
+            Kantor Pusat: <br />
+            Jln. Laksana No. 68 ABC, Medan<br />            
             Telepon: (061) 372 592
         </p>                  
     </div>

@@ -10,6 +10,7 @@
     <script type="text/javascript" src="<?php _e(base_url()) ?>js/jquery-ui-1.8.1.custom.min.js"></script>
     <script type="text/javascript" src="<?php _e(base_url()) ?>js/jquery.currency.min.js"></script>
     <script type="text/javascript" src="<?php _e(base_url()) ?>js/jquery.autocomplete.js"></script>
+    <script type="text/javascript" src="<?php _e(base_url()) ?>js/config.js"></script>
     <script type="text/javascript" src="<?php _e(base_url()) ?>js/custom-function.js"></script>
 </head>
 <body>

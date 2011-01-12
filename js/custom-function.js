@@ -383,7 +383,9 @@ function doConfirmChecking(i) {
 
 //fungsi untuk cetak laporan penggantian barang
 function cetakGantiBarang(tanggal){
-    window.location.replace('checking/'+tanggal);
+    params='';
+    url = baseUrl+'report/checking/'+tanggal;
+    window.open(url,'Cetak Opname', params);
 }
 //fungsi untuk cetak laporan stok opname
 function printOpname(url) {

@@ -784,8 +784,9 @@ class Report extends Controller {
         if(!empty($tanggal))
         {
             $query = $this->barang->get_penggantian_barang($tanggal);
-            if($query->num_rows() > 0)
-            {
+            $total_row = $query->num_rows();
+            if($total_row > 0 && $total_row <= 500)
+            {                
                 //langsung cetak ke pdf saja
                 $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENGGANTIAN BARANG</h3>
                                 <table style="text-align:left">
@@ -855,29 +856,100 @@ class Report extends Controller {
                         <table>
                             <tr>'.$line1.'</tr>
                             <tr>'.$line2.'</tr>
-                        </table></div>';
-                $this->cetak_pdf(5,$head,$list,$row_total,$foot);
-            }            
-        }
-        //tampilkan list laporan penggantian barang
-        $query = $this->barang->get_penggantian_barang();
-        if($query->num_rows() > 0)
-        {
-            $row_data = '';
-            $i = 0;
-            foreach($query->result() as $row)
-            {
-                $row_data .= '<tr>
-                                <td>'.++$i.'</td>
-                                <td>'.$this->convert_date($row->tanggal).'</td>
-                                <td>'.$row->total_item.' jenis </td>
-                                <td>'.$row->total_qty.' item</td>
-                                <td><span class="button"><input type="button" class="button" value="Cetak" onclick="cetakGantiBarang(\''.$row->tanggal.'\')"/></span></td>
-                            </tr>';
+                        </table></div>';                
+                $this->cetak_pdf(5,$head,$list,$row_total,$foot);              
             }
-            $this->data['row_data'] = $row_data;
+            else if($total_row > 0 && $total_row >= 500)
+            {
+                $head ='<div style="font-size:11pt"><h3 style="text-align:center">LAPORAN PENGGANTIAN BARANG</h3>
+                            <table>
+                                <tr><td>CABANG</td><td>: '.config_item('shop_name').'</td></tr>
+                                <tr><td>TANGGAL CHECKING</td><td>: '.$this->convert_date($tanggal).'</td></tr>
+                               
+                            </table>
+                           <br />
+                            <table class="table-data" cellspacing="0" cellpadding="0" border="1">
+                                <tr>
+                                    <td class="head">No</td>                                        
+                                    <td class="head">Kode Label</td>
+                                    <td class="head">Nama Barang</td>
+                                    <td class="head">Kelompok <br />Barang</td>                                        
+                                    <td class="head">Harga Ganti<br /> (Rp)</td>
+                                    <td class="head">Qty</td>                                        
+                                    <td class="head">Jumlah Ganti<br /> (Rp)</td>                                        
+                                </tr>';
+                //setting up data
+                $row_data = '';                
+                $total_qty=0;
+                $total_ganti=0;
+                $i = 0;
+                foreach($query->result() as $row)
+                {
+                    $jumlah_ganti = $row->qty * $row->harga_ganti;
+                    $row_data .= '<tr>
+                                    <td>'.++$i.'</td>
+                                    <td>'.$row->id_barang.'</td>
+                                    <td>'.$row->nama.'</td>
+                                    <td>'.$row->kelompok_barang.'</td>
+                                    <td>'.number_format($row->harga_ganti,0,',','.').'</td>
+                                    <td>'.$row->qty.'</td>
+                                    <td style="padding-right:10px;text-align:right">'.number_format($jumlah_ganti,0,',','.').'</td>
+                                </tr>';
+                    $total_qty += $row->qty;
+                    $total_ganti += $jumlah_ganti;
+                }
+                $row_total = '<tr><td colspan="5">T O T A L</td><td>'.number_format($total_qty,0,',','.').'</td><td style="padding-right:10px;text-align:right">'.number_format($total_ganti,0,',','.').'</td></tr>';
+                //ambil data supervisor sama data kasir
+                /*$this->load->model('transaksi');
+                $query = $this->transaksi->get_kasir($tanggal);
+                foreach($query->result() as $row)
+                {
+                    $qry = $this->karyawan->get_karyawan($row->id_kasir);
+                    $data_kasir[] = $qry->row();                            
+                }*/
+                $query = $this->karyawan->get_supervisor();
+                $supervisor = $query->row();
+                //nyusun data untuk ditampilkan
+                $line1 = '<td style="text-align:center">S U P E R V I S O R</td>';
+                $line2 = '<td style="text-align:center"><br />('.strtoupper($supervisor->nama).')</td>';
+                $i=0;
+                /*foreach($data_kasir as $row)
+                {
+                    $line1 .= '<td style="text-align:center">K A S I R '.++$i.'</td>';
+                    $line2 .= '<td style="text-align:center"><br />('.strtoupper($row->nama).')</td>';
+                }*/
+                $foot ='</table>
+                        <br />
+                        <table class="table-data">
+                            <tr>'.$line1.'</tr>
+                            <tr>'.$line2.'</tr>
+                        </table></div>';       
+                $this->data['content'] = $head.$row_data.$row_total.$foot;              
+                $this->load->view('print-template',$this->data);   
+            }
         }
-        $this->load->view('report-checking',$this->data);
+        else
+        {
+            //tampilkan list laporan penggantian barang
+            $query = $this->barang->get_penggantian_barang();
+            if($query->num_rows() > 0)
+            {
+                $row_data = '';
+                $i = 0;
+                foreach($query->result() as $row)
+                {
+                    $row_data .= '<tr>
+                                    <td>'.++$i.'</td>
+                                    <td>'.$this->convert_date($row->tanggal).'</td>
+                                    <td>'.$row->total_item.' jenis </td>
+                                    <td>'.$row->total_qty.' item</td>
+                                    <td><span class="button"><input type="button" class="button" value="Cetak" onclick="cetakGantiBarang(\''.$row->tanggal.'\')"/></span></td>
+                                </tr>';
+                }
+                $this->data['row_data'] = $row_data;
+            }
+            $this->load->view('report-checking',$this->data);
+        }
     }
     /**
     *Cari laporan penjualan
