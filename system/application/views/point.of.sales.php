@@ -1,6 +1,10 @@
 <?php include('pos/header.php') ?>
 <!--dialog untuk notifikasi -->
-<div id="dialog-message" title="Notifikasi">        
+<div id="dialog-message" title="Notifikasi" style="display:none">        
+</div>
+<div id="dialog-msg" title="Notifikasi" style="display:none">
+    <span class="ui-icon ui-icon-alert" style="float:left; margin:2px 7px 50px 0;"></span>
+    <span style="color:red;"></span>
 </div>
 <!--dialog untuk konfirmasi -->
 <div id="dialog-confirm-exit" title="Konfirmasi" style="display:none">

@@ -7,6 +7,7 @@
 
 //--APLIKASI UTAMA POINT OF SALES --//
 var searchFocus=false;
+var statusQty=false;
 var screenWidth;
 var screenHeight;
 /**
@@ -489,29 +490,31 @@ function appendRow(data){
         else {
             num = parseInt(num);
         }
-        var row = '<tr class="row">';
-		row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+ '</td>';
-		row += '<td width="15%"style=" text-align: center;">'+data.id_barang+'</td>';
-		row += '<td width="25%">'+data.nama+'</td>';
-		row += '<td width="15%" style=" text-align: right;">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'<input type="hidden" id="harga_'+num+'" value="'+data.harga+'"/></td>';
-		row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" id="diskon_'+num+'" value="'+data.diskon+'" onkeyup="countTotal('+num+')" ></td>';
-		row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" id="qty_'+num+'" value="1" onkeyup="countTotal('+num+');validateQty('+num+');"><input type="hidden" id="stok_'+num+'" value="'+data.stok_barang+'"/></td>';
-		row += '<td width="20%" style=" text-align: right;"><span id="jumlah_'+num+'">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'</span><input type="hidden" id="jmlh_'+num+'" value="'+data.harga+'"/></td>';
-		row += '</tr>';
-        //check apakah id barang tersebut sudah ada di dalam baris
-        var check = $('#row-data tr:contains('+data.id_barang+') td:nth-child(1)').html();
-        if(rowType == 1 && check != null) {
-            check = parseInt(check) - 1;
-            var new_qty = parseInt($('#qty_'+check).val()) + 1;
-            $('#qty_'+check).val(new_qty);
-            countTotal(check);
+        validateQtyById(data.id_barang,data.stok_barang);
+        if(statusQty == true){
+           var row = '<tr class="row">';
+            row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+ '</td>';
+            row += '<td width="15%"style=" text-align: center;">'+data.id_barang+'</td>';
+            row += '<td width="25%">'+data.nama+'</td>';
+            row += '<td width="15%" style=" text-align: right;">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'<input type="hidden" id="harga_'+num+'" value="'+data.harga+'"/></td>';
+            row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" id="diskon_'+num+'" value="'+data.diskon+'" onkeyup="countTotal('+num+')" ></td>';
+            row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" name="qty" id="qty_'+num+'" value="1" onkeyup="countTotal('+num+');validateQty('+num+');"><input type="hidden" id="stok_'+num+'" value="'+data.stok_barang+'"/></td>';
+            row += '<td width="20%" style=" text-align: right;"><span id="jumlah_'+num+'">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'</span><input type="hidden" id="jmlh_'+num+'" value="'+data.harga+'"/></td>';
+            row += '</tr>';
+            //check apakah id barang tersebut sudah ada di dalam baris
+            var check = $('#row-data tr:contains('+data.id_barang+') td:nth-child(1)').html();
+            if(rowType == 1 && check != null) {
+                check = parseInt(check) - 1;
+                var new_qty = parseInt($('#qty_'+check).val()) + 1;
+                $('#qty_'+check).val(new_qty);
+                countTotal(check);
+            }
+            else {            
+                $('#row-data').append(row);
+                countTotal(num);
+            }       
+            $('#barcode').val('');
         }
-        else {            
-            $('#row-data').append(row);
-            countTotal(num);
-        }        
-        
-        $('#barcode').val('');	
     }
     else{
         displayNotification('Kode item tersebut tidak terdaftar dalam database');
@@ -870,15 +873,71 @@ function transRefund() {
     }
 }
 /**
-*Validasi Qty, tidak boleh melebihi stock
+ *Validasi Qty, tidak boleh melebihi stock
+ */
+function validateQty(num) {    
+    var stock = parseFloat($('#stok_'+num).val()); 
+    //ambil semua datanya
+    var id_barang = $('#row-data tr:nth-child('+(num+1)+') td:nth-child(2)').html();
+    var line = $('#row-data tr:contains("'+id_barang+'") td:nth-child(6) input[name="qty"]');
+    var total_qty = 0;
+    for(i=0;i<line.length;i++) {
+        idx = line[i].getAttribute('id');
+        temp = $('#'+idx).val();
+        if(temp=="") {
+           temp = 0
+        }
+        else {
+            temp = parseFloat(temp);
+        }
+        total_qty += temp;
+    }
+    if(total_qty > stock) {        
+        $('#dialog-msg span').html('Total Qty <b>'+id_barang+'</b> melebihi stok');       
+        $('#dialog-msg').dialog({
+			autoOpen: true,
+			modal: true,
+			buttons: {
+				Ok : function() {
+					$(this).dialog('close'); 
+                    $('#qty_'+num).val('');        
+                    $('#qty_'+num).focus();
+				}
+			}
+		});        
+    }
+    else {
+        statusQty = true;
+    }
+}
+/**
+* validasi qty berdasarkan id barang, untuk append row
 */
-function validateQty(num) {
-    var qty = parseFloat($('#qty_'+num).val());
-    var stock = parseFloat($('#stok_'+num).val());
-    //alert(qty);alert(stock);
-    if(qty > stock) {
-        displayNotification('Qty melebihi stok barang dalam database');
-        $('#qty_'+num).val(stock);
+function validateQtyById(id_barang,stock) {
+    var line = $('#row-data tr:contains("'+id_barang+'") td:nth-child(6) input[name="qty"]');
+    if(line.length > 0) {
+        var total_qty = 0;
+        for(i=0;i<line.length;i++) {
+            idx = line[i].getAttribute('id');
+            temp = $('#'+idx).val();
+            if(temp=="") {
+                temp = 0
+            }
+            else {
+                temp = parseFloat(temp);
+            }
+            total_qty += temp;
+        }        
+        if(total_qty >= stock) {
+            statusQty = false;
+            displayNotification('<span style="color:red">Total Qty <b>'+id_barang+'</b> melebihi stok</span>');          
+        }
+        else {
+            statusQty = true;
+        }
+    }
+    else {
+        statusQty = true;
     }
 }
 /**

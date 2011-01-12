@@ -16,4 +16,5 @@ Revisi 1.0
     - absensi ada 2 jenis, absensi datang dan absensi pulang
 4. Cetak grafik penjualan dan grafik prestasi
 5. Rekap omset dalam satu bulan
-6. Rapihin resi untuk refund.
+6. Rapihin resi untuk refund --ok
+7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
