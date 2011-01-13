@@ -42,9 +42,14 @@ class Presence extends Controller {
     /**
     * Fungsi untuk absensi
     */
-    function check()
+    function check($param='')
     {
-        $this->load->view('presence-check',$this->data);
+        if($param == 'arrive')
+            $this->load->view('presence-check-arrive',$this->data);
+        else if($param == 'return')
+            $this->load->view('presence-check-return',$this->data);
+        else
+            $this->load->view('presence-check-arrive',$this->data);
     }
     /**
     *simpan data absensi

@@ -65,9 +65,10 @@
     </p>
     <?php } if($page == 'presence') { ?>
     <p style="float:left;text-align: left; padding-right: 20px;">
-        <a href="<?php _e(base_url().'presence/check')?>">Absensi Datang</a> .:.   
-        <a href="<?php _e(base_url().'presence/')?>">Absensi Pulang</a> .:.   
-        <?php if($jabatan=='supervisor') { ?><a href="<?php _e(base_url().'presence/manage')?>">Data Absensi</a> .:.<?php } ?>   
+        <a href="<?php _e(base_url().'presence/check/arrive')?>">Absensi Datang</a> .:.   
+        <a href="<?php _e(base_url().'presence/check/return')?>">Absensi Pulang</a> .:.   
+        <a href="<?php _e(base_url().'presence/manage')?>">Data Absensi</a> .:.   
+        <a href="<?php _e(base_url().'presence/report')?>">Rekap Absensi</a> .:.   
     </p>
     <?php } ?>
     

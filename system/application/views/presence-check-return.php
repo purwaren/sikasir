@@ -6,13 +6,13 @@
             <p><?php _e($now) ?></p>
         </div>
         
-        <h2><a href="#">Absensi Kehadiran</a></h2>
+        <h2><a href="#">Absensi Pulang</a></h2>
         <p class="description">Absensi kehadiran pegawai sebagai data acuan untuk penyusunan laporan prestasi kerja karyawan</p>     
         <br />  
         Isikan NIK anda pada form berikut.  
         <table cellspacing="0" cellpadding="0">
             <tr>
-                <td>NIK</td><td class="head"> : <input type="text" id="id_karyawan" maxlength="10"> </td>
+                <td>NIK</td><td class="head"> : <input type="text" id="id_karyawan" maxlength="10" style="width:80px"> </td>
             </tr>                              
         </table>           
         <p id="err_msg" style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>
