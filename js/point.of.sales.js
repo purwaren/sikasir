@@ -46,6 +46,9 @@ try {
         digitalClock();
         //fokus ke barcode
         $('#barcode').focus();
+        //clear display        
+        displayMsg('');        
+        displayMsg('');        
         /*
 		*Memunculkan pesan error
 		*/
@@ -212,6 +215,11 @@ try {
                 total = Math.floor(total/100) * 100;
                 $('#total').val($.currency(total,{s:".",d:",",c:0})+',-');
                 $('#barcode').focus();
+                //display the total
+                var msg = new Array();
+                msg[0] = 'Total (Rupiah)';
+                msg[1] = $.currency(total,{s:".",d:",",c:0})+',-';
+                displayMsg(formatMsg(msg));
             }
             //End - Total penjualan hari ini
             if(event.keyCode == 35) {
@@ -496,11 +504,17 @@ function appendRow(data){
             row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+ '</td>';
             row += '<td width="15%"style=" text-align: center;">'+data.id_barang+'</td>';
             row += '<td width="25%">'+data.nama+'</td>';
-            row += '<td width="15%" style=" text-align: right;">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'<input type="hidden" id="harga_'+num+'" value="'+data.harga+'"/></td>';
+            row += '<td width="15%" style=" text-align: right;">'+$.currency(data.harga,{s:".",d:",",c:0})+',-'+'<input type="hidden" id="harga_'+num+'" value="'+data.harga+'"/></td>';
             row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" id="diskon_'+num+'" value="'+data.diskon+'" onkeyup="countTotal('+num+')" ></td>';
             row += '<td width="10%" style=" text-align: center;"><input type="text" size="5" style="text-align:center" name="qty" id="qty_'+num+'" value="1" onkeyup="countTotal('+num+');validateQty('+num+');"><input type="hidden" id="stok_'+num+'" value="'+data.stok_barang+'"/></td>';
-            row += '<td width="20%" style=" text-align: right;"><span id="jumlah_'+num+'">'+$.currency(data.harga,{s:".",d:",",c:0}+',-')+'</span><input type="hidden" id="jmlh_'+num+'" value="'+data.harga+'"/></td>';
+            row += '<td width="20%" style=" text-align: right;"><span id="jumlah_'+num+'">'+$.currency(data.harga,{s:".",d:",",c:0})+',-'+'</span><input type="hidden" id="jmlh_'+num+'" value="'+data.harga+'"/></td>';
             row += '</tr>';
+            /*Display data to PD Series*/
+            var msg = new Array();
+            msg[0] = data.nama;
+            msg[1] = $.currency(data.harga,{s:".",d:",",c:0}) +',-';
+            
+            displayMsg(formatMsg(msg));  
             //check apakah id barang tersebut sudah ada di dalam baris
             var check = $('#row-data tr:contains('+data.id_barang+') td:nth-child(1)').html();
             if(rowType == 1 && check != null) {
@@ -512,14 +526,28 @@ function appendRow(data){
             else {            
                 $('#row-data').append(row);
                 countTotal(num);
-            }       
+            }            
             $('#barcode').val('');
         }
     }
     else{
         displayNotification('Kode item tersebut tidak terdaftar dalam database');
     }
-} 
+}
+/*formatting message*/
+function formatMsg(msg) {
+    var message = '';    
+    message += msg[0] + spacer(20 - msg[0].length);
+    message += spacer(20 - msg[1].length) + msg[1];
+    return message;
+}
+function spacer(n) {
+    var msg = '';
+    for(i=0;i < n;i++) {
+        msg += ' ';
+    }
+    return msg;
+}
 /**
 *fungsi untuk menampilkan hasil searching 
 */
@@ -586,6 +614,15 @@ function digitalClock() {
     $('#digiClock').html(clock);
     //$('#digiDate').html(date);
     setTimeout("digitalClock()",1000);
+}
+/* Display message to PD Series */
+function displayMsg(msg) {
+    $.post(
+            "get_kassa",                     
+            function(kassa){                        
+                $('#appletPrinter')[0].writeMessage(msg,kassaServer[kassa]);          
+            }        
+    );    
 }
 /*Print receipt*/
 function printReceipt(mode,tunai) {    
@@ -714,7 +751,13 @@ function payTrans(mop) {
     //bayar cash
     if(mop == 1) {
         var cash = parseFloat($('#trans-cash').val());
-        var bill = total;     
+        var bill = total;
+        //tampilin cash
+        var msg = new Array();
+        msg[0] = 'Tunai (Rp)';
+        msg[1] = $.currency(cash,{s:".",d:",",c:0})+',-';
+        displayMsg(formatMsg(msg));
+        /////////
         if(bill <= cash) {
             //send ajax request, saving transaction data to database
             $.post(
@@ -729,6 +772,11 @@ function payTrans(mop) {
                         //ketika kembalian dipilih ok, maka kembali ke siap transaksi
                         var kembalian = cash - bill;
                         $('#cashback').html('Rp. '+$.currency(kembalian,{s:".",d:",",c:0})+',-');
+                        //display message
+                        var msg = new Array();
+                        msg[0] = 'Kembali (Rp)';
+                        msg[1] = $.currency(kembalian,{s:".",d:",",c:0})+',-';
+                        displayMsg(formatMsg(msg));
                         $('#dialog-cashback').dialog({                     
                             modal: true,
                             buttons: {
@@ -842,6 +890,11 @@ function transRefund() {
     var total_pengganti = parseFloat($('#total_pengganti').val());
     var bill = total_pengganti - total_tukar;
     bill = Math.floor(bill/100) * 100;
+    //tampilin cash
+    var msg = new Array();
+    msg[0] = 'Tunai (Rp)';
+    msg[1] = $.currency(cash,{s:".",d:",",c:0})+',-';
+    displayMsg(formatMsg(msg));
     //ajax request untuk refund barang       
     if(bill <= cash) {
         $.post(
@@ -853,6 +906,11 @@ function transRefund() {
                     printRefundReceipt(3,cash,brg_tukar,qty_tukar);
                     var kembalian = cash - bill;
                     $('#cashback').html('Rp. '+$.currency(kembalian,{s:".",d:",",c:0})+',-');
+                    //display message
+                    var msg = new Array();
+                    msg[0] = 'Kembali (Rp)';
+                    msg[1] = $.currency(kembalian,{s:".",d:",",c:0})+',-';
+                    displayMsg(formatMsg(msg));
                     $('#dialog-cashback').dialog({                     
                         modal: true,
                         buttons: {
@@ -996,8 +1054,14 @@ function countAllWithDisc() {
     }   
     var total = parseFloat($('#total_val').val());
     var totalWithDisc = total*(1 - (disc/100));
-   
-    $('#total').val($.currency(totalWithDisc,{s:".",d:",",c:0})+',-');    
+    
+    $('#total').val($.currency(totalWithDisc,{s:".",d:",",c:0})+',-'); 
+    
+    //display total
+    var msg = new Array();
+    msg[0] = 'Total (Rp)';
+    msg[1] = $.currency(totalWithDisc,{s:".",d:",",c:0})+',-';
+    setTimeout(displayMsg(formatMsg(msg)),1500);
 }
 /**
 *Fungsi untuk search barang
@@ -1133,16 +1197,22 @@ function displayRefundInfo() {
         var kurang = total_pengganti - total_tukar;
         var sisa = total_tukar - total_pengganti;
         kurang = Math.floor(kurang/100) * 100;
+        
         if(total_pengganti >= total_tukar) {
             $('#button-refund').css('display','block');                            
             $('#kurang-bayar').css('display','block');
-            $('#kurang-bayar').html('Kurang : Rp '+$.currency(kurang,{s:".",d:",",c:0}) + ',- <input type="hidden" id="bill-refund" value="'+kurang+'"/>');                        
+            $('#kurang-bayar').html('Kurang : Rp '+$.currency(kurang,{s:".",d:",",c:0}) + ',- <input type="hidden" id="bill-refund" value="'+kurang+'"/>');            
         }
         else {            
             $('#button-refund').css('display','none');
             $('#kurang-bayar').css('display','block'); 
             $('#kurang-bayar').html('Sisa : Rp '+ $.currency(kurang,{s:".",d:",",c:0}) + ',-');
-        }                    
+        }
+        //display to PD Series
+        var msg = new Array();
+        msg[0] = 'Kurang (Rp)';
+        msg[1] = $.currency(kurang,{s:".",d:",",c:0}) + ',-';
+        displayMsg(formatMsg(msg));
     }
 }
 /**

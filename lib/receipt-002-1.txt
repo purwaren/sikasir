@@ -2,22 +2,24 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 ==================================#
-Tanggal: 2011-01-11 20:29:53#
+Tanggal: 2011-01-14 23:16:23#
 #
         TRANSAKSI REFUND#
-02104004 OBL TYPO PJG#
-        1@139.900,00 = 139.900,00#
-72182013 PW KS DBRST PTH#
-        -1@19.900,00 = -19.900,00#
+73119004 PW KM TIFFANY 891#
+    1 @147.900 disc 10% = 133.110#
+73119009 PW KM TIFFANY 988#
+           -1 @147.900 = -147.900#
+73386103 PW KM AUREL 217#
+      1 @45.900 disc 10% = 41.310#
  #
-0 items#
+1 items#
 ==================================#
-Total  : Rp              120.000,00#
-Tunai  : Rp              150.000,00#
-Kembali: Rp               30.000,00#
+Total  : Rp                 41.300#
+Tunai  : Rp                100.000#
+Kembali: Rp                 58.700#
 ==================================#
 Kasir : Yeni Purwaningsih#
-Pramuniaga : Dian Eka Sari#
+Pramuniaga : Diko Rahman#
  #
          TERIMAKASIH# 
    BERBELANJA DENGAN KAMI#
