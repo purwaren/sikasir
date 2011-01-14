@@ -10,7 +10,7 @@ $(function(){
     $('#date_bon').datepicker({dateFormat: 'yy-mm-dd'});
     $('#date_absensi').datepicker({dateFormat: 'yy-mm-dd'});
     $(".item_code").autocomplete (
-			"item_autocomplete",
+			baseUrl+"item/item_autocomplete",
 			{
 				delay:10,
 				minChars:2,
@@ -22,10 +22,22 @@ $(function(){
 				autoFill:false
 			}
 		);
+    /**
+    * absensi datang
+    */
     $('#id_karyawan').keyup(function(event){
         if(event.keyCode == 13) {
             var id_karyawan = $('#id_karyawan').val();            
-            checkPresence(id_karyawan);
+            checkPresence(id_karyawan,1);
+        }
+    });
+    /**
+    * absensi pulang
+    */
+    $('#id-karyawan').keyup(function(event){
+        if(event.keyCode == 13) {
+            var id_karyawan = $('#id-karyawan').val();            
+            checkPresence(id_karyawan,2);
         }
     });
 });
@@ -289,12 +301,10 @@ function displayForm() {
     }
 }
 //redirect ke cetak bon
-function cetakBon(kode_bon)
-{
+function cetakBon(kode_bon){
     window.location.replace('retur/'+kode_bon);
 }
-function countBedaStok()
-{
+function countBedaStok() {
     //hitung beda stok
     var stok_barang = $('#stok_barang').val();    
     var stok_opname = $('#stok_opname').val();
@@ -339,7 +349,7 @@ function doConfirmChecking(i) {
     $('#dialog-confirm-checking table').hide();           
     //do check passwd and username        
     $.post(
-        "confirm_checking",
+        baseUrl+"checking/confirm_checking",
         {'username': username, 'passwd': passwd,'iterasi':i}, 
         function(data){               
             //update ke table row           
@@ -393,21 +403,28 @@ function printOpname(url) {
     window.open(url,'Cetak Opname', params);
 }
 /**
-*ambil data karyawan dari server
+* ambil data karyawan dari server
+* opsi => 1 datang, 2 pulang
 */
-function checkPresence(id_karyawan) {
+function checkPresence(id_karyawan,opsi) {
     //panggil method untuk retrieve data karyawan sekaligus set flag untuk absensi
     $.post(
-        "save_presence",
-        {'id_karyawan': id_karyawan},
+        baseUrl+"presence/save_presence",
+        {'id_karyawan': id_karyawan,'opsi':opsi},
         function(data) {            
-            if(data == null) {
+            if(data == -1) {
                 $('#err_msg').html('Data tidak ditemukan');
+            }
+            else if(data == 0) {
+                $('#err_msg').html('Belum tercatat di absensi datang');
             }
             else {
                 $('#err_msg').html('');
                 appendRowAbsensi(data);
-                $('#id_karyawan').val('');
+                if(opsi == 1)
+                    $('#id_karyawan').val('');
+                else if(opsi == 2)
+                    $('#id-karyawan').val('');
             }
         },
         "json"
@@ -475,7 +492,7 @@ function doConfirmPresence() {
     }
     if(j>0) {
         $.post(
-            "save_status",
+            baseUrl+"presence/save_status",
             {'id_karyawan': id_karyawan,'status': status_absensi},
             function(data) {            
                 if(data == 0) {
@@ -543,7 +560,7 @@ function removeAbsensi(nik,tanggal,nama) {
 */
 function doRemoveAbsensi(nik,tanggal) {
     $.post(
-        "remove",
+        baseUrl+"presence/remove",
         {'nik': nik,'tanggal': tanggal},
         function(data) {            
             if(data == 0) {
@@ -596,7 +613,7 @@ function blockPengguna(nik,nama) {
 }
 function doBlockPengguna(nik) {
     $.post(
-        "block",
+        baseUrl+"user/block",
         {'nik': nik,'status': 0},
         function(data) {            
             if(data == 1) {
@@ -639,7 +656,7 @@ function unblockPengguna(nik,nama) {
 }
 function doUnblockPengguna(nik) {
     $.post(
-        "block",
+        baseUrl+"user/block",
         {'nik': nik,'status': 1},
         function(data) {            
             if(data == 1) {
@@ -682,7 +699,7 @@ function removePengguna(nik,nama) {
 }
 function doRemovePengguna(nik) {
     $.post(
-        "remove",
+        baseUrl+"user/remove",
         {'nik': nik},
         function(data) {            
             if(data == 1) {
@@ -712,7 +729,7 @@ function saveImport(line) {
     //do post
     if(kode_bon != "" && tgl_bon != "") {
         $.post(
-            "import",
+            baseUrl+"item/import",
             {'item_code': item_code, 'item_name':item_name, 'cat_code':cat_code, 'item_disc':item_disc, 'quantity':quantity, 'item_hj':item_hj,'kode_bon':kode_bon, 'tgl_bon':tgl_bon},
             function(data) {            
                 if(data == '1') { //sukses

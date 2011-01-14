@@ -58,7 +58,8 @@ class Presence extends Controller {
     function save_presence() 
     {
         date_default_timezone_set("Asia/Jakarta");
-        $id_karyawan = $this->input->post('id_karyawan'); 
+        $id_karyawan = $this->input->post('id_karyawan');
+        $opsi = $this->input->post('opsi');
         //cek apakah karyawan terdaftar di toko
         $this->load->model('karyawan');
         $query = $this->karyawan->get_karyawan($id_karyawan);
@@ -68,20 +69,37 @@ class Presence extends Controller {
             //check apakah sudah absen, absen hanya boleh sekali
             $this->load->model('absensi');
             $data = array('id_karyawan'=>$id_karyawan,'tanggal'=>date("Y-m-d"));        
-            $query = $this->absensi->get_presence_status($data);        
-            if($query->num_rows() > 0) //sudah pernah absen
+            $query = $this->absensi->get_presence_status($data);
+            if($opsi == 1)
             {
-                $this->data['err_msg'] = '';            
+                if($query->num_rows() > 0) //sudah pernah absen
+                {
+                    $this->data['err_msg'] = '';
+                    _e(-1);
+                    
+                }
+                else //belum pernah absen
+                {
+                    $this->absensi->set_presence($id_karyawan, time());            
+                    $query = $this->absensi->get_presence_status($data);
+                }
+                //status absensi
+                $absensi = $query->row();           
+                $data = array('NIK'=>$absensi->NIK,'nama'=>$karyawan->nama,'status'=>$absensi->status, 'datang'=>$absensi->datang);
+                _e(json_encode($data));
             }
-            else //belum pernah absen
+            else if($opsi == 2)
             {
-                $this->absensi->set_presence($id_karyawan, time());            
-                $query = $this->absensi->get_presence_status($data);
+                //yang boleh absen pulang harus yang udah absen masuk
+                if($query->num_rows() > 0)
+                {
+                    ;
+                }
+                else
+                {
+                    _e(0);
+                }
             }
-            //status absensi
-            $absensi = $query->row();           
-            $data = array('NIK'=>$absensi->NIK,'nama'=>$karyawan->nama,'status'=>$absensi->status, 'datang'=>$absensi->datang);
-            _e(json_encode($data));
         }        
     }
     /**

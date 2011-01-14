@@ -12,7 +12,7 @@
         Isikan NIK anda pada form berikut.  
         <table cellspacing="0" cellpadding="0">
             <tr>
-                <td>NIK</td><td class="head"> : <input type="text" id="id_karyawan" maxlength="10" style="width:80px"> </td>
+                <td>NIK</td><td class="head"> : <input type="text" id="id-karyawan" maxlength="10" style="width:80px"> </td>
             </tr>                              
         </table>           
         <p id="err_msg" style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>
