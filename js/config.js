@@ -27,3 +27,9 @@ var rowType = 0
 * 1 -> allowed
 */
 var allowPramu = 0;
+/**
+* Tulisan default di Display
+*/
+var defMsg = new Array();
+defMsg[0] = 'Welcome To'
+defMsg[1] = 'Mode Fashion Group';
