@@ -2,9 +2,20 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 =================================#
-Tanggal  : 09 Januari 2011#
+Tanggal: 2011-01-11 20:29:53#
 Omset    : Rp 111.300,-#
 Total Qty: 6 items#
+02104004 OBL TYPO PJG#
+        1@139.900,00 = 139.900,00#
+72182013 PW KS DBRST PTH#
+        -1@19.900,00 = -19.900,00#
+73386103 PW KM AUREL 217#
+      1 @45.900 disc 10% = 41.310#
+0 items#
+Total  : Rp              120.000,00#
+Tunai  : Rp              150.000,00#
+Kembali: Rp               30.000,00#
+Pramuniaga : Dian Eka Sari#
 #
 DETAIL PER KELOMPOK BARANG #
 ---------------------------------#

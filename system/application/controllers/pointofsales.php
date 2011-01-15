@@ -512,12 +512,14 @@ class PointOfSales extends Controller {
                         if($row->diskon > 0)
                         {
                             $harga_pengganti = $row->qty * $barang->harga * (1 - $row->diskon/100);
-                            $pengganti.='  '.$row->qty.' @'.number_format($barang->harga,2,',','.').' disc '.$row->diskon.'% = '.number_format($harga_pengganti,2,',','.').'#'.chr(10); 
+                            $tmp = '  '.$row->qty.' @'.number_format($barang->harga,0,',','.').' disc '.$row->diskon.'% = '.number_format($harga_pengganti,0,',','.').'#'.chr(10);
+                            $pengganti.= $this->spacer(36-strlen($tmp)).$tmp; 
                         }
                         else
                         {
                             $harga_pengganti = $row->qty * $barang->harga;
-                            $pengganti.='  '.$row->qty.' @'.number_format($barang->harga,2,',','.').' = '.number_format($harga_pengganti,2,',','.').'#'.chr(10); 
+                            $tmp = '  '.$row->qty.' @'.number_format($barang->harga,0,',','.').' = '.number_format($harga_pengganti,0,',','.').'#'.chr(10);
+                            $pengganti.= $this->spacer(36-strlen($tmp)).$tmp;
                         }
                         $total_item += $row->qty;
                         $total_pengganti += $harga_pengganti;
@@ -529,7 +531,8 @@ class PointOfSales extends Controller {
                         $barang = $brg_query->row();
                         $harga_tukar = $qty_tukar[$i] * $barang->harga;                        
                         $tukar .=$barang->id_barang.' '.$barang->nama.'#'.chr(10);
-                        $tukar.='  '.$qty_tukar[$i].'@'.number_format($barang->harga,2,',','.').' = '.number_format($harga_tukar,2,',','.').'#'.chr(10);
+                        $tmp = '  '.$qty_tukar[$i].' @'.number_format($barang->harga,0,',','.').' = '.number_format($harga_tukar,0,',','.').'#'.chr(10);
+                        $tukar.= $this->spacer(36-strlen($tmp)).$tmp;
                         $total_tukar += $harga_tukar;
                     }
                     $total = $transaksi->total;
@@ -569,12 +572,12 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<tukar>',$tukar,$resi);//tulis detail barang ditukar
                     $resi = str_replace('<pengganti>',$pengganti,$resi);//tulis detail barang ditukar               
                     $resi = str_replace('<all>',$total_item.' items',$resi);         
-                    $resi = str_replace('<total>',number_format($total,2,',','.'),$resi);           
+                    $tmp = number_format($total,0,',','.');
                     $resi = str_replace('<kasir>',$this->data['userinfo'],$resi);                                        
                     $resi = str_replace('<pramu>',$pramu,$resi);                                        
-                    $resi = str_replace('<cash>',number_format($cash,2,',','.'),$resi);  
+                    $tmp = number_format($cash,0,',','.');
                     $cashback = $cash - $total;                    
-                    $resi = str_replace('<cashback>',number_format($cashback,2,',','.'),$resi);                               
+                    $tmp = number_format($cashback,0,',','.');
                     //open file to write
                     $filename = 'lib/receipt-'.$this->session->userdata('nik').'-'.$this->session->userdata('no_shift').'.txt';
                     $file = fopen($filename,'w');
