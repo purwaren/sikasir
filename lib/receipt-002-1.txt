@@ -2,24 +2,22 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 ==================================#
-Tanggal: 2011-01-14 23:16:23#
+Tanggal: 2011-01-15 17:55:13#
 #
         TRANSAKSI REFUND#
-73119004 PW KM TIFFANY 891#
-    1 @147.900 disc 10% = 133.110#
 73119009 PW KM TIFFANY 988#
-           -1 @147.900 = -147.900#
-73386103 PW KM AUREL 217#
-      1 @45.900 disc 10% = 41.310#
+     1 @147.900 disc 10% = 133.110#
+73230000 PW KM GLITER #
+              -1 @24.900 = -24.900#
  #
-1 items#
+0 items#
 ==================================#
-Total  : Rp                 41.300#
-Tunai  : Rp                100.000#
-Kembali: Rp                 58.700#
+Total  : Rp                110.700#
+Tunai  : Rp                150.000#
+Kembali: Rp                 39.300#
 ==================================#
 Kasir : Yeni Purwaningsih#
-Pramuniaga : Diko Rahman#
+Pramuniaga : Ayu Ristika#
  #
          TERIMAKASIH# 
    BERBELANJA DENGAN KAMI#

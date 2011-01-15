@@ -46,9 +46,8 @@ try {
         digitalClock();
         //fokus ke barcode
         $('#barcode').focus();
-        //clear display        
-        displayMsg('');        
-        displayMsg('');        
+        //tulis selamat datang pada saat gak ada transaksi    
+        displayMsg(formatMsg(defMsg));
         /*
 		*Memunculkan pesan error
 		*/
@@ -1113,7 +1112,12 @@ function getItem(option) {
                     $('#detail-pengganti tr').remove()
                 }
             }
-            else {           
+            else {
+                //tampilkan datanya ke Display
+                var msg = new Array();
+                msg[0] = data.nama;
+                msg[1] = $.currency(data.harga,{s:".",d:",",c:0})+',-';
+                displayMsg(formatMsg(msg));
                 //append row
                 if(option==1) {
                     var row = '<tr class="head"><td style="width:40px">N0</td><td style="width:150px">KODE BARANG</td><td style="width:230px">NAMA BARANG</td><td style="width:170px">HARGA BARANG (Rp)</td><td style="width:90px">STOK BARANG</td><td style="width:90px">QTY</td></tr>';
