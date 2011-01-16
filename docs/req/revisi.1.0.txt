@@ -18,3 +18,4 @@ Revisi 1.0
 5. Rekap omset dalam satu bulan
 6. Rapihin resi untuk refund --ok
 7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
+8. Bikin handler untuk Pole Display --ok

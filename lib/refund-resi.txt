@@ -7,7 +7,7 @@ Tanggal: <tanggal> <jam>#
         TRANSAKSI REFUND#
 <pengganti> #
 <all>#
-==================================#
+-------------------------------(+)#
 Total  : Rp <total>#
 Tunai  : Rp <cash>#
 Kembali: Rp <cashback>#
