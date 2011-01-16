@@ -458,6 +458,7 @@ class Report extends Controller {
                     $list[] = $row_data;
                     //tampilin totalnya                    
                     $query = $this->transaksi->total_qty_sales($bulan,$tahun);
+                    $row_total = '';
                     if($query->num_rows() > 0)
                     {
                         $row_total = '<tr><td style="width:25px; background-color:#dedede; font-weight:bold; text-transform: uppercase; border:1px solid;">TOT</td>';
@@ -508,6 +509,7 @@ class Report extends Controller {
                         $this->data['report_sales'] .= $row;
                     }
                     $this->data['report_sales'] .= $row_total.$foot;
+                    //rekap omset satu bulan
                     //cetak ke pdf
                     if(isset($list) && $this->input->post('submit_report_sales_pdf'))
                     {                            
@@ -539,6 +541,12 @@ class Report extends Controller {
         $this->data['month'] = $month;
         $this->data['year'] = $year;
         $this->load->view('report-sales',$this->data);        
+    }
+    /**
+    * rekap omset dalam satu bulan
+    */
+    function _omset($bulan,$tahun) {
+        
     }
     /**
     *Laporan Stok Barang

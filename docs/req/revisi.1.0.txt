@@ -19,3 +19,4 @@ Revisi 1.0
 6. Rapihin resi untuk refund --ok
 7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
 8. Bikin handler untuk Pole Display --ok
+9. Prestasi karyawan untuk pilihan semua, tampilkan tabel omsetnya aja... biar bisa kelihatan mana yang tertinggi mana yang terendah..
