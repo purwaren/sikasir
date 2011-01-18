@@ -18,11 +18,11 @@
         <p id="err_msg" style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>
         <br/>            
         <table class="table-data" cellspacing="0" cellpadding="0" style="display:none">
-            <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Status</td></tr>
+            <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Datang</td><td class="head">Pulang</td><td class="head">Status</td></tr>
         </table>
-        <p id="button-simpan" style="display:none;">
+        <!--<p id="button-simpan" style="display:none;">
             <span class="button"><input type="button" value="simpan" class="button" onclick="confirmPresence()"/></span>
-        </p>
+        </p>-->
         <div id="dialog-confirm-absensi" title="Konfirmasi" style="display:none">
             <p>Simpan sekarang ?</p>
         </div> 

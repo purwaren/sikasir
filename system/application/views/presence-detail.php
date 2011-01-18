@@ -28,7 +28,15 @@
             </tr>
             <tr>
                 <td>Status Absensi</td><td>: <?php _e($detail->status) ?></td>
-            </tr>            
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <?php _e(form_open('presence/manage')) ?>
+                    <input type="hidden" name="date_absensi" value="<?php _e($tgl_absensi) ?>" />
+                    <span class="button"><input class="button" type="submit" value="Kembali" name="submit_absensi"/></span>                    
+                    <?php _e(form_close()) ?>
+                </td>
+            </tr>
         </table>
         <?php } else { ?>
         <p style="color:red"><?php _e($err_msg)?></p>

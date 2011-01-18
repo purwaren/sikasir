@@ -412,11 +412,14 @@ function checkPresence(id_karyawan,opsi) {
         baseUrl+"presence/save_presence",
         {'id_karyawan': id_karyawan,'opsi':opsi},
         function(data) {            
-            if(data == -1) {
-                $('#err_msg').html('Data tidak ditemukan');
+            if(data == '-1') {
+                $('#err_msg').html('Sudah pernah absen');
             }
             else if(data == 0) {
-                $('#err_msg').html('Belum tercatat di absensi datang');
+                $('#err_msg').html('Tidak tercatat di absensi datang / tidak masuk');
+            }
+            else if(data == null) {
+                $('#err_msg').html('Data tidak ditemukan');
             }
             else {
                 $('#err_msg').html('');
@@ -445,7 +448,7 @@ function appendRowAbsensi(data) {
         else {
             var status = data.status;
         }
-        var tr = '<tr class="row-data"><td>'+i+'</td><td>'+data.NIK+'</td><td>'+data.nama+'</td><td>'+status+'</td></tr>';
+        var tr = '<tr class="row-data"><td>'+i+'</td><td>'+data.NIK+'</td><td>'+data.nama+'</td><td>'+data.datang+'</td><td>'+data.pulang+'</td><td>'+status+'</td></tr>';
         $('.table-data').append(tr);
         //tampilin tombol submit
         $('#button-simpan').css('display','block');

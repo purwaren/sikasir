@@ -68,32 +68,51 @@ class Presence extends Controller {
             $karyawan = $query->row();
             //check apakah sudah absen, absen hanya boleh sekali
             $this->load->model('absensi');
-            $data = array('id_karyawan'=>$id_karyawan,'tanggal'=>date("Y-m-d"));        
+            $data = array('NIK'=>$id_karyawan,'tanggal'=>date("Y-m-d"));        
             $query = $this->absensi->get_presence_status($data);
             if($opsi == 1)
             {
                 if($query->num_rows() > 0) //sudah pernah absen
                 {
-                    $this->data['err_msg'] = '';
-                    _e(-1);
-                    
+                    $this->data['err_msg'] = '';                    
                 }
                 else //belum pernah absen
                 {
-                    $this->absensi->set_presence($id_karyawan, time());            
-                    $query = $this->absensi->get_presence_status($data);
+                    //set jam masuk karyawan
+                    $this->absensi->set_presence($id_karyawan, time());           
                 }
+                $query = $this->absensi->get_presence_status($data);                   
                 //status absensi
-                $absensi = $query->row();           
-                $data = array('NIK'=>$absensi->NIK,'nama'=>$karyawan->nama,'status'=>$absensi->status, 'datang'=>$absensi->datang);
+                $absensi = $query->row();
+                if(empty($absensi->pulang))
+                    $absensi->plg = 'Belum';
+                $data = array('NIK'=>$absensi->NIK,'nama'=>$karyawan->nama,'status'=>$absensi->status, 'datang'=>$absensi->dtg,'pulang'=>$absensi->plg);
                 _e(json_encode($data));
             }
             else if($opsi == 2)
             {
                 //yang boleh absen pulang harus yang udah absen masuk
                 if($query->num_rows() > 0)
-                {
-                    ;
+                {                    
+                    $absensi = $query->row();
+                    if($absensi->status == 'masuk') 
+                    {
+                        //update jam pulang karyawan
+                        $data = array('NIK'=>$absensi->NIK,'tanggal'=>$absensi->tanggal,'pulang'=>time());
+                        if(empty($absensi->pulang))
+                            $this->absensi->update_presence($data);
+                        $query = $this->absensi->get_presence_status($data);                   
+                        //status absensi
+                        $absensi = $query->row();
+                        if(empty($absensi->pulang))
+                            $absensi->plg = 'Belum';
+                        $data = array('NIK'=>$absensi->NIK,'nama'=>$karyawan->nama,'status'=>$absensi->status, 'datang'=>$absensi->dtg,'pulang'=>$absensi->plg);
+                        _e(json_encode($data));                      
+                    }
+                    else
+                    {                        
+                        _e(0);
+                    }                    
                 }
                 else
                 {
@@ -142,7 +161,8 @@ class Presence extends Controller {
             $this->data['result']='';
             if($this->input->post('submit_absensi'))
             {
-                $tanggal = $this->input->post('date_absensi');            
+                $tanggal = $this->input->post('date_absensi');
+                $this->data['tgl_absensi'] = $tanggal;
                 if(!empty($tanggal))
                 {
                     $this->load->model('absensi');
@@ -152,11 +172,19 @@ class Presence extends Controller {
                         $tgl = explode('-',$tanggal);
                         $table = ' <h3 style="text-align:center">DATA ABSENSI KARYAWAN <br /> TANGGAL : '.$tgl[2].' '.$this->month_to_string($tgl[1]).' '.$tgl[0].'</h3>
                                     <table class="table-data" cellspacing="0" cellpadding="0" >
-                                    <tr><!--<td class="head">No</td>--><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Status</td><td class="head">Action</td></tr>';
+                                    <tr><!--<td class="head">No</td>--><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Datang</td><td class="head">Pulang</td><td class="head">Keterangan</td><td class="head">Action</td></tr>';
                         $i=0;
                         foreach($query->result() as $row)
                         {
-                            $table .= '<tr><!--<td></td>--><td>'.$row->NIK.'</td><td>'.$row->nama.'</td><td>'.$row->status.'</td>
+                            if(!empty($row->datang))
+                                $dtg = $row->dtg;
+                            else
+                                $dtg = 'Belum';
+                            if(!empty($row->pulang))
+                                $plg = $row->plg;
+                            else
+                                $plg = 'Belum';
+                            $table .= '<tr><!--<td></td>--><td>'.$row->NIK.'</td><td>'.$row->nama.'</td><td>'.$dtg.'</td><td>'.$plg.'</td><td>'.$row->status.'</td>
                                     <td>
                                         <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetailAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
                                         <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
@@ -190,6 +218,7 @@ class Presence extends Controller {
         if(!empty($nik))
         {
             $tanggal = $this->uri->segment(4);
+            $this->data['tgl_absensi'] = $tanggal;
             $this->load->model('absensi');
             $query = $this->absensi->get_presence_detail($nik,$tanggal);
             if($query->num_rows() > 0)

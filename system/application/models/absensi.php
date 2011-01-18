@@ -12,7 +12,7 @@ class Absensi extends Model
         parent::Model();
     }
     /**
-    *Retrieve data pengguna
+    *simpan data karyawan datang
     */
     function set_presence($id_karyawan, $datang)
     {
@@ -25,11 +25,22 @@ class Absensi extends Model
         return $this->db->insert('absensi',$data);
     }
     /**
+    * update presence   untuk absensi pulang
+    */
+    function update_presence($data)
+    {
+        $this->db->where(array('NIK'=>$data['NIK'],'tanggal'=>$data['tanggal']));
+        return $this->db->update('absensi',$data);
+    }
+    /**
     *Lihat status absensi karyawan pada hari terntentu, ditentukan dengan tanggal
     */
     function get_presence_status($data)
     {
-        $query = $this->db->get_where('absensi',array('NIK'=>$data['id_karyawan'],'tanggal'=>$data['tanggal']));
+        $this->db->select('time(from_unixtime(datang)) as dtg');
+        $this->db->select('time(from_unixtime(pulang)) as plg');
+        $this->db->select('absensi.*');
+        $query = $this->db->get_where('absensi',array('NIK'=>$data['NIK'],'tanggal'=>$data['tanggal']));
         return $query;
     }
     /**
@@ -39,11 +50,17 @@ class Absensi extends Model
     {
         if(empty($tanggal))
         {
-            $query = 'update absensi set status='.$status.' where NIK = "'.$nik.'"';
+            if($status == '1')
+                $query = 'update absensi set status='.$status.' where NIK = "'.$nik.'"';
+            else
+                $query = 'update absensi set status='.$status.', datang="" where NIK = "'.$nik.'"';
         }
         else
         {
-            $query = 'update absensi set status='.$status.' where NIK = "'.$nik.'" and tanggal="'.$tanggal.'"';
+            if($status == '1')
+                $query = 'update absensi set status='.$status.' where NIK = "'.$nik.'" and tanggal="'.$tanggal.'"';
+            else
+                $query = 'update absensi set status='.$status.', datang="", pulang="" where NIK = "'.$nik.'" and tanggal="'.$tanggal.'"';
         }
         return $this->db->query($query);
     }
@@ -52,7 +69,7 @@ class Absensi extends Model
     */
     function get_presence($tanggal)
     {
-        $query = 'select * from karyawan k left join absensi a on k.NIK = a.NIK where tanggal="'.$tanggal.'"';
+        $query = 'select k.*,a.*, time(from_unixtime(datang)) as dtg, time(from_unixtime(pulang)) as plg from karyawan k left join absensi a on k.NIK = a.NIK where tanggal="'.$tanggal.'"';
         return $this->db->query($query);
     }
     /**
