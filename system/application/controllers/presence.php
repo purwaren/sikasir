@@ -304,6 +304,100 @@ class Presence extends Controller {
         }
     }
     /**
+    * Laporan rekap absensi
+    */
+    function report() {
+        $this->load->model('absensi');
+        //klo pencet tombol display, tampilin rekapnya
+        if($this->input->post('submit_presence_report'))
+        {
+            $opsi = $this->input->post('opsi');
+            //harian
+            if($opsi == 1)
+            {
+            }
+            //bulanan
+            else if($opsi == 2)
+            {
+                //rekap jam kerja
+                $month = $this->input->post('month');
+                $year = $this->input->post('year');
+                $query = $this->absensi->rekap_absen_bulanan($month,$year);
+                if($query->num_rows() > 0)
+                {
+                    $head = '<div style="text-align:center"><h3>REKAP JAM KERJA <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
+                    $row_data =  '<table class="table-data" cellspacing="0" cellpadding="0" >
+                                    <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td>
+                                    <td class="head">Total Jam Kerja (Jam)</td><td class="head">Total Jam Lembur (Jam)</td><td class="head">Total Hadir (hari)</td></tr>';                    
+                    $i=0;
+                    foreach($query->result() as $row)
+                    {
+                        $total_jam = $row->total_jam + ceil($row->total_menit/60);
+                        $total_lembur = $total_jam - config_item('work_cycle')*$row->total_masuk;
+                        if($total_lembur <= 0)
+                            $total_lembur = 0;
+                        $row_data .= '<tr>
+                                        <td>'.++$i.'</td>
+                                        <td>'.$row->NIK.'</td>
+                                        <td>'.$row->nama.'</td>
+                                        <td>'.$total_jam.'</td>
+                                        <td>'.$total_lembur.'</td>
+                                        <td>'.$row->total_masuk.'</td>
+                                    </tr>';
+                    }
+                    $foot = '</table></div>';
+                }                
+                $this->data['report'] = $head.$row_data.$foot;
+                //rekap kehadiran
+                $this->load->model('karyawan');
+                $query = $this->karyawan->get_all_karyawan();
+                if($query->num_rows() > 0)
+                {
+                    $head = '<div style="text-align:center"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
+                    $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td>&nbsp;</td>';
+                    for($i=0;$i<=max_day($month,$year);)
+                    {
+                        $row_data .= '<td class="head">'.++$i.'</td>';
+                    }
+                    $row_data .= '</tr>';
+                    $karyawan = $query->result();
+                    foreach($karyawan as $row)
+                    {
+                        $row_absen = '<tr><td>'.$row->nama.'</td>';
+                        $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$bulan,$tahun);
+                        
+                    }
+                    $foot = '</table></div>';
+                    $this->data['report'] .= $head.$row_data.$foot;
+                }
+            }
+        }
+        //ambil bulan dan tahun untuk rekap absensi
+        $query = $this->absensi->get_month();
+        if($query->result() > 0)
+        {
+            $bulan = '<select name="month" style="width:100px">';
+            foreach($query->result() as $row)
+            {
+                $bulan .= '<option value="'.$row->bulan.'">'.month_to_string($row->bulan).'</option>';
+            }
+            $bulan .= '</select>';
+        }
+        $query = $this->absensi->get_year();
+        if($query->num_rows() > 0)
+        {
+            $year = '<select name="year" style="width:60px">';
+            foreach($query->result() as $row)
+            {
+                $year .= '<option value='.$row->tahun.'>'.$row->tahun.'</option>';
+            }
+            $year .= '</select>';
+        }
+        $this->data['month'] = $bulan;
+        $this->data['year'] = $year;
+        $this->load->view('presence-report',$this->data);
+    }
+    /**
     *konversi bulan dari angka ke string
     */
     function month_to_string($month)

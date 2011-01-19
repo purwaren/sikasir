@@ -15,5 +15,10 @@ $config['shop_phone'] = "(061) 799 0009";
 */
 $config['screen'] = '14';
 
+/**
+* jam kerja normal dalam satu hari, sisanya dianggap lembur
+*/
+$config['work_cycle'] = 8;
+
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */

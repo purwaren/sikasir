@@ -88,6 +88,55 @@ class Absensi extends Model
         $query = 'delete from absensi where nik="'.$nik.'" and tanggal="'.$tanggal.'"';
         return $this->db->query($query);
     }
+    /**
+    * ambil bulan
+    */
+    function get_month()
+    {
+        $this->db->select('month(tanggal) as bulan');
+        $this->db->group_by('bulan');
+        return $this->db->get('absensi');
+    }
+    /**
+    * ambil tahun
+    */
+    function get_year()
+    {
+        $this->db->select('year(tanggal) as tahun');
+        $this->db->group_by('tahun');
+        return $this->db->get('absensi');
+    }
+    /**
+    * rekap absen dalam satu bulan
+    */
+    function rekap_absen_bulanan($bulan,$tahun)
+    {
+        $query = 'select * from (
+                    select karyawan.*, sum(rekap.jam_kerja) as total_jam , sum(rekap.menit_kerja) as total_menit 
+                    from (
+                            select absensi.*, time(from_unixtime(datang)) as dtg, time(from_unixtime(pulang)) as plg,
+                            hour(timediff(from_unixtime(pulang),from_unixtime(datang))) as jam_kerja,minute(timediff(from_unixtime(pulang),from_unixtime(datang))) as menit_kerja 
+                            from absensi where status="masuk" and pulang > 0 and month(tanggal)="01" and year(tanggal)="2011"
+                        ) as rekap 
+                    left join karyawan 
+                    on rekap.NIK = karyawan.NIK group by rekap.NIK
+                ) as rekap_kerja
+                left join (
+                    select absensi.NIK, count(tanggal) as total_masuk 
+                    from absensi 
+                    where status="masuk" and pulang > 0 and month(tanggal)="01" and year(tanggal)="2011"
+                    group by absensi.NIK
+                ) as rekap_hadir
+                on rekap_kerja.NIK = rekap_hadir.NIK';
+        return $this->db->query($query);
+    }
+    /**
+    * rekap kehadiran dalam 1 bulan
+    */
+    function rekap_hadir_bulanan($nik,$bulan,$year)
+    {
+        return $this->db->get_where('absensi',array('NIK'=>$nik,'month(tanggal)'=>$bulan,'year(tanggal)'=>$tahun));       
+    }
 }
 //End of accounting.php
 //Location: system/application/models
