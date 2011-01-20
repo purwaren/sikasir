@@ -7,13 +7,13 @@ Revisi 1.0
         stok_barang = stok_opname, mutasi_keluar=0, mutasi_masuk = 0, stok_opname=0
     - cetak laporan ganti barang, klo kurang dari 500 ke pdf, klo lebih dari 500 langsung ke printer -- ok
 3. Absensi
-    - rekap absensi per hari dan per bulan
-    - rekap jam kerja per bulan (normal + lembur), per karyawan
-    - bwt login khusus untuk absensi
-    - yang boleh ngotak atik absen hanya supervisor, jadi dimenu admin dan yang lain dihilangkan
-    - untuk karyawan yang tidak datang statusnya awalnya masih kosong, supervisor/login absen yang berhak mengisi
+    - rekap absensi per hari dan per bulan -ok
+    - rekap jam kerja per bulan (normal + lembur), per karyawan-ok
+    - bwt login khusus untuk absensi 
+    - yang boleh ngotak atik absen hanya supervisor, jadi dimenu admin dan yang lain dihilangkan -ok
+    - untuk karyawan yang tidak datang statusnya awalnya masih kosong, supervisor/login absen yang berhak mengisi -ok
     - cetak absensi dan rekap absensi
-    - absensi ada 2 jenis, absensi datang dan absensi pulang
+    - absensi ada 2 jenis, absensi datang dan absensi pulang -ok
 4. Cetak grafik penjualan dan grafik prestasi
 5. Rekap omset dalam satu bulan
 6. Rapihin resi untuk refund --ok

@@ -353,21 +353,81 @@ class Presence extends Controller {
                 $query = $this->karyawan->get_all_karyawan();
                 if($query->num_rows() > 0)
                 {
-                    $head = '<div style="text-align:center"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
-                    $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td>&nbsp;</td>';
+                    $head = '<div style="text-align:center;overflow:auto;width:100%"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$year.'</h3>';
+                    $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td class="head">NIK</td>';
                     for($i=0;$i<=max_day($month,$year);)
                     {
                         $row_data .= '<td class="head">'.++$i.'</td>';
                     }
-                    $row_data .= '</tr>';
+                    $row_data .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
                     $karyawan = $query->result();
                     foreach($karyawan as $row)
                     {
-                        $row_absen = '<tr><td>'.$row->nama.'</td>';
-                        $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$bulan,$tahun);
                         
+                        $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$month,$year);
+                        $row_absen = '<tr><td>'.$row->NIK.'</td>';
+                        if($query->num_rows() > 0)
+                        {                           
+                            $data = $query->result();                            
+                            $j=0;
+                            $total_masuk = 0;
+                            $total_libur = 0;
+                            $total_izin = 0;
+                            $total_alpha = 0;
+                            for($i = 0;$i<=max_day($month,$year);$i++)
+                            {
+                                if(isset($data[$j]) && $data[$j]->tgl == ($i+1))
+                                {
+                                    if($data[$j]->status == 'masuk')
+                                    {
+                                        $status = 'M';
+                                        $total_masuk++;
+                                    }
+                                    else if($data[$j]->status == 'izin')
+                                    {
+                                        $status = 'I';
+                                        $total_izin++;
+                                    }
+                                    else if($data[$j]->status == 'alpha')
+                                    {
+                                        $status = 'A';
+                                        $total_alpha++;
+                                    }
+                                    else if($data[$j]->status == 'libur/off')
+                                    {
+                                        $status = 'L';
+                                        $total_libur++;
+                                    }
+                                    $row_absen .= '<td style="background:#dedede">'.$status.'</td>';
+                                    $j++;                                    
+                                }
+                                else
+                                {
+                                    $row_absen .= '<td>&nbsp;</td>';
+                                }
+                            }
+                            $row_absen .= '<td style="background:#dedede">'.$total_masuk.'</td><td style="background:#dedede">'.$total_libur.'</td>
+                                            <td style="background:#dedede">'.$total_izin.'</td><td style="background:#dedede">'.$total_alpha.'</td></tr>';
+                        }
+                        else
+                        {
+                            for($i=0;$i<=max_day($month,$year);$i++)
+                            {
+                                $row_absen .= '<td>&nbsp;</td>';
+                            }
+                            $row_absen .= '<td>0</td><td>0</td><td>0</td><td>0</td></tr>';
+                        }
+                        $row_data .= $row_absen;                        
                     }
-                    $foot = '</table></div>';
+                    $foot = '</table>
+                            <p style="text-align:left;">Keterangan :</p>
+                            <ol style="text-align:left">
+                                <li>M = Masuk</li>
+                                <li>I = Izin</li>
+                                <li>A = Alpha</li>
+                                <li>L = Libur/Off</li>
+                            </ol>                            
+                            </div>';
                     $this->data['report'] .= $head.$row_data.$foot;
                 }
             }

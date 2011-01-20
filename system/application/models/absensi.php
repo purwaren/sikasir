@@ -133,8 +133,10 @@ class Absensi extends Model
     /**
     * rekap kehadiran dalam 1 bulan
     */
-    function rekap_hadir_bulanan($nik,$bulan,$year)
+    function rekap_hadir_bulanan($nik,$bulan,$tahun)
     {
+        $this->db->select('absensi.*')->select('day(tanggal) as tgl');        
+        $this->db->order_by('tanggal');
         return $this->db->get_where('absensi',array('NIK'=>$nik,'month(tanggal)'=>$bulan,'year(tanggal)'=>$tahun));       
     }
 }
