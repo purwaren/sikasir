@@ -2,24 +2,26 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 =================================#
-Tanggal: 2011-01-16 16:22:14#
+Tanggal: 2011-01-18 18:12:44#
  #
         DETAIL TRANSAKSI#
-01145006 OBL S.BRAND NK#
-               3 @11.500 = 34.500#
+54105001 JTW FOSIL RT W#
+             1 @137.500 = 137.500#
+62554002 GENDONGAN SWETTY#
+               1 @54.900 = 54.900#
 
-3 items#
+2 items#
 ------------------------------(+)#
-Subtotal =                 34.500#
-Diskon   = 10% x 34.500#
-         =                  3.450#
+Subtotal =                192.400#
+Diskon   = 10% x 192.400#
+         =                 19.240#
 ------------------------------(-)#
-Total   :                  31.000#
-Tunai   :                  50.000#
-Kembali :                  19.000#
+Total   :                 173.100#
+Tunai   :                 200.000#
+Kembali :                  26.900#
 =================================#
 Kasir : Yeni Purwaningsih#
-Pramuniaga: Ayu Ristika#
+Pramuniaga: Diko Rahman#
  #
           TERIMAKASIH# 
     BERBELANJA DENGAN KAMI#
