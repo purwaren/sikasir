@@ -535,7 +535,11 @@ function appendRow(data){
 }
 /*formatting message*/
 function formatMsg(msg) {
-    var message = '';    
+    var message = '';
+    //ambil dua puluh karakter aja untuk baris bertama
+    if(msg[0].length > 20)
+        msg[0] = msg[0].substr(0,20);
+    //formating string
     message += msg[0] + spacer(20 - msg[0].length);
     message += spacer(20 - msg[1].length) + msg[1];
     return message;
