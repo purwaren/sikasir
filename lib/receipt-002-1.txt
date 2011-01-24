@@ -2,24 +2,23 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 =================================#
-Tanggal: 2011-01-16 16:22:14#
+Tanggal: 2011-01-22 06:40:45#
  #
         DETAIL TRANSAKSI#
-01145006 OBL S.BRAND NK#
-               3 @11.500 = 34.500#
+0011100001 Hape N73 Udah Jelek Banget#
+             1 @500.000 = 500.000#
 
-3 items#
+1 items#
 ------------------------------(+)#
-Subtotal =                 34.500#
-Diskon   = 10% x 34.500#
-         =                  3.450#
+Subtotal =                500.000#
+
 ------------------------------(-)#
-Total   :                  31.000#
-Tunai   :                  50.000#
-Kembali :                  19.000#
+Total   :                 500.000#
+Tunai   :                 500.000#
+Kembali :                       0#
 =================================#
 Kasir : Yeni Purwaningsih#
-Pramuniaga: Ayu Ristika#
+Pramuniaga: Dian Eka Sari#
  #
           TERIMAKASIH# 
     BERBELANJA DENGAN KAMI#

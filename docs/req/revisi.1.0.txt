@@ -20,4 +20,4 @@ Revisi 1.0
 7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
 8. Bikin handler untuk Pole Display --ok
 9. Prestasi karyawan untuk pilihan semua, tampilkan tabel omsetnya aja... biar bisa kelihatan mana yang tertinggi mana yang terendah..
-10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan
+10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan -ok
