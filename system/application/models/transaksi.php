@@ -38,9 +38,9 @@ class Transaksi extends Model
     /**
     *Ambil data terakhir transaksi
     */
-    function last_transaksi()
+    function last_transaksi($id_transaksi)
     {
-        $query = 'select time(from_unixtime(id_transaksi)) as jam,tp.* from transaksi_penjualan tp order by id_transaksi desc limit 1';
+        $query = 'select time(from_unixtime(id_transaksi)) as jam,tp.* from transaksi_penjualan tp where tp.id_transaksi="'.$id_transaksi.'"';
         return $this->db->query($query);
     }
     /**

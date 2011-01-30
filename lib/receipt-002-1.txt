@@ -1,28 +1,24 @@
 MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
-=================================#
-Tanggal: 2011-01-16 16:22:14#
- #
-        DETAIL TRANSAKSI#
+==================================#
+Tanggal: 2011-01-30 08:49:07#
+#
+        TRANSAKSI REFUND#
 01145006 OBL S.BRAND NK#
-               3 @11.500 = 34.500#
-62554002 GENDONGAN SWETTY#
-               1 @54.900 = 54.900#
-
-3 items#
-------------------------------(+)#
-Subtotal =                 34.500#
-Diskon   = 10% x 34.500#
-         =                  3.450#
-------------------------------(-)#
-Total   :                  31.000#
-Tunai   :                  50.000#
-Kembali :                  19.000#
-=================================#
-Kasir : Yeni Purwaningsih#
-Pramuniaga: Ayu Ristika#
+              -1 @11.500 = -11.500#
+73350028 PW KS MOOD PJG#
+                1 @39.900 = 39.900#
  #
-          TERIMAKASIH# 
-    BERBELANJA DENGAN KAMI#
-           --o00o--#
+0 items#
+-------------------------------(+)#
+Total  : Rp                 28.400#
+Tunai  : Rp                 50.000#
+Kembali: Rp                 21.600#
+==================================#
+Kasir : Yeni Purwaningsih#
+Pramuniaga : Yunita Wulandari#
+ #
+         TERIMAKASIH# 
+   BERBELANJA DENGAN KAMI#
+          --o00o--#
