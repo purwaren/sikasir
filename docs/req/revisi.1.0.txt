@@ -1,5 +1,5 @@
 Revisi 1.0
-1. Check jumlah barang yang dijual harus <= stok, untuk kasus id barang yang sama berulang2.. 
+1. Check jumlah barang yang dijual harus <= stok, untuk kasus id barang yang sama berulang2.. -ok 
 2. Checking barang
     - Yang boleh diopname adalah yang stok barang > 0 -- ok
     - Lihat yang sudah opname sama yang belum opname --ok
@@ -9,7 +9,7 @@ Revisi 1.0
 3. Absensi
     - rekap absensi per hari dan per bulan -ok
     - rekap jam kerja per bulan (normal + lembur), per karyawan-ok
-    - bwt login khusus untuk absensi 
+    - bwt login khusus untuk absensi -ok
     - yang boleh ngotak atik absen hanya supervisor, jadi dimenu admin dan yang lain dihilangkan -ok
     - untuk karyawan yang tidak datang statusnya awalnya masih kosong, supervisor/login absen yang berhak mengisi -ok
     - cetak absensi dan rekap absensi

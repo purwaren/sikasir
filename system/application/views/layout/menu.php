@@ -1,6 +1,6 @@
 <div id="tabs">
     <ul>
-      <?php if($jabatan=='supervisor'||$jabatan=='absensi') { ?>
+      <?php if($jabatan=='supervisor'|| $jabatan=='absensi') { ?>
       <li><a class="<?php if($page=='presence') echo 'current' ?>" href="<?php _e(base_url().'presence/check') ?>" accesskey="m"><span class="key">P</span>resence</a></li>
       <?php } if($jabatan=='admin') {?>
       <li><a class="<?php if($page=='user') echo 'current' ?>" href="<?php _e(base_url().'user') ?>" accesskey="m"><span class="key">U</span>ser</a></li>
@@ -67,8 +67,10 @@
     <p style="float:left;text-align: left; padding-right: 20px;">
         <a href="<?php _e(base_url().'presence/check/arrive')?>">Absensi Datang</a> .:.   
         <a href="<?php _e(base_url().'presence/check/return')?>">Absensi Pulang</a> .:.   
-        <a href="<?php _e(base_url().'presence/manage')?>">Data Absensi</a> .:.   
-        <a href="<?php _e(base_url().'presence/report')?>">Rekap Absensi</a> .:.   
+        <a href="<?php _e(base_url().'presence/manage')?>">Data Absensi</a> .:. 
+        <?php if($jabatan == 'supervisor') { ?>
+        <a href="<?php _e(base_url().'presence/report')?>">Rekap Absensi</a> .:. 
+        <?php } ?>
     </p>
     <?php } ?>
     

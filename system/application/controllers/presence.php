@@ -20,7 +20,12 @@ class Presence extends Controller {
             $data_karyawan = $query->row();
             $this->data['userinfo'] = $data_karyawan->nama;
             $this->data['jabatan'] = $this->session->userdata('jabatan');
-            $this->data['now'] = strtoupper(date('M')).'<br />'.date('d'); 
+            $this->data['now'] = strtoupper(date('M')).'<br />'.date('d');
+            //only supervisor and absensi allowed
+            if($this->data['jabatan'] != 'supervisor' && $this->data['jabatan'] != 'absensi')
+            {
+                redirect('home/error');
+            }
         }
         else
         {
@@ -155,60 +160,53 @@ class Presence extends Controller {
     *Menampilkan data absen pada tanggal tertentu,
     */
     function manage()
-    {
-        if($this->data['jabatan'] == 'supervisor') 
+    {        
+        $this->data['result']='';
+        if($this->input->post('submit_absensi'))
         {
-            $this->data['result']='';
-            if($this->input->post('submit_absensi'))
+            $tanggal = $this->input->post('date_absensi');
+            $this->data['tgl_absensi'] = $tanggal;
+            if(!empty($tanggal))
             {
-                $tanggal = $this->input->post('date_absensi');
-                $this->data['tgl_absensi'] = $tanggal;
-                if(!empty($tanggal))
+                $this->load->model('absensi');
+                $query = $this->absensi->get_presence($tanggal);
+                if($query->num_rows() > 0)
                 {
-                    $this->load->model('absensi');
-                    $query = $this->absensi->get_presence($tanggal);
-                    if($query->num_rows() > 0)
+                    $tgl = explode('-',$tanggal);
+                    $table = ' <h3 style="text-align:center">DATA ABSENSI KARYAWAN <br /> TANGGAL : '.$tgl[2].' '.$this->month_to_string($tgl[1]).' '.$tgl[0].'</h3>
+                                <table class="table-data" cellspacing="0" cellpadding="0" >
+                                <tr><!--<td class="head">No</td>--><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Datang</td><td class="head">Pulang</td><td class="head">Keterangan</td><td class="head">Action</td></tr>';
+                    $i=0;
+                    foreach($query->result() as $row)
                     {
-                        $tgl = explode('-',$tanggal);
-                        $table = ' <h3 style="text-align:center">DATA ABSENSI KARYAWAN <br /> TANGGAL : '.$tgl[2].' '.$this->month_to_string($tgl[1]).' '.$tgl[0].'</h3>
-                                    <table class="table-data" cellspacing="0" cellpadding="0" >
-                                    <tr><!--<td class="head">No</td>--><td class="head">NIK</td><td class="head">Nama Karyawan</td><td class="head">Datang</td><td class="head">Pulang</td><td class="head">Keterangan</td><td class="head">Action</td></tr>';
-                        $i=0;
-                        foreach($query->result() as $row)
-                        {
-                            if(!empty($row->datang))
-                                $dtg = $row->dtg;
-                            else
-                                $dtg = 'Belum';
-                            if(!empty($row->pulang))
-                                $plg = $row->plg;
-                            else
-                                $plg = 'Belum';
-                            $table .= '<tr><!--<td></td>--><td>'.$row->NIK.'</td><td>'.$row->nama.'</td><td>'.$dtg.'</td><td>'.$plg.'</td><td>'.$row->status.'</td>
-                                    <td>
-                                        <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetailAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
-                                        <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
-                                        <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="removeAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\',\''.$row->nama.'\')"/></span>
-                                    </td></tr>';
-                        }
-                        $this->data['result'] = $table.'</table>';
+                        if(!empty($row->datang))
+                            $dtg = $row->dtg;
+                        else
+                            $dtg = 'Belum';
+                        if(!empty($row->pulang))
+                            $plg = $row->plg;
+                        else
+                            $plg = 'Belum';
+                        $table .= '<tr><!--<td></td>--><td>'.$row->NIK.'</td><td>'.$row->nama.'</td><td>'.$dtg.'</td><td>'.$plg.'</td><td>'.$row->status.'</td>
+                                <td>
+                                    <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetailAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
+                                    <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\')"/></span>
+                                    <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="removeAbsensi(\''.$row->NIK.'\',\''.$row->tanggal.'\',\''.$row->nama.'\')"/></span>
+                                </td></tr>';
                     }
-                    else
-                    {
-                        $this->data['err_msg'] = 'Data tidak ditemukan';
-                    }
+                    $this->data['result'] = $table.'</table>';
                 }
                 else
                 {
-                    $this->data['err_msg'] = 'Tanggal tidak boleh dikosongkan';
+                    $this->data['err_msg'] = 'Data tidak ditemukan';
                 }
             }
-            $this->load->view('presence-manage',$this->data);
+            else
+            {
+                $this->data['err_msg'] = 'Tanggal tidak boleh dikosongkan';
+            }
         }
-        else
-        {
-            redirect('home/error');
-        }
+        $this->load->view('presence-manage',$this->data);        
     }
     /**
     *Menampilkan detail absensi    
@@ -236,45 +234,38 @@ class Presence extends Controller {
     *fungsi ini digunakan untuk ngedit status absensi
     */
     function edit($nik="")
-    {
-        if($this->data['jabatan'] == 'supervisor')
+    {        
+        $this->data['err_msg'] = '';
+        $this->load->model('absensi');
+        if(!empty($nik))
         {
-            $this->data['err_msg'] = '';
-            $this->load->model('absensi');
-            if(!empty($nik))
+            $tanggal = $this->uri->segment(4);                
+            $query = $this->absensi->get_presence_detail($nik,$tanggal);
+            if($query->num_rows() > 0)
             {
-                $tanggal = $this->uri->segment(4);                
-                $query = $this->absensi->get_presence_detail($nik,$tanggal);
+                $this->data['detail'] = $query->row();
+            }
+            else
+            {
+                $this->data['err_msg'] = 'Maaf data tidak ditemukan';
+            }
+        }
+        if($this->input->post('submit_edit_absensi'))
+        {
+            $nik = $this->input->post('nik');
+            $tgl = $this->input->post('tanggal');
+            $status = $this->input->post('status');
+            if($this->absensi->update_presence_status($nik,$status,$tgl))
+            {
+                $query = $this->absensi->get_presence_detail($nik,$tgl);
                 if($query->num_rows() > 0)
                 {
                     $this->data['detail'] = $query->row();
-                }
-                else
-                {
-                    $this->data['err_msg'] = 'Maaf data tidak ditemukan';
+                    $this->data['msg'] = '<span style="color:green">Data telah disimpan</span>';
                 }
             }
-            if($this->input->post('submit_edit_absensi'))
-            {
-                $nik = $this->input->post('nik');
-                $tgl = $this->input->post('tanggal');
-                $status = $this->input->post('status');
-                if($this->absensi->update_presence_status($nik,$status,$tgl))
-                {
-                    $query = $this->absensi->get_presence_detail($nik,$tgl);
-                    if($query->num_rows() > 0)
-                    {
-                        $this->data['detail'] = $query->row();
-                        $this->data['msg'] = '<span style="color:green">Data telah disimpan</span>';
-                    }
-                }
-            }
-            $this->load->view('presence-edit',$this->data);
         }
-        else
-        {
-            redirect('home/error');
-        }
+        $this->load->view('presence-edit',$this->data);        
     }
     /**
     *fungsi untuk menghapus data absensi
@@ -306,156 +297,164 @@ class Presence extends Controller {
     /**
     * Laporan rekap absensi
     */
-    function report() {
-        $this->load->model('absensi');
-        //klo pencet tombol display, tampilin rekapnya
-        if($this->input->post('submit_presence_report'))
+    function report() 
+    {
+        if($this->data['jabatan'] == 'supervisor') 
         {
-            $opsi = $this->input->post('opsi');
-            //harian
-            if($opsi == 1)
+            $this->load->model('absensi');
+            //klo pencet tombol display, tampilin rekapnya
+            if($this->input->post('submit_presence_report') || $this->input->post('submit_print_report'))
             {
-            }
-            //bulanan
-            else if($opsi == 2)
-            {
-                //rekap jam kerja
-                $month = $this->input->post('month');
-                $year = $this->input->post('year');
-                $query = $this->absensi->rekap_absen_bulanan($month,$year);
-                if($query->num_rows() > 0)
+                $opsi = $this->input->post('opsi');
+                //harian
+                if($opsi == 1)
                 {
-                    $head = '<div style="text-align:center"><h3>REKAP JAM KERJA <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
-                    $row_data =  '<table class="table-data" cellspacing="0" cellpadding="0" >
-                                    <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td>
-                                    <td class="head">Total Jam Kerja (Jam)</td><td class="head">Total Jam Lembur (Jam)</td><td class="head">Total Hadir (hari)</td></tr>';                    
-                    $i=0;
-                    foreach($query->result() as $row)
-                    {
-                        $total_jam = $row->total_jam + ceil($row->total_menit/60);
-                        $total_lembur = $total_jam - config_item('work_cycle')*$row->total_masuk;
-                        if($total_lembur <= 0)
-                            $total_lembur = 0;
-                        $row_data .= '<tr>
-                                        <td>'.++$i.'</td>
-                                        <td>'.$row->NIK.'</td>
-                                        <td>'.$row->nama.'</td>
-                                        <td>'.$total_jam.'</td>
-                                        <td>'.$total_lembur.'</td>
-                                        <td>'.$row->total_masuk.'</td>
-                                    </tr>';
-                    }
-                    $foot = '</table></div>';
-                }                
-                $this->data['report'] = $head.$row_data.$foot;
-                //rekap kehadiran
-                $this->load->model('karyawan');
-                $query = $this->karyawan->get_all_karyawan();
-                if($query->num_rows() > 0)
+                }
+                //bulanan
+                else if($opsi == 2)
                 {
-                    $head = '<div style="text-align:center;overflow:auto;width:100%"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$year.'</h3>';
-                    $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td class="head">NIK</td>';
-                    for($i=0;$i<=max_day($month,$year);)
+                    //rekap jam kerja
+                    $month = $this->input->post('month');
+                    $year = $this->input->post('year');
+                    $query = $this->absensi->rekap_absen_bulanan($month,$year);
+                    if($query->num_rows() > 0)
                     {
-                        $row_data .= '<td class="head">'.++$i.'</td>';
-                    }
-                    $row_data .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
-                    $karyawan = $query->result();
-                    foreach($karyawan as $row)
+                        $head = '<div style="text-align:center"><h3>REKAP JAM KERJA <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
+                        $row_data =  '<table class="table-data" cellspacing="0" cellpadding="0" >
+                                        <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td>
+                                        <td class="head">Total Jam Kerja (Jam)</td><td class="head">Total Jam Lembur (Jam)</td><td class="head">Total Hadir (hari)</td></tr>';                    
+                        $i=0;
+                        foreach($query->result() as $row)
+                        {
+                            $total_jam = $row->total_jam + ceil($row->total_menit/60);
+                            $total_lembur = $total_jam - config_item('work_cycle')*$row->total_masuk;
+                            if($total_lembur <= 0)
+                                $total_lembur = 0;
+                            $row_data .= '<tr>
+                                            <td>'.++$i.'</td>
+                                            <td>'.$row->NIK.'</td>
+                                            <td>'.$row->nama.'</td>
+                                            <td>'.$total_jam.'</td>
+                                            <td>'.$total_lembur.'</td>
+                                            <td>'.$row->total_masuk.'</td>
+                                        </tr>';
+                        }
+                        $foot = '</table></div>';
+                    }                
+                    $this->data['report'] = $head.$row_data.$foot;
+                    //rekap kehadiran
+                    $this->load->model('karyawan');
+                    $query = $this->karyawan->get_all_karyawan();
+                    if($query->num_rows() > 0)
                     {
-                        
-                        $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$month,$year);
-                        $row_absen = '<tr><td>'.$row->NIK.'</td>';
-                        if($query->num_rows() > 0)
-                        {                           
-                            $data = $query->result();                            
-                            $j=0;
-                            $total_masuk = 0;
-                            $total_libur = 0;
-                            $total_izin = 0;
-                            $total_alpha = 0;
-                            for($i = 0;$i<=max_day($month,$year);$i++)
-                            {
-                                if(isset($data[$j]) && $data[$j]->tgl == ($i+1))
+                        $head = '<div style="text-align:center;overflow:auto;width:100%"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$year.'</h3>';
+                        $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td class="head">NIK</td>';
+                        for($i=0;$i<=max_day($month,$year);)
+                        {
+                            $row_data .= '<td class="head">'.++$i.'</td>';
+                        }
+                        $row_data .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
+                        $karyawan = $query->result();
+                        foreach($karyawan as $row)
+                        {
+                            
+                            $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$month,$year);
+                            $row_absen = '<tr><td>'.$row->NIK.'</td>';
+                            if($query->num_rows() > 0)
+                            {                           
+                                $data = $query->result();                            
+                                $j=0;
+                                $total_masuk = 0;
+                                $total_libur = 0;
+                                $total_izin = 0;
+                                $total_alpha = 0;
+                                for($i = 0;$i<=max_day($month,$year);$i++)
                                 {
-                                    if($data[$j]->status == 'masuk')
+                                    if(isset($data[$j]) && $data[$j]->tgl == ($i+1))
                                     {
-                                        $status = 'M';
-                                        $total_masuk++;
+                                        if($data[$j]->status == 'masuk')
+                                        {
+                                            $status = 'M';
+                                            $total_masuk++;
+                                        }
+                                        else if($data[$j]->status == 'izin')
+                                        {
+                                            $status = 'I';
+                                            $total_izin++;
+                                        }
+                                        else if($data[$j]->status == 'alpha')
+                                        {
+                                            $status = 'A';
+                                            $total_alpha++;
+                                        }
+                                        else if($data[$j]->status == 'libur/off')
+                                        {
+                                            $status = 'L';
+                                            $total_libur++;
+                                        }
+                                        $row_absen .= '<td style="background:#dedede">'.$status.'</td>';
+                                        $j++;                                    
                                     }
-                                    else if($data[$j]->status == 'izin')
+                                    else
                                     {
-                                        $status = 'I';
-                                        $total_izin++;
+                                        $row_absen .= '<td>&nbsp;</td>';
                                     }
-                                    else if($data[$j]->status == 'alpha')
-                                    {
-                                        $status = 'A';
-                                        $total_alpha++;
-                                    }
-                                    else if($data[$j]->status == 'libur/off')
-                                    {
-                                        $status = 'L';
-                                        $total_libur++;
-                                    }
-                                    $row_absen .= '<td style="background:#dedede">'.$status.'</td>';
-                                    $j++;                                    
                                 }
-                                else
+                                $row_absen .= '<td style="background:#dedede">'.$total_masuk.'</td><td style="background:#dedede">'.$total_libur.'</td>
+                                                <td style="background:#dedede">'.$total_izin.'</td><td style="background:#dedede">'.$total_alpha.'</td></tr>';
+                            }
+                            else
+                            {
+                                for($i=0;$i<=max_day($month,$year);$i++)
                                 {
                                     $row_absen .= '<td>&nbsp;</td>';
                                 }
+                                $row_absen .= '<td>0</td><td>0</td><td>0</td><td>0</td></tr>';
                             }
-                            $row_absen .= '<td style="background:#dedede">'.$total_masuk.'</td><td style="background:#dedede">'.$total_libur.'</td>
-                                            <td style="background:#dedede">'.$total_izin.'</td><td style="background:#dedede">'.$total_alpha.'</td></tr>';
+                            $row_data .= $row_absen;                        
                         }
-                        else
-                        {
-                            for($i=0;$i<=max_day($month,$year);$i++)
-                            {
-                                $row_absen .= '<td>&nbsp;</td>';
-                            }
-                            $row_absen .= '<td>0</td><td>0</td><td>0</td><td>0</td></tr>';
-                        }
-                        $row_data .= $row_absen;                        
+                        $foot = '</table>
+                                <p style="text-align:left;">Keterangan :</p>
+                                <ol style="text-align:left">
+                                    <li>M = Masuk</li>
+                                    <li>I = Izin</li>
+                                    <li>A = Alpha</li>
+                                    <li>L = Libur/Off</li>
+                                </ol>                            
+                                </div>';
+                        $this->data['report'] .= $head.$row_data.$foot;
                     }
-                    $foot = '</table>
-                            <p style="text-align:left;">Keterangan :</p>
-                            <ol style="text-align:left">
-                                <li>M = Masuk</li>
-                                <li>I = Izin</li>
-                                <li>A = Alpha</li>
-                                <li>L = Libur/Off</li>
-                            </ol>                            
-                            </div>';
-                    $this->data['report'] .= $head.$row_data.$foot;
                 }
             }
-        }
-        //ambil bulan dan tahun untuk rekap absensi
-        $query = $this->absensi->get_month();
-        if($query->result() > 0)
-        {
-            $bulan = '<select name="month" style="width:100px">';
-            foreach($query->result() as $row)
+            //ambil bulan dan tahun untuk rekap absensi
+            $query = $this->absensi->get_month();
+            if($query->result() > 0)
             {
-                $bulan .= '<option value="'.$row->bulan.'">'.month_to_string($row->bulan).'</option>';
+                $bulan = '<select name="month" style="width:100px">';
+                foreach($query->result() as $row)
+                {
+                    $bulan .= '<option value="'.$row->bulan.'">'.month_to_string($row->bulan).'</option>';
+                }
+                $bulan .= '</select>';
             }
-            $bulan .= '</select>';
-        }
-        $query = $this->absensi->get_year();
-        if($query->num_rows() > 0)
-        {
-            $year = '<select name="year" style="width:60px">';
-            foreach($query->result() as $row)
+            $query = $this->absensi->get_year();
+            if($query->num_rows() > 0)
             {
-                $year .= '<option value='.$row->tahun.'>'.$row->tahun.'</option>';
+                $year = '<select name="year" style="width:60px">';
+                foreach($query->result() as $row)
+                {
+                    $year .= '<option value='.$row->tahun.'>'.$row->tahun.'</option>';
+                }
+                $year .= '</select>';
             }
-            $year .= '</select>';
+            $this->data['month'] = $bulan;
+            $this->data['year'] = $year;
+            $this->load->view('presence-report',$this->data);
         }
-        $this->data['month'] = $bulan;
-        $this->data['year'] = $year;
-        $this->load->view('presence-report',$this->data);
+        else
+        {
+            redirect('home/error');
+        }
     }
     /**
     *konversi bulan dari angka ke string

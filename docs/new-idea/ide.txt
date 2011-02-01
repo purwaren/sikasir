@@ -1,0 +1,22 @@
+IDE SIKASIR
+Sikasir Extends
+- Module untuk membership
+- Module untuk reading magnetic card / smart card
+- Module untuk user interfaces
+- Mobile Apps
+- Module untuk export laporan ke PDF, Excel, Word, CSV dll
+- Module untuk interkoneksi dengan aplikasi lain (API)
+- Module untuk Online ( kan rencananya mau dibuat online, antar mesin terhubung ke server)
+- Module untuk Feature Management / mengatur fungsionalitas mana yang boleh dan tidak boleh, berdasarkan versinya.
+
+Ide : program sikasir dibuat beberapa versi, dikhususnkan untuk bentuk usahanya, misal:
+- Retailer (Yang sekarang dikembangin)
+- Food and Beverages, Restaurant (table service or quick service) a
+
+
+Fitur tambahan
+- bisa pilih mau print invoice==>(elektronik dll) atau struk (makanan, baju dll)
+
+IDE SISGUD
+- Module untuk Printer, bisa print sticker dan print barcode langsung.
+

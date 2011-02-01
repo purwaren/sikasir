@@ -1,0 +1,36 @@
+Daftar Software POS Indonesia
+- Package Point of Sales (http://rquadrantsolution-pakpos.blogspot.com/) - depok
+    - dibangun di SQL Server, pake teknologi microsoft. 
+    - terlalu banyak klik sana klik sini 
+    - pencatatan inventory masih digabung di POS, tidak dibuat sistem sendiri
+    - tidak ada fitur opname/checking barang
+- ePoint POS Indonesia (http://www.epointpos.co.id/) - singapore & indonesia & thailand, sudah PT alamat: jakarta utara
+    + User interface sudah touch screen, dipake di tpt2 restoran kayak fast food
+    + Sudah well established
+    + Support Multipayment method
+    ? tidak ada fitur opname/checking barang
+    + sudah bisa online
+- PROHEXA RITELSOFT (http://www.prohexa.com/ritelsoft.html) -tangerang
+    - cuma 3 data, item supplier dan pelanggan
+    - laporan2 masih standard
+    - tidak ada fitur opname / checking barang
+    - bukan web based application dan belum terintegrasi
+- LenMarc Point of Sales (http://www.lenmarc.com) - bandung
+    + support multi OS
+    + sudah ada opname
+    ? belum tahu teknologi pake apa
+    - fitur2 standar
+    - belum bisa online
+-  Syscom POS System(syscofindo.com) - batam
+    + bisa  export laporan ke word / excel
+    - batam
+    ? tidak disebutkan tentang fitur opname/checking barang
+    ? Program dalam bahasa indonesia
+    + sudah pake cash drawer,printer dan display
+- Mooncatcher point of sales (http://implementasi.wordpress.com) - tangerang
+    ? sudah include kasir dan inventori
+    + sudah online dan support multibranch
+    + bisa print barcode sticker
+    + support history claim dan service barang
+
+    

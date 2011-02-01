@@ -37,6 +37,7 @@
                         <option value="2">Supervisor</option>
                         <option value="3">Kasir</option>
                         <option value="4">Pramuniaga</option>
+                        <option value="5">Absensi</option>
                     </select>
                 </td>
             </tr>
