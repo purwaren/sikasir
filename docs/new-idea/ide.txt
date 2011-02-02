@@ -18,5 +18,6 @@ Fitur tambahan
 - bisa pilih mau print invoice==>(elektronik dll) atau struk (makanan, baju dll)
 
 IDE SISGUD
-- Module untuk Printer, bisa print sticker dan print barcode langsung.
+- Module untuk Printer(API), bisa print sticker dan print barcode langsung. Printernya juga harus support untuk ngeprint banyak halaman, lebih prefer pake yang apache coocon atau apache fop, tapi run di tomcat
+- 
 
