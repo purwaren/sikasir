@@ -58,9 +58,16 @@ class Graph extends Controller {
             $query = $this->transaksi->get_omset($bulan,$tahun);            
             if($query->num_rows() > 0)
             {
+                //ambil total qty sales untuk perbulan
+                $qry = $this->transaksi->total_qty_sales($bulan,$tahun);
+                if($qry->num_rows() > 0) 
+                { 
+                    $qty_sales = $qry->result();                   
+                }
                 $line= '0,0'.chr(10);
                 $row_data = '';
                 $total_omset=0;
+                $total_qty=0;
                 $i=0;
                 $min_omset='';
                 $max_omset='';
@@ -68,7 +75,7 @@ class Graph extends Controller {
                 $idx_max='';
                 foreach($query->result() as $row)
                 {                                        
-                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->tgl.'</td><td>'.number_format($row->omset,'0',',','.').',-</td></tr>';
+                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->tgl.'</td><td>'.$qty_sales[$i-1]->total.'</td><td>'.number_format($row->omset,'0',',','.').',-</td></tr>';
                     $line .= $row->tgl.','.($row->omset/1000). chr(10);
                     if($i==1)
                     {
@@ -92,8 +99,9 @@ class Graph extends Controller {
                         }                        
                     }
                     $total_omset += $row->omset;
+                    $total_qty += $qty_sales[$i-1]->total;
                 }                
-                $row_total = '<tr><td colspan="2">T O T A L</td><td>'.number_format($total_omset,'0',',','.').',-</td></tr>';
+                $row_total = '<tr><td colspan="2">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total_omset,'0',',','.').',-</td></tr>';
                 $this->data['row_data']=$row_data.$row_total;
                 $file = @fopen('lib/omset.csv','w');
                 fwrite($file,$line);

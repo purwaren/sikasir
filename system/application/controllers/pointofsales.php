@@ -345,7 +345,8 @@ class PointOfSales extends Controller {
                     $this->barang->refund_barang($id_tukar[$i],$qty_tukar[$i],1);
                 }
             }
-            _e(1);
+            $reply = array('status'=>1,'id_transaksi'=>$id_transaksi);
+            _e(json_encode($reply));
         }
         else
         {
@@ -359,12 +360,13 @@ class PointOfSales extends Controller {
     {
         //baca input parameter
         $cash = $this->input->post('cash');
+        $id_transaksi = $this->input->post('id_transaksi');
         //resi transaksi normal
-        if($this->input->post('option')==1)
+        if($this->input->post('option')==1 && !empty($id_transaksi))
         {
             //siapkan data resi yang akan diprint
             $this->load->model('transaksi');
-            $query = $this->transaksi->last_transaksi();
+            $query = $this->transaksi->last_transaksi($id_transaksi);
             if($query->num_rows() > 0)
             {
                 //ambil item transaksi yang ada di tabel item_transaksi_penjualan
@@ -487,7 +489,7 @@ class PointOfSales extends Controller {
             $qty_tukar = $this->input->post('qty_tukar');
             //siapkan data resi yang akan diprint
             $this->load->model('transaksi');
-            $query = $this->transaksi->last_transaksi();
+            $query = $this->transaksi->last_transaksi($id_transaksi);
             if($query->num_rows() > 0)
             {
                 //ambil data barang pengganti yang disimpan sebagai transaksi penjualan
@@ -574,14 +576,14 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<pengganti>',$pengganti,$resi);//tulis detail barang ditukar               
                     $resi = str_replace('<all>',$total_item.' items',$resi);         
                     $tmp = number_format($total,0,',','.');
-                    $resi = str_replace('<total>',$this->spacer(23-strlen($tmp)).$tmp,$resi);
+                    $resi = str_replace('<total>',$this->spacer(22-strlen($tmp)).$tmp,$resi);
                     $resi = str_replace('<kasir>',$this->data['userinfo'],$resi);                                        
                     $resi = str_replace('<pramu>',$pramu,$resi);                                        
                     $tmp = number_format($cash,0,',','.');
-                    $resi = str_replace('<cash>',$this->spacer(23-strlen($tmp)).$tmp,$resi); 
+                    $resi = str_replace('<cash>',$this->spacer(22-strlen($tmp)).$tmp,$resi); 
                     $cashback = $cash - $total;                    
                     $tmp = number_format($cashback,0,',','.');
-                    $resi = str_replace('<cashback>',$this->spacer(23-strlen($tmp)).$tmp,$resi);
+                    $resi = str_replace('<cashback>',$this->spacer(22-strlen($tmp)).$tmp,$resi);
                     //open file to write
                     $filename = 'lib/receipt-'.$this->session->userdata('nik').'-'.$this->session->userdata('no_shift').'.txt';
                     $file = fopen($filename,'w');

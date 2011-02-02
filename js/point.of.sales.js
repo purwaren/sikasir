@@ -628,10 +628,10 @@ function displayMsg(msg) {
     );    
 }
 /*Print receipt*/
-function printReceipt(mode,tunai) {    
+function printReceipt(mode,tunai,id_transaksi) {    
     $.post(
         "print_receipt",
-        {option: mode, cash: tunai}, 
+        {'option': mode, 'cash': tunai,'id_transaksi':id_transaksi}, 
         function(receipt){
             $.post(
                     "get_kassa",                     
@@ -645,10 +645,10 @@ function printReceipt(mode,tunai) {
 /**
 *Print receipt refund
 */
-function printRefundReceipt(mode,tunai,brg_tukar,qty_tukar) {
+function printRefundReceipt(mode,tunai,brg_tukar,qty_tukar,id_transaksi) {
     $.post(
         "print_receipt",
-        {option: mode, cash: tunai,'brg_tukar[]': brg_tukar, 'qty_tukar[]':qty_tukar}, 
+        {'option': mode, 'cash': tunai,'brg_tukar[]': brg_tukar, 'qty_tukar[]':qty_tukar,'id_transaksi':id_transaksi}, 
         function(receipt){
             $.post(
                     "get_kassa",                     
@@ -770,7 +770,7 @@ function payTrans(mop) {
                     //success
                     if(data == 1) { 
                         //print receipt + munculin angka kembalian
-                        printReceipt(1,cash);
+                        printReceipt(1,cash,id_transaksi);
                         //kalau tdk ok, kasih taw kesalahannya
                         //ketika kembalian dipilih ok, maka kembali ke siap transaksi
                         var kembalian = cash - bill;
@@ -815,7 +815,7 @@ function payTrans(mop) {
                     //success
                     if(data == 1) { 
                         //print receipt + munculin angka kembalian
-                        printReceipt(1,total);
+                        printReceipt(1,total,id_transaksi);
                         //kalau tdk ok, kasih taw kesalahannya
                         //ketika kembalian dipilih ok, maka kembali ke siap transaksi                       
                         $('#cashback').html('Rp. '+$.currency(0,{s:".",d:",",c:0})+',-');
@@ -904,9 +904,9 @@ function transRefund() {
             "trans_refund",
             {'id_tukar[]': brg_tukar,'qty_tukar[]':qty_tukar,'id_pengganti[]': brg_pengganti,'qty_pengganti[]':qty_pengganti, 'disc_pengganti[]':disc_pengganti, 'id_pramu': id_pramu, 'total': bill},
             function(data){
-                if(data == 1) {
+                if(data.status == 1) {
                     //print receipt + munculin angka kembalian
-                    printRefundReceipt(3,cash,brg_tukar,qty_tukar);
+                    printRefundReceipt(3,cash,brg_tukar,qty_tukar,data.id_transaksi);
                     var kembalian = cash - bill;
                     $('#cashback').html('Rp. '+$.currency(kembalian,{s:".",d:",",c:0})+',-');
                     //display message
@@ -925,7 +925,8 @@ function transRefund() {
                     });
                     $('.ui-button').focus();                                                            
                 }
-            }
+            },
+            "json"
         );
         $('#dialog-prompt-refund').dialog('close')
     }

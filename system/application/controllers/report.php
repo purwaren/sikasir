@@ -508,8 +508,7 @@ class Report extends Controller {
                     {
                         $this->data['report_sales'] .= $row;
                     }
-                    $this->data['report_sales'] .= $row_total.$foot;
-                    //rekap omset satu bulan
+                    $this->data['report_sales'] .= $row_total.$foot;                    
                     //cetak ke pdf
                     if(isset($list) && $this->input->post('submit_report_sales_pdf'))
                     {                            
