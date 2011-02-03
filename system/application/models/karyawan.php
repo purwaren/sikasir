@@ -59,7 +59,7 @@ class Karyawan extends Model
         }
         else
         {
-            $query = $this->db->query('select * from karyawan where nama like "'.$name.'%" and NIK in(select NIK from pengguna where jabatan="pramuniaga") order by nama asc');
+            $query = $this->db->query('select * from karyawan where nama like "'.$name.'%" and NIK in(select NIK from pengguna where jabatan="pramuniaga" and flag_hapus=0) order by nama asc');
         }
         return $query;
     }
