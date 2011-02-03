@@ -29,6 +29,7 @@
                 <td class="head">No</td>
                 <td class="head">Tanggal</td>
                 <td class="head">Qty Terjual</td>
+                <td class="head">Total Diskon(Rp)</td>
                 <td class="head">Omset (Rp)</td>
             </tr>
             <?php if(isset($row_data)) _e($row_data) ?>

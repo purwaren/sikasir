@@ -64,18 +64,25 @@ class Graph extends Controller {
                 { 
                     $qty_sales = $qry->result();                   
                 }
+                //ambil total diskon untuk satu bulan
+                $qry = $this->transaksi->total_disc_daily($bulan,$tahun);
+                if($qry->num_rows() > 0) 
+                { 
+                    $row_disc = $qry->result();
+                }
                 $line= '0,0'.chr(10);
                 $row_data = '';
                 $total_omset=0;
                 $total_qty=0;
+                $total_disc=0;
                 $i=0;
                 $min_omset='';
                 $max_omset='';
                 $idx_min='';
                 $idx_max='';
                 foreach($query->result() as $row)
-                {                                        
-                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->tgl.'</td><td>'.$qty_sales[$i-1]->total.'</td><td>'.number_format($row->omset,'0',',','.').',-</td></tr>';
+                {             
+                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->tgl.'</td><td>'.$qty_sales[$i-1]->total.'</td><td>'.number_format($row_disc[$i-1]->total_diskon,'0',',','.').',-</td><td>'.number_format($row->omset,'0',',','.').',-</td></tr>';
                     $line .= $row->tgl.','.($row->omset/1000). chr(10);
                     if($i==1)
                     {
@@ -100,8 +107,9 @@ class Graph extends Controller {
                     }
                     $total_omset += $row->omset;
                     $total_qty += $qty_sales[$i-1]->total;
+                    $total_disc += $row_disc[$i-1]->total_diskon;
                 }                
-                $row_total = '<tr><td colspan="2">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total_omset,'0',',','.').',-</td></tr>';
+                $row_total = '<tr><td colspan="2">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total_disc,'0',',','.').',-</td><td>'.number_format($total_omset,'0',',','.').',-</td></tr>';
                 $this->data['row_data']=$row_data.$row_total;
                 $file = @fopen('lib/omset.csv','w');
                 fwrite($file,$line);

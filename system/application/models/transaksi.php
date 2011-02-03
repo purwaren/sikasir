@@ -48,9 +48,10 @@ class Transaksi extends Model
     */
     function trans_a_day($date)
     {
-        $query = 'select time(from_unixtime(transaksi_penjualan.id_transaksi)) as jam_transaksi, transaksi_penjualan.*,id_barang,qty,item_transaksi_penjualan.diskon as diskon_item 
+        $query = 'select time(from_unixtime(transaksi_penjualan.id_transaksi)) as jam_transaksi, transaksi_penjualan.*,id_barang,sum(qty) as qty,item_transaksi_penjualan.diskon as diskon_item 
                 from transaksi_penjualan left join item_transaksi_penjualan on transaksi_penjualan.id_transaksi = item_transaksi_penjualan.id_transaksi 
-                where tanggal ="'.$date.'" 
+                where tanggal ="'.$date.'"
+                group by jam_transaksi,id_barang
                 order by jam_transaksi asc';
         return $this->db->query($query);
     }
@@ -59,8 +60,12 @@ class Transaksi extends Model
     */
     function trans_based_bon($tanggal)
     {
-        $query = 'select tp.id_transaksi, time( from_unixtime( tp.id_transaksi ) ) AS jam_transaksi, total, count(id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
-                on tp.id_transaksi = itp.id_transaksi where tanggal="'.$tanggal.'" group by tp.id_transaksi';
+        $query = 'select * from (select tp.id_transaksi,tp.diskon, time( from_unixtime( tp.id_transaksi ) ) AS jam_transaksi, total, count(distinct id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
+                            on tp.id_transaksi = itp.id_transaksi where tanggal="'.$tanggal.'" group by tp.id_transaksi) as tab1
+                left join (select itp.id_transaksi,b.harga,sum(itp.diskon/100*b.harga*itp.qty) as rupiah_diskon 
+                            from item_transaksi_penjualan itp left join barang b on  itp.id_barang = b.id_barang left join transaksi_penjualan tp on itp.id_transaksi = tp.id_transaksi 
+                            where tp.tanggal="'.$tanggal.'" group by itp.id_transaksi) as tab2
+                on tab1.id_transaksi=tab2.id_transaksi';
         return $this->db->query($query);
     }
     /**
@@ -71,11 +76,24 @@ class Transaksi extends Model
         $query = 'select sum(total) as temp_sales from transaksi_penjualan where tanggal="'.$date.'"';
         return $this->db->query($query);
     }
+    /**
+    * ambil total item terjual per hari dalam satu bulan
+    */
     function total_qty_sales($month,$year)
     {
         $query = 'select day(tp.tanggal) as tgl, sum(qty) as total from transaksi_penjualan tp 
         left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi
         where month(tp.tanggal) = "'.$month.'" and year(tp.tanggal)="'.$year.'" group by tp.tanggal order by tgl asc';
+        return $this->db->query($query);
+    }
+    /**
+    * ambil total diskon per hari dalam satu bulan
+    */
+    function total_disc_daily($month,$year)
+    {
+        $query = 'select tgl,ceil((sum(diskon_item)+sum(diskon_all))/100)*100 as total_diskon from (select day(tanggal)as tgl,sum(itp.diskon/100*b.harga*itp.qty) as diskon_item, ceil(((tp.total*(tp.diskon/100))/(1-tp.diskon/100))/100)*100 as diskon_all
+                    from item_transaksi_penjualan itp left join barang b on  itp.id_barang = b.id_barang left join transaksi_penjualan tp on itp.id_transaksi = tp.id_transaksi 
+                    where month(tanggal)="'.$month.'" and year(tanggal)="'.$year.'" group by itp.id_transaksi)as disc group by tgl';
         return $this->db->query($query);
     }
     /**

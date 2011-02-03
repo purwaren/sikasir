@@ -15,11 +15,12 @@ Revisi 1.0
     - cetak absensi dan rekap absensi
     - absensi ada 2 jenis, absensi datang dan absensi pulang -ok
 4. Cetak grafik penjualan dan grafik prestasi
-5. Rekap omset dalam satu bulan taro di laporan akumulasi penjualan bulanan.
+//5. Rekap omset dalam satu bulan taro di laporan akumulasi penjualan bulanan.// tidak perlu,overlap dengan grafik omset
 6. Rapihin resi untuk refund --ok
 7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
 8. Bikin handler untuk Pole Display --ok
 9. Prestasi karyawan untuk pilihan semua, tampilkan tabel omsetnya aja... biar bisa kelihatan mana yang tertinggi mana yang terendah..
 10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan -ok
-11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya
+11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya - ok
+12. Terus taro digrafik omset, qty terjual, dan total diskon hari itu -ok
 
