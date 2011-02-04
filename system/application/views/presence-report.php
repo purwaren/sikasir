@@ -14,8 +14,8 @@
             <tr>
                 <td>Pilihan</td><td>: 
                 <select name="opsi" id="opsi" style="width:170px;">
-                    <option value="2">Rekap Bulanan</option>
-                    <!--<option value="1">Rekap Harian</option>-->
+                    <option value="1">Rekapitulasi Kehadiran</option>
+                    <option value="2">Rekapitulasi Jam Kerja</option>                    
                 </select></td>
             </tr>
             <tr id="bulanan">

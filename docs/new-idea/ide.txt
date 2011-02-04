@@ -1,7 +1,7 @@
 IDE SIKASIR
 Sikasir Extends
 - Module untuk membership
-- Module untuk reading magnetic card / smart card
+- Module untuk reading magnetic card / smart card, bisa untuk absensi, baca kartu kredit dan kartu member
 - Module untuk user interfaces
 - Mobile Apps
 - Module untuk export laporan ke PDF, Excel, Word, CSV dll

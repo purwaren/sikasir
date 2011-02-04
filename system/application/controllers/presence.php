@@ -306,58 +306,33 @@ class Presence extends Controller {
             if($this->input->post('submit_presence_report') || $this->input->post('submit_print_report'))
             {
                 $opsi = $this->input->post('opsi');
-                //harian
+                $month = $this->input->post('month');
+                $year = $this->input->post('year');
+                //rekap kehadiran
                 if($opsi == 1)
                 {
-                }
-                //bulanan
-                else if($opsi == 2)
-                {
-                    //rekap jam kerja
-                    $month = $this->input->post('month');
-                    $year = $this->input->post('year');
-                    $query = $this->absensi->rekap_absen_bulanan($month,$year);
-                    if($query->num_rows() > 0)
-                    {
-                        $head = '<div style="text-align:center"><h3>REKAP JAM KERJA <br /> BULAN : '.month_to_string($month).' '.$month.'</h3>';
-                        $row_data =  '<table class="table-data" cellspacing="0" cellpadding="0" >
-                                        <tr><td class="head">No</td><td class="head">NIK</td><td class="head">Nama Karyawan</td>
-                                        <td class="head">Total Jam Kerja (Jam)</td><td class="head">Total Jam Lembur (Jam)</td><td class="head">Total Hadir (hari)</td></tr>';                    
-                        $i=0;
-                        foreach($query->result() as $row)
-                        {
-                            $total_jam = $row->total_jam + ceil($row->total_menit/60);
-                            $total_lembur = $total_jam - config_item('work_cycle')*$row->total_masuk;
-                            if($total_lembur <= 0)
-                                $total_lembur = 0;
-                            $row_data .= '<tr>
-                                            <td>'.++$i.'</td>
-                                            <td>'.$row->NIK.'</td>
-                                            <td>'.$row->nama.'</td>
-                                            <td>'.$total_jam.'</td>
-                                            <td>'.$total_lembur.'</td>
-                                            <td>'.$row->total_masuk.'</td>
-                                        </tr>';
-                        }
-                        $foot = '</table></div>';
-                    }                
-                    $this->data['report'] = $head.$row_data.$foot;
                     //rekap kehadiran
                     $this->load->model('karyawan');
                     $query = $this->karyawan->get_all_karyawan();
                     if($query->num_rows() > 0)
                     {
-                        $head = '<div style="text-align:center;overflow:auto;width:100%"><h3>REKAP KEHADIRAN <br /> BULAN : '.month_to_string($month).' '.$year.'</h3>';
-                        $row_data = '<table class="table-data" cellspacing="0" cellpadding="0" ><tr><td class="head">NIK</td>';
+                        $head = '<div style="text-align:center;overflow:auto;width:100%"><h3>REKAPITULASI KEHADIRAN KARYAWAN</h3>
+                                <table style="text-align:left">
+                                    <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
+                                    <tr><td style="width: 50px">BULAN </td><td>: '.strtoupper(month_to_string($month)).' '.$year.'</td></tr>
+                                </table><br />';
+                        $head .= '<table class="table-data" cellspacing="0" cellpadding="0" style="border:1px solid;"><tr><td class="head">NIK</td>';
                         for($i=0;$i<=max_day($month,$year);)
                         {
-                            $row_data .= '<td class="head">'.++$i.'</td>';
+                            $head .= '<td class="head">'.++$i.'</td>';
                         }
-                        $row_data .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
+                        $head .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
+                        $row_data = '';
                         $karyawan = $query->result();
+                        $num = 0;
                         foreach($karyawan as $row)
                         {
-                            
+                            $num++;
                             $query = $this->absensi->rekap_hadir_bulanan($row->NIK,$month,$year);
                             $row_absen = '<tr><td>'.$row->NIK.'</td>';
                             if($query->num_rows() > 0)
@@ -392,7 +367,7 @@ class Presence extends Controller {
                                             $status = 'L';
                                             $total_libur++;
                                         }
-                                        $row_absen .= '<td style="background:#dedede">'.$status.'</td>';
+                                        $row_absen .= '<td style="background-color:#dedede">'.$status.'</td>';
                                         $j++;                                    
                                     }
                                     else
@@ -400,8 +375,8 @@ class Presence extends Controller {
                                         $row_absen .= '<td>&nbsp;</td>';
                                     }
                                 }
-                                $row_absen .= '<td style="background:#dedede">'.$total_masuk.'</td><td style="background:#dedede">'.$total_libur.'</td>
-                                                <td style="background:#dedede">'.$total_izin.'</td><td style="background:#dedede">'.$total_alpha.'</td></tr>';
+                                $row_absen .= '<td style="background-color:#dedede">'.$total_masuk.'</td><td style="background-color:#dedede">'.$total_libur.'</td>
+                                                <td style="background-color:#dedede">'.$total_izin.'</td><td style="background-color:#dedede">'.$total_alpha.'</td></tr>';
                             }
                             else
                             {
@@ -411,10 +386,19 @@ class Presence extends Controller {
                                 }
                                 $row_absen .= '<td>0</td><td>0</td><td>0</td><td>0</td></tr>';
                             }
-                            $row_data .= $row_absen;                        
+                            $row_data .= $row_absen;
+                            if($num%60==0)
+                            {
+                                $list[] = $row_data;
+                                $row_data = '';
+                            }
+                        }
+                        if(!empty($row_data))
+                        {
+                            $list[] = $row_data;
                         }
                         $foot = '</table>
-                                <p style="text-align:left;">Keterangan :</p>
+                                <p style="text-align:left;margin:0;">Keterangan :</p>
                                 <ol style="text-align:left">
                                     <li>M = Masuk</li>
                                     <li>I = Izin</li>
@@ -422,8 +406,95 @@ class Presence extends Controller {
                                     <li>L = Libur/Off</li>
                                 </ol>                            
                                 </div>';
-                        $this->data['report'] .= $head.$row_data.$foot;
+                        $this->data['report'] = $head;
+                        foreach($list as $row)
+                        {
+                            $this->data['report'] .= $row;
+                        }
+                        $this->data['report'] .= $foot;
+                        
+                        if($this->input->post('submit_print_report'))
+                        {
+                            $this->cetak_pdf($opsi,$head,$list,$foot);exit;
+                        }
                     }
+                }
+                //rekap jam kerja
+                else if($opsi == 2)
+                {
+                    //rekap jam kerja                    
+                    $query = $this->absensi->rekap_absen_bulanan($month,$year);                    
+                    if($query->num_rows() > 0)
+                    {
+                        $head = '<div style="text-align:center">
+                                    <h3>REKAPITULASI JAM KERJA KARYAWAN</h3>
+                                <table style="text-align:left">
+                                    <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
+                                    <tr><td style="width: 50px">BULAN </td><td>: '.strtoupper(month_to_string($month)).' '.$year.'</td></tr>
+                                </table><br />';
+                        if($this->input->post('submit_print_report'))
+                        {
+                            $head .=  '<table class="table-data" cellspacing="0" cellpadding="0" style="width:485px;border:1px solid;" >
+                                        <tr>
+                                            <td class="head" style="width:30px;background-color:#dedede;">No</td>
+                                            <td class="head" style="width:60px;background-color:#dedede;">NIK</td>
+                                            <td class="head" style="width:150px;background-color:#dedede;">Nama Karyawan</td>
+                                            <td class="head" style="width:80px;background-color:#dedede;">Total Jam Kerja <br />(Jam)</td>
+                                            <td class="head" style="width:85px;background-color:#dedede;">Total Jam Lembur <br />(Jam)</td>
+                                            <td class="head" style="width:80px;background-color:#dedede;">Total Hadir <br />(hari)</td></tr>';
+                        }
+                        else
+                        {
+                            $head .=  '<table class="table-data" cellspacing="0" cellpadding="0" style="width:485px;" >
+                                        <tr>
+                                            <td class="head" style="width:30px;">No</td>
+                                            <td class="head" style="width:60px;">NIK</td>
+                                            <td class="head" style="width:150px;">Nama Karyawan</td>
+                                            <td class="head" style="width:80px;">Total Jam Kerja <br />(Jam)</td>
+                                            <td class="head" style="width:85px;">Total Jam Lembur <br />(Jam)</td>
+                                            <td class="head" style="width:80px;">Total Hadir <br />(hari)</td></tr>';
+                        }
+                        $i=0;
+                        $row_data='';
+                        foreach($query->result() as $row)
+                        {
+                            $total_jam = $row->total_jam + ceil($row->total_menit/60);
+                            $total_lembur = $total_jam - config_item('work_cycle')*$row->total_masuk;
+                            if($total_lembur <= 0)
+                                $total_lembur = 0;
+                            $row_data .= '<tr>
+                                            <td style="width:30px">'.++$i.'</td>
+                                            <td style="width:60px">'.$row->NIK.'</td>
+                                            <td style="width:150px">'.$row->nama.'</td>
+                                            <td style="width:80px">'.$total_jam.'</td>
+                                            <td style="width:85px">'.$total_lembur.'</td>
+                                            <td style="width:80px">'.$row->total_masuk.'</td>
+                                        </tr>';
+                            //60 data per lembar
+                            if($i%60 == 0) 
+                            {
+                                $list[] = $row_data;
+                                $row_data = '';
+                            }
+                        }
+                        if(!empty($row_data))
+                        {
+                            $list[] = $row_data;
+                        }
+                        $foot = '</table></div>';                        
+                    }
+                    //tampilin sebagai preview print
+                    $this->data['report'] = $head;
+                    foreach($list as $row)
+                    {
+                        $this->data['report'] .= $row;
+                    }
+                    $this->data['report'] .= $foot;             
+                    if($this->input->post('submit_print_report'))
+                    {
+                        $this->cetak_pdf($opsi,$head,$list,$foot);exit;
+                    }
+                    
                 }
             }
             //ambil bulan dan tahun untuk rekap absensi
@@ -455,6 +526,90 @@ class Presence extends Controller {
         {
             redirect('home/error');
         }
+    }
+    /*
+    **Funngsi cetak pdf
+    */
+    function cetak_pdf($opsi,$head,$list_item,$footer)
+    {
+        require_once('lib/tcpdf/config/lang/eng.php');
+        require_once('lib/tcpdf/tcpdf.php');
+
+        // create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetTitle('TCPDF Example 006');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, 20, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 10);
+        
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); 
+        
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l); 
+
+        // ---------------------------------------------------------
+        //print yang rekap jam kerja
+        if($opsi==2)
+        {     
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);               
+            $pdf->setPageFormat($size,'P');               
+            // set font
+            $pdf->SetFont('dejavusans', '', 9);                
+            foreach($list_item as $rows)
+            {
+                // add a page
+                $pdf->AddPage();                
+                $html = $head.$rows.$footer;
+                //echo $html;
+                $pdf->writeHTML($html, true, 0, true, 0);            
+            }
+                
+        }
+        //print yang rekap kehadiran
+        if($opsi == 1)
+        {            
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);               
+            $pdf->setPageFormat($size,'L');               
+            // set font
+            $pdf->SetFont('dejavusans', '', 9);                
+            foreach($list_item as $rows)
+            {
+                // add a page
+                $pdf->AddPage();                
+                $html = $head.$rows.$footer;
+                //echo $html;
+                $pdf->writeHTML($html, true, 0, true, 0);            
+            }
+        }
+        // ---------------------------------------------------------
+
+        //Close and output PDF document
+        $pdf->Output('tes.pdf', 'I');     
+            
     }
     /**
     *konversi bulan dari angka ke string
