@@ -311,6 +311,12 @@ class Presence extends Controller {
                 //rekap kehadiran
                 if($opsi == 1)
                 {
+                    //set background untuk header
+                    $background = '';
+                    if($this->input->post('submit_print_report')) 
+                    {
+                        $background = 'background-color: #cdcdcd;font-weight:bold;';
+                    }
                     //rekap kehadiran
                     $this->load->model('karyawan');
                     $query = $this->karyawan->get_all_karyawan();
@@ -321,12 +327,12 @@ class Presence extends Controller {
                                     <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
                                     <tr><td style="width: 50px">BULAN </td><td>: '.strtoupper(month_to_string($month)).' '.$year.'</td></tr>
                                 </table><br />';
-                        $head .= '<table class="table-data" cellspacing="0" cellpadding="0" style="border:1px solid;"><tr><td class="head">NIK</td>';
+                        $head .= '<table class="table-data" cellspacing="0" cellpadding="0" style="border:1px solid;"><tr><td class="head" style="'.$background.'">NIK</td>';
                         for($i=0;$i<=max_day($month,$year);)
                         {
-                            $head .= '<td class="head">'.++$i.'</td>';
+                            $head .= '<td class="head" style="'.$background.'">'.++$i.'</td>';
                         }
-                        $head .= '<td class="head">M</td><td class="head">L</td><td class="head">I</td><td class="head">A</td></tr>';
+                        $head .= '<td class="head" style="'.$background.'">M</td><td class="head" style="'.$background.'">L</td><td class="head" style="'.$background.'">I</td><td class="head" style="'.$background.'">A</td></tr>';
                         $row_data = '';
                         $karyawan = $query->result();
                         $num = 0;

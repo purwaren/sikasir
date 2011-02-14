@@ -61,7 +61,7 @@ class Item extends Controller {
             //ambil data dari form mutasi
             $id_mutasi_masuk = $this->input->post('id_bon');
             $tgl_mutasi = $this->input->post('date_bon');
-            if(!empty($id_mutasi_masuk))
+            if(!empty($id_mutasi_masuk) && !empty($tgl_mutasi))
             {
                 $id_barang = $this->input->post('id_barang');
                 $nama = $this->input->post('nama');
@@ -150,7 +150,7 @@ class Item extends Controller {
             }
             else
             {
-                $this->data['err_msg'] = '<span style="color:red">Kode BON tidak boleh kosong </span>';
+                $this->data['err_msg'] = '<span style="color:red">Kode BON  dan Tanggal tidak boleh kosong </span>';
             }
         }
         $this->load->view('item-add',$this->data);

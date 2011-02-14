@@ -515,13 +515,13 @@ class PointOfSales extends Controller {
                         {
                             $harga_pengganti = $row->qty * $barang->harga * (1 - $row->diskon/100);
                             $tmp = '  '.$row->qty.' @'.number_format($barang->harga,0,',','.').' disc '.$row->diskon.'% = '.number_format($harga_pengganti,0,',','.').'#'.chr(10);
-                            $pengganti.= $this->spacer(36-strlen($tmp)).$tmp; 
+                            $pengganti.= $this->spacer(34-strlen($tmp)).$tmp; 
                         }
                         else
                         {
                             $harga_pengganti = $row->qty * $barang->harga;
                             $tmp = '  '.$row->qty.' @'.number_format($barang->harga,0,',','.').' = '.number_format($harga_pengganti,0,',','.').'#'.chr(10);
-                            $pengganti.= $this->spacer(36-strlen($tmp)).$tmp;
+                            $pengganti.= $this->spacer(34-strlen($tmp)).$tmp;
                         }
                         $total_item += $row->qty;
                         $total_pengganti += $harga_pengganti;
@@ -576,14 +576,14 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<pengganti>',$pengganti,$resi);//tulis detail barang ditukar               
                     $resi = str_replace('<all>',$total_item.' items',$resi);         
                     $tmp = number_format($total,0,',','.');
-                    $resi = str_replace('<total>',$this->spacer(22-strlen($tmp)).$tmp,$resi);
+                    $resi = str_replace('<total>',$this->spacer(20-strlen($tmp)).$tmp,$resi);
                     $resi = str_replace('<kasir>',$this->data['userinfo'],$resi);                                        
                     $resi = str_replace('<pramu>',$pramu,$resi);                                        
                     $tmp = number_format($cash,0,',','.');
-                    $resi = str_replace('<cash>',$this->spacer(22-strlen($tmp)).$tmp,$resi); 
+                    $resi = str_replace('<cash>',$this->spacer(20-strlen($tmp)).$tmp,$resi); 
                     $cashback = $cash - $total;                    
                     $tmp = number_format($cashback,0,',','.');
-                    $resi = str_replace('<cashback>',$this->spacer(22-strlen($tmp)).$tmp,$resi);
+                    $resi = str_replace('<cashback>',$this->spacer(20-strlen($tmp)).$tmp,$resi);
                     //open file to write
                     $filename = 'lib/receipt-'.$this->session->userdata('nik').'-'.$this->session->userdata('no_shift').'.txt';
                     $file = fopen($filename,'w');

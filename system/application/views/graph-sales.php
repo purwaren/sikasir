@@ -14,6 +14,7 @@
            <tr id="bulanan">
                 <td>Bulan</td><td> : <?php _e($month)._e('--')._e($year)?> </td><td>            
             <span class="button">&nbsp;<input type="submit" name="submit_graph_sales" value="Display" class="button"/></span>            
+            <span class="button">&nbsp;<input type="submit" name="submit_graph_sales_pdf" value="Cetak" class="button"/></span>            
             </td></tr>             
             
             </tr>

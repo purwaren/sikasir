@@ -14,6 +14,7 @@
            <tr id="bulanan">
                 <td>Bulan</td><td> : <?php _e($month)._e('--')._e($year)?> </td><td>            
                 <span class="button">&nbsp;<input type="submit" name="submit_graph_performance" value="Display" class="button"/></span>            
+                <span class="button">&nbsp;<input type="submit" name="submit_graph_performance_pdf" value="Cetak" class="button"/></span>            
             </td></tr>             
             <tr>
                 <td>Karyawan</td><td> : <?php _e($karyawan) ?></td>
@@ -23,11 +24,11 @@
         <?php _e(form_close()) ?>
         
         <?php if(isset($nik) && $nik == 'all' && isset($table)) { ?>
-            <h3 style="text-align:center">BULAN : <?php _e($bulan.' '.$tahun)?>
+            <!--<h3 style="text-align:center">BULAN : <?php _e($bulan.' '.$tahun)?>
             <br />
             DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>
-            <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance-all.png" alt="Grafik Omset" style="border:none" /></p>
-            <h3 style="text-align:center">TABEL OMSET <?php _e($bulan)?> <br /> (Rupiah)</h3>        
+            <p style="text-align: center"><img src="<?php _e(base_url())?>css/chart/performance-all.png" alt="Grafik Omset" style="border:none" /></p>-->
+            <h3 style="text-align:center">TABEL OMSET KARYAWAN <br /> BULAN : <?php _e($bulan.' '.$tahun)?> <br /> (Rupiah)</h3>        
             <div style="width: 100%; overflow:auto;">
             <?php if(isset($table)) _e($table) ?>
             </div>

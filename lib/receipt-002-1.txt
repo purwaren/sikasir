@@ -1,26 +1,24 @@
 MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
-=================================#
-Tanggal: 2011-02-03 19:21:35#
+================================#
+Tanggal: 2011-02-12 07:26:01#
+#
+        TRANSAKSI REFUND#
+01145006 OBL S.BRAND NK#
+            -1 @11.500 = -11.500#
+01225046 OBL MOC WR JKS#
+              1 @24.900 = 24.900#
  #
-        DETAIL TRANSAKSI#
-52101004 PA JKT IMPORT 8008#
-  1 @127.900 disc 10% #
-                        = 115.110#
-
-1 items#
-------------------------------(+)#
-Subtotal =                115.110#
-
-------------------------------(-)#
-Total   :                 115.100#
-Tunai   :                 200.000#
-Kembali :                  84.900#
-=================================#
+0 items#
+-----------------------------(+)#
+Total  : Rp               13.400#
+Tunai  : Rp               20.000#
+Kembali: Rp                6.600#
+================================#
 Kasir : Yeni Purwaningsih#
-Pramuniaga: Diko Rahman#
+Pramuniaga : Dian Eka Sari#
  #
-          TERIMAKASIH# 
-    BERBELANJA DENGAN KAMI#
-           --o00o--#
+         TERIMAKASIH# 
+   BERBELANJA DENGAN KAMI#
+          --o00o--#

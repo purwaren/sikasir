@@ -12,14 +12,14 @@ Revisi 1.0
     - bwt login khusus untuk absensi -ok
     - yang boleh ngotak atik absen hanya supervisor, jadi dimenu admin dan yang lain dihilangkan -ok
     - untuk karyawan yang tidak datang statusnya awalnya masih kosong, supervisor/login absen yang berhak mengisi -ok
-    - cetak absensi dan rekap absensi
+    - cetak absensi dan rekap absensi -ok
     - absensi ada 2 jenis, absensi datang dan absensi pulang -ok
-4. Cetak grafik penjualan dan grafik prestasi
+4. Cetak grafik penjualan dan grafik prestasi -ok
 //5. Rekap omset dalam satu bulan taro di laporan akumulasi penjualan bulanan.// tidak perlu,overlap dengan grafik omset
 6. Rapihin resi untuk refund --ok
 7. cek jumlah barang yang dijual tidak boleh melebihi stok. prblemnya klo yang barisnya dobel2.. -ok
 8. Bikin handler untuk Pole Display --ok
-9. Prestasi karyawan untuk pilihan semua, tampilkan tabel omsetnya aja... biar bisa kelihatan mana yang tertinggi mana yang terendah..
+9. Prestasi karyawan untuk pilihan semua, tampilkan tabel omsetnya aja... biar bisa kelihatan mana yang tertinggi mana yang terendah..-ok
 10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan -ok
 11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya - ok
 12. Terus taro digrafik omset, qty terjual, dan total diskon hari itu -ok

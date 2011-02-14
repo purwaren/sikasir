@@ -82,7 +82,12 @@ class Graph extends Controller {
                 $idx_max='';
                 foreach($query->result() as $row)
                 {             
-                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->tgl.'</td><td>'.$qty_sales[$i-1]->total.'</td><td>'.number_format($row_disc[$i-1]->total_diskon,'0',',','.').',-</td><td>'.number_format($row->omset,'0',',','.').',-</td></tr>';
+                    $row_data .= '<tr>
+                                    <td style="width:20px">'.++$i.'</td>
+                                    <td style="width:50px">'.$row->tgl.'</td>
+                                    <td style="width:50px">'.$qty_sales[$i-1]->total.'</td>
+                                    <td style="width:100px">'.number_format($row_disc[$i-1]->total_diskon,'0',',','.').',-</td>
+                                    <td style="width:100px">'.number_format($row->omset,'0',',','.').',-</td></tr>';
                     $line .= $row->tgl.','.($row->omset/1000). chr(10);
                     if($i==1)
                     {
@@ -109,7 +114,7 @@ class Graph extends Controller {
                     $total_qty += $qty_sales[$i-1]->total;
                     $total_disc += $row_disc[$i-1]->total_diskon;
                 }                
-                $row_total = '<tr><td colspan="2">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total_disc,'0',',','.').',-</td><td>'.number_format($total_omset,'0',',','.').',-</td></tr>';
+                $row_total = '<tr><td colspan="2" style="width:70px;">T O T A L</td><td style="width:50px">'.$total_qty.'</td><td style="width:100px">'.number_format($total_disc,'0',',','.').',-</td><td style="width:100px">'.number_format($total_omset,'0',',','.').',-</td></tr>';
                 $this->data['row_data']=$row_data.$row_total;
                 $file = @fopen('lib/omset.csv','w');
                 fwrite($file,$line);
@@ -129,6 +134,23 @@ class Graph extends Controller {
                 $config['max_omset'] = $max_omset;            
                 $config['min_omset'] = $min_omset;            
                 $this->generate_graph($config);
+                //jika pilih cetak pdf maka ekspor ke pdf
+                if($this->input->post('submit_graph_sales_pdf'))
+                {
+                    $head1 = '<h3 style="text-align:center">GRAFIK OMSET '.$this->data['bulan'].'<br /> DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>';
+                    $img = base_url().'css/chart/sales.png';
+                    $head2 = '<h3 style="text-align:center">TABEL OMSET '.$this->data['bulan'].'</h3>';
+                    $table = '<table class="table-data" cellspacing="0" cellpadding="0" style="width:300px; text-align:center;border:1px solid;">
+                                <tr>
+                                    <td class="head" style="width:20px">No</td>
+                                    <td class="head" style="width:50px">Tanggal</td>
+                                    <td class="head" style="width:50px">Qty Terjual</td>
+                                    <td class="head" style="width:100px">Total Diskon(Rp)</td>
+                                    <td class="head" style="width:100px">Omset (Rp)</td>
+                                </tr>';
+                    $table .= $this->data['row_data'].'</table>';
+                    $this->cetak_pdf(1,$head1,$head2,$table,$img);
+                }
             }
             else
             {
@@ -184,7 +206,7 @@ class Graph extends Controller {
         if($query->num_rows() > 0)
         {
             $this->data['pramu'] = $query->result();
-            $karyawan = '<select name="nik" style="width:178px;">';
+            $karyawan = '<select name="nik" style="width:178px;"><option value="all">Semua Karyawan</option>';
             foreach($query->result() as $row)
             {
                 $karyawan .= '<option value="'.$row->NIK.'">'.$row->nama.'</option>';
@@ -192,7 +214,7 @@ class Graph extends Controller {
             $karyawan .= '</select>';
             $this->data['karyawan'] = $karyawan;
         }
-        if($this->input->post('submit_graph_performance'))
+        if($this->input->post('submit_graph_performance') || $this->input->post('submit_graph_performance_pdf'))
         {
             $bulan = $this->input->post('bulan');
             $tahun = $this->input->post('tahun');
@@ -200,11 +222,19 @@ class Graph extends Controller {
             $this->data['bulan'] = strtoupper($this->month_to_string($bulan));
             $this->data['nik'] = $nik;
             $this->data['tahun'] = $tahun;
+            $bgcolor='';
+            $width = '';
+            if($this->input->post('submit_graph_performance_pdf'))
+            {
+               $bgcolor='background-color: #dedede;';
+               $width ='width:70px;';
+            }
             //menampilkan grafik semua karyawan
             if($nik == 'all')
             {
                 //ambil data nik semua pramuniaga                
                 $pramu = $this->data['pramu'];
+                $jumlah_pramu = count($pramu);
                 $i = 0;
                 $data = array();
                 $series = array();
@@ -243,49 +273,52 @@ class Graph extends Controller {
                     }                    
                 }                                
                 //setting data kedalam tabel untuk ditampilkan
-                //header table
-                $row_head = '<table class="table-data" cellspacing="0" cellpadding="0"><tr><td class="head">Tanggal</td>';
-                foreach($series as $row)
+                if(isset($data_mentah)) 
                 {
-                    $row_head .='<td class="head">'.$row.'</td>';
-                }
-                $row_head .= '<td class="head">TOTAL</td></tr>';
-                //row data untuk tabel
-                $row_data = '';                
-                for($i=1;$i<=31;$i++)
-                {
-                    $line = '<tr><td>'.$i.'</td>';
-                    $total_day = 0;
-                    for($j=0;$j<count($data_mentah);$j++)
-                    {                        
-                        if(isset($data_mentah[$j][$i]))
-                        {
-                            $line .= '<td>'.number_format($data_mentah[$j][$i],'0',',','.').',-</td>'; 
-                            $total_day += $data_mentah[$j][$i];
-                        }
-                        else
-                        {
-                            $line .= '<td>'.number_format(0,'0',',','.').',-</td>';
-                        }
+                    //header table
+                    $row_head = '<table class="table-data" cellspacing="0" cellpadding="0" style="border: 1px solid;"><tr><td class="head" style="text-align:center;'.$bgcolor.'">&nbsp;Tanggal&nbsp;</td>';
+                    foreach($series as $row)
+                    {
+                        $row_head .='<td class="head" style="text-align:center;'.$width.$bgcolor.'">&nbsp;'.$row.'&nbsp;</td>';
                     }
-                    $line .= '<td>'.number_format($total_day,'0',',','.').',-</td></tr>';
-                    $row_data .= $line;
+                    $row_head .= '<td class="head" style="text-align:center;'.$width.$bgcolor.'">&nbsp;JUMLAH&nbsp;</td></tr>';
+                    //row data untuk tabel
+                    $row_data = '';                
+                    for($i=1;$i<=31;$i++)
+                    {
+                        $line = '<tr><td style="text-align:center'.$bgcolor.'">'.$i.'</td>';
+                        $total_day = 0;
+                        for($j=0;$j<count($data_mentah);$j++)
+                        {                        
+                            if(isset($data_mentah[$j][$i]))
+                            {
+                                $line .= '<td style="text-align:right;'.$width.'">'.number_format($data_mentah[$j][$i],'0',',','.').',- &nbsp;</td>'; 
+                                $total_day += $data_mentah[$j][$i];
+                            }
+                            else
+                            {
+                                $line .= '<td style="text-align:right'.$width.'">'.number_format(0,'0',',','.').',- &nbsp;</td>';
+                            }
+                        }
+                        $line .= '<td style="text-align:right;'.$width.'">'.number_format($total_day,'0',',','.').',- &nbsp;</td></tr>';
+                        $row_data .= $line;
+                    }
+                    //row total
+                    $row_total = '<tr><td style="text-align:center">TOTAL</td>';
+                    foreach($total as $row)
+                    {
+                        $row_total .= '<td style="text-align:right;'.$width.'">'.number_format($row,'0',',','.').',- &nbsp;</td>';
+                    }
+                    $row_total .='<td style="'.$width.'"></td></tr><tr><td style="text-align:center">RATA - RATA </td>';
+                    for($i=0;$i<count($total);$i++)
+                    {
+                        $temp = array_filter($data_mentah[$i]);
+                        $avg = $total[$i]/count($temp);
+                        $row_total .= '<td style="text-align:right;'.$width.'">'.number_format($avg,'0',',','.').',- &nbsp;</td>';
+                    }
+                    $row_total .= '<td style="'.$width.'"></td></tr>';
+                    $this->data['table'] = $row_head.$row_data.$row_total.'</table>';               
                 }
-                //row total
-                $row_total = '<tr><td>TOTAL</td>';
-                foreach($total as $row)
-                {
-                    $row_total .= '<td>'.number_format($row,'0',',','.').',-</td>';
-                }
-                $row_total .='<td></td></tr><tr><td>RATA - RATA </td>';
-                for($i=0;$i<count($total);$i++)
-                {
-                    $temp = array_filter($data_mentah[$i]);
-                    $avg = $total[$i]/count($temp);
-                    $row_total .= '<td>'.number_format($avg,'0',',','.').',-</td>';
-                }
-                $row_total .= '<td></td></tr>';
-                $this->data['table'] = $row_head.$row_data.$row_total.'</table>';                
                 //initialize config
                 $config['series'] = $series;
                 $config['title'] = 'Grafik Perbandingan Omset Karyawan';
@@ -293,8 +326,14 @@ class Graph extends Controller {
                 $config['y_axis_name'] = 'Jumlah Omset (Rp 1.000)';
                 $config['x_axis_name'] = 'Tanggal';
                 $config['type'] = 'cubic';
-                $this->generate_multigraph($data,$config);
-                
+                //$this->generate_multigraph($data,$config);
+                if($this->input->post('submit_graph_performance_pdf')) 
+                {
+                    $head1 = '';$img = $jumlah_pramu;
+                    $head2 = '<h3 style="text-align:center">TABEL OMSET KARYAWAN <br /> BULAN : '.$this->data['bulan'].' '.$this->data['tahun'].'<br /> (Rupiah)</h3>';
+                    $table = $this->data['table'];
+                    $this->cetak_pdf(3,$head1,$head2,$table,$img);
+                }
             }
             //menampilkan grafik per karyawan
             else
@@ -328,7 +367,7 @@ class Graph extends Controller {
                             $omset[$i] = $row[$j]->omset/1000;
                             $item_sales[$i] = $row[$j]->total_item*100;
                             $customer[$i] = $row[$j]->total_customer*100;
-                            $row_data .= '<tr><td>'.++$k.'</td><td>'.$row[$j]->tgl.'</td><td>'.number_format($row[$j]->omset,'0',',','.').',-</td><td>'.$row[$j]->total_item.'</td><td>'.$row[$j]->total_customer.'</td></tr>';                        
+                            $row_data .= '<tr><td>'.++$k.'</td><td>'.$row[$j]->tgl.'</td><td style="text-align:right;width:100px;">'.number_format($row[$j]->omset,'0',',','.').',-&nbsp;&nbsp;</td><td style="text-align:right;">'.$row[$j]->total_item.'&nbsp;&nbsp;</td><td style="text-align:right;">'.$row[$j]->total_customer.'&nbsp;&nbsp;</td></tr>';                        
                             if($i==1)
                             {
                                 $idx_min=$i;
@@ -364,8 +403,8 @@ class Graph extends Controller {
                             $i++;
                         }                        
                     }                                       
-                    $row_total = '<tr><td colspan="2">T O T A L</td><td>'.number_format($total_omset,'0',',','.').',-</td><td>'.$total_item.'</td><td>'.$total_customer.'</td></tr>';
-                    $row_total .= '<tr><td colspan="2">RATA RATA</td><td>'.number_format($total_omset/$j,'0',',','.').',-</td><td>'.floor($total_item/$j).'</td><td>'.floor($total_customer/$j).'</td></tr>';
+                    $row_total = '<tr><td colspan="2">T O T A L</td><td style="text-align:right;width:100px;">'.number_format($total_omset,'0',',','.').',-&nbsp;&nbsp;</td><td style="text-align:right;">'.$total_item.'&nbsp;&nbsp;</td><td style="text-align:right;">'.$total_customer.'&nbsp;&nbsp;</td></tr>';
+                    $row_total .= '<tr><td colspan="2">RATA RATA</td><td style="text-align:right;width:100px;">'.number_format($total_omset/$j,'0',',','.').',-&nbsp;&nbsp;</td><td style="text-align:right;">'.floor($total_item/$j).'&nbsp;&nbsp;</td><td style="text-align:right;">'.floor($total_customer/$j).'&nbsp;&nbsp;</td></tr>';
                     
                     //ambil omset rata-rata per hari dalam satu bulan
                     $query = $this->transaksi->get_avg_omset($bulan,$tahun);
@@ -394,7 +433,7 @@ class Graph extends Controller {
                         }
                     }
                    
-                    $row_total .= '<tr><td colspan="2">RATA-RATA GLOBAL</td><td>'.number_format($avg_omset_total/$i,'0',',','.').',-</td><td>'.floor($total_item/$i).'</td><td>'.floor($total_customer/$i).'</td></tr>';
+                    $row_total .= '<tr><td colspan="2">RATA-RATA GLOBAL</td><td style="text-align:right;width:100px;">'.number_format($avg_omset_total/$i,'0',',','.').',-&nbsp;&nbsp;</td><td style="text-align:right;">'.floor($total_item/$i).'&nbsp;&nbsp;</td><td style="text-align:right;">'.floor($total_customer/$i).'&nbsp;&nbsp;</td></tr>';
                     $this->data['row_data']=$row_data.$row_total;
                     //ambil jumlah item yang berhasil dijual oleh karyawan
                     
@@ -420,6 +459,25 @@ class Graph extends Controller {
                     $config['max_omset'] = $max_omset;            
                     $config['min_omset'] = $min_omset;                    
                     $this->generate_multigraph($data, $config);
+                    if($this->input->post('submit_graph_performance_pdf'))
+                    {
+                        $head1='<h3 style="text-align:center">BULAN : '.$this->data['bulan'].' '.$this->data['tahun'].'<br /> 
+                                NAMA KARYAWAN : '.strtoupper($this->data['pramuniaga']->nama).'<br /><br />
+                                DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>';
+                        $img = base_url().'css/chart/performance.png';
+                        
+                        $head2 = '<h3 style="text-align:center">TABEL OMSET '.$this->data['bulan'].' '.$this->data['tahun'].'</h3>';
+                        $table = '<table class="table-data" cellspacing="0" cellpadding="0" style="width:300px; text-align:center; border: 1px solid;">
+                                    <tr>
+                                        <td class="head" style="background-color: #dedede;">No</td>
+                                        <td class="head" style="background-color: #dedede;">Tanggal</td>
+                                        <td class="head" style="width:100px;background-color: #dedede;">Omset (Rp)</td>
+                                        <td class="head" style="background-color: #dedede;">Total Item</td>
+                                        <td class="head" style="background-color: #dedede;">Total Customer</td>
+                                    </tr>';
+                        $table .= $this->data['row_data'].'</table>';
+                        $this->cetak_pdf(2,$head1,$head2,$table,$img);
+                    }
                 }
                 else
                 {
@@ -563,6 +621,108 @@ class Graph extends Controller {
         $Test->setFontProperties("lib/chart/Fonts/tahoma.ttf",10);
         $Test->drawTitle(350,22,$param['title'],50,50,50,585);        
         $Test->Render($param['file_name']);
+    }
+    /*
+    **Funngsi cetak pdf
+    */
+    function cetak_pdf($opsi,$head1,$head2,$data,$img)
+    {
+        require_once('lib/tcpdf/config/lang/eng.php');
+        require_once('lib/tcpdf/tcpdf.php');
+
+        // create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false); 
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Sikasir');
+        $pdf->SetTitle('Grafik');
+        $pdf->SetSubject('Cetak Grafik');
+        $pdf->SetKeywords('grafik');
+
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, 20, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 10);
+        
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); 
+        
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l); 
+
+        // ---------------------------------------------------------
+        if($opsi == 1)
+        {
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);               
+            $pdf->setPageFormat($size,'P');               
+            // set font
+            $pdf->SetFont('dejavusans', '', 9);      
+            // add a page
+            $pdf->AddPage();
+            $pdf->writeHTML('<br />', true, 0, true, 0);
+            $pdf->writeHTML($head1, true, 0, true, 0);
+            $pdf->Image($img,13,40,190,60);
+            $pdf->writeHTML('<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />', true, 0, true, 0);      
+            $pdf->writeHTML($head2,true,0,true,0);     
+            $pdf->writeHTMLCell(0,0,50,110,$data);
+        }
+        if($opsi == 2)
+        {
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);               
+            $pdf->setPageFormat($size,'P');               
+            // set font
+            $pdf->SetFont('dejavusans', '', 9);      
+            // add a page
+            $pdf->AddPage();
+            $pdf->writeHTML('<br />', true, 0, true, 0);
+            $pdf->writeHTML($head1, true, 0, true, 0);
+            $pdf->Image($img,13,50,190,65);
+            $pdf->writeHTML('<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />', true, 0, true, 0);      
+            $pdf->writeHTML($head2,true,0,true,0);     
+            $pdf->writeHTMLCell(0,0,50,130,$data);
+        }
+        if($opsi == 3)
+        {
+            $pdf->setPageUnit('mm');
+            if($img <= 10)
+            {
+                $size = array(216,330);               
+            }
+            else
+            {
+                $w = 216;
+                $h = 330 + (($img - 10)*20);
+                $size = array($w,$h);
+            }
+            $pdf->setPageFormat($size,'L');               
+            // set font
+            $pdf->SetFont('dejavusans', '', 9);      
+            // add a page
+            $pdf->AddPage();               
+            $pdf->writeHTMLCell(0,0,0,25,$head2); 
+            $pdf->writeHTMLCell(0,0,15,45,$data);
+        }
+        // ---------------------------------------------------------
+
+        //Close and output PDF document
+        $pdf->Output('tes.pdf', 'I');     
+            
     }
     /**
     *hitung jumlah hari dalam satu bulan
