@@ -318,21 +318,26 @@ class Graph extends Controller {
                     }
                     $row_total .= '<td style="'.$width.'"></td></tr>';
                     $this->data['table'] = $row_head.$row_data.$row_total.'</table>';               
+                
+                    //initialize config
+                    $config['series'] = $series;
+                    $config['title'] = 'Grafik Perbandingan Omset Karyawan';
+                    $config['file_name'] = 'css/chart/performance-all.png';
+                    $config['y_axis_name'] = 'Jumlah Omset (Rp 1.000)';
+                    $config['x_axis_name'] = 'Tanggal';
+                    $config['type'] = 'cubic';
+                    //$this->generate_multigraph($data,$config);
+                    if($this->input->post('submit_graph_performance_pdf')) 
+                    {
+                        $head1 = '';$img = $jumlah_pramu;
+                        $head2 = '<h3 style="text-align:center">TABEL OMSET KARYAWAN <br /> BULAN : '.$this->data['bulan'].' '.$this->data['tahun'].'<br /> (Rupiah)</h3>';
+                        $table = $this->data['table'];
+                        $this->cetak_pdf(3,$head1,$head2,$table,$img);
+                    }
                 }
-                //initialize config
-                $config['series'] = $series;
-                $config['title'] = 'Grafik Perbandingan Omset Karyawan';
-                $config['file_name'] = 'css/chart/performance-all.png';
-                $config['y_axis_name'] = 'Jumlah Omset (Rp 1.000)';
-                $config['x_axis_name'] = 'Tanggal';
-                $config['type'] = 'cubic';
-                //$this->generate_multigraph($data,$config);
-                if($this->input->post('submit_graph_performance_pdf')) 
+                else
                 {
-                    $head1 = '';$img = $jumlah_pramu;
-                    $head2 = '<h3 style="text-align:center">TABEL OMSET KARYAWAN <br /> BULAN : '.$this->data['bulan'].' '.$this->data['tahun'].'<br /> (Rupiah)</h3>';
-                    $table = $this->data['table'];
-                    $this->cetak_pdf(3,$head1,$head2,$table,$img);
+                    $this->data['err_msg'] = 'Data tidak ditemukan';
                 }
             }
             //menampilkan grafik per karyawan
