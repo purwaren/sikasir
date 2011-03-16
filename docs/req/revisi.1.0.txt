@@ -23,4 +23,5 @@ Revisi 1.0
 10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan -ok
 11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya - ok
 12. Terus taro digrafik omset, qty terjual, dan total diskon hari itu -ok
+13. Check quantity untuk refund, di qty barang pengganti.
 
