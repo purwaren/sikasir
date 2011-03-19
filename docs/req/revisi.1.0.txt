@@ -24,4 +24,5 @@ Revisi 1.0
 11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya - ok
 12. Terus taro digrafik omset, qty terjual, dan total diskon hari itu -ok
 13. Check quantity untuk refund, di qty barang pengganti.
+14. Cross check untuk pembayaran apakah datanya sudah masuk ke table item_transaksi_penjualan. -ok
 
