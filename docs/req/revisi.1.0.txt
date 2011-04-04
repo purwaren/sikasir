@@ -26,4 +26,4 @@ Revisi 1.0
 13. Check quantity untuk refund, di qty barang pengganti.
 14. Ketika import bon, langsung muncul akumulasi datanya, spt total qty dan total rupiahnya.
 15. Benerin mekanisme checking, ada fasilitas untuk update opname yang stok barangnya udh abis.
-16.
+16. Cross check untuk pembayaran apakah datanya sudah masuk ke table item_transaksi_penjualan. -ok 

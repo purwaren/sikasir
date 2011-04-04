@@ -655,7 +655,7 @@ function printRefundReceipt(mode,tunai,brg_tukar,qty_tukar,id_transaksi) {
                     function(kassa){                        
                         $('#appletPrinter')[0].sendReceipt(receipt,kassaServer[kassa]);           
                     }        
-            );             
+            );   
         }        
     );
 }
@@ -701,6 +701,7 @@ function cancelTrans() {
         $('#dialog-prompt-trans').dialog('close');
         $('#barcode').focus();
     }
+    $('#trans-nth').val('');
     countAllTotal();
     countAllWithDisc();    
 }
@@ -732,6 +733,7 @@ function payTrans(mop) {
     var id_pramuniaga = $.trim($('#id_pramu').val());
     var disc_all = parseFloat($.trim($('#disc_all').val()));
     var total = parseFloat($('#total_val').val());
+    var item_valid = 0;
     total = total*(1- (disc_all/100));
     total = Math.floor(total/100) * 100;
     var check = "";
@@ -743,7 +745,8 @@ function payTrans(mop) {
             harga_barang[i] = $('#harga_'+i).val();
             qty[i] = $('#qty_'+i).val();
             disc[i] = $('#diskon_'+i).val();
-            jumlah[i] = $('#jmlh_'+i).val();            
+            jumlah[i] = $('#jmlh_'+i).val();
+            item_valid++;
         }
         else {
             //jumlah di set negatif, biar di server dianggap sebagai transaksi tidak valid / dibatalkan
@@ -765,7 +768,7 @@ function payTrans(mop) {
             //send ajax request, saving transaction data to database
             $.post(
                 "transaction",
-                {'id_trans': id_transaksi, 'id_barang[]': id_barang,'qty[]': qty,'disc[]':disc,'jumlah[]':jumlah,'id_pramu':id_pramuniaga,'disc_all':disc_all,'total':total},
+                {'id_trans': id_transaksi, 'id_barang[]': id_barang,'item_valid':item_valid,'qty[]': qty,'disc[]':disc,'jumlah[]':jumlah,'id_pramu':id_pramuniaga,'disc_all':disc_all,'total':total},
                 function(data){
                     //success
                     if(data == 1) { 
@@ -786,7 +789,7 @@ function payTrans(mop) {
                                 Ok : function() {
                                     $(this).dialog('close');
                                     //var cash = bill + kembalian;                        
-                                    setTimeout("window.location.replace('launch')",500);
+                                    setTimeout("location.reload()",500);
                                 }
                             }
                         });

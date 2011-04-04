@@ -28,6 +28,13 @@ class Transaksi extends Model
         }
     }
     /**
+    * hapus transaksi berdasar id transaksinya
+    */
+    function remove($id_transaksi)
+    {
+        return $this->db->where('id_transaksi',$id_transaksi)->delete('transaksi_penjualan');
+    }
+    /**
     *Ambil data kasir dalam transaksi
     */
     function get_kasir($tanggal)

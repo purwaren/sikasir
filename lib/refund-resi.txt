@@ -8,9 +8,9 @@ Tanggal: <tanggal> <jam>#
 <pengganti> #
 <all>#
 -----------------------------(+)#
-Total  : Rp <total>#
-Tunai  : Rp <cash>#
-Kembali: Rp <cashback>#
+Total  : Rp<total>#
+Tunai  : Rp<cash>#
+Kembali: Rp<cashback>#
 ================================#
 Kasir : <kasir>#
 Pramuniaga : <pramu>#

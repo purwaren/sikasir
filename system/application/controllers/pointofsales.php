@@ -105,6 +105,7 @@ class PointOfSales extends Controller {
         //data berasal dari  pos system
         $id_transaksi = $this->input->post('id_trans');
         $id_barang = $this->input->post('id_barang');
+        $item_valid = $this->input->post('item_valid');
         $qty = $this->input->post('qty');
         $disc = $this->input->post('disc');
         $id_pramuniaga = $this->input->post('id_pramu');
@@ -150,8 +151,19 @@ class PointOfSales extends Controller {
                 }
                 $i++;
             }
-            
-            _e(1);
+            //cross check apakah data sudah benar2 tersimpan ke database
+            $query = $this->item_transaksi->get_all_item($id_transaksi);
+            if($query->num_rows() == $item_valid)
+            {
+                _e(1);
+            }
+            else 
+            {
+                //hapus lagi data yang di item_transaksi_penjualan dan transaksi_penjualan
+                $this->item_transaksi->remove($id_transaksi);
+                $this->transaksi->remove($id_transaksi);
+                _e(0);
+            }
         }
         else
         {
