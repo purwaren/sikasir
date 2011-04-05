@@ -373,8 +373,13 @@ class Item extends Controller {
                 $item = $this->csvreader->parse_file($file_name);
                 $this->data['row_data'] = '';
                 $i=0;
+                $total_qty = 0;
+                $total = 0;
                 foreach($item as $row)
                 {
+                    $jumlah = $row['item_hj']*$row['quantity'];
+                    $total += $jumlah;
+                    $total_qty += $row['quantity'];
                     $this->data['row_data'] .= '<tr>
                                                     <td>'.++$i.'</td>
                                                     <td>'.$row['item_code'].'</td>
@@ -383,9 +388,11 @@ class Item extends Controller {
                                                     <td>'.$row['item_disc'].'</td>
                                                     <td style="text-align:right;padding-right:10px;"><input type="hidden" id="item_hj_'.$i.'" value="'.$row['item_hj'].'">'.number_format($row['item_hj'],0,',','.').',-</td>
                                                     <td>'.$row['quantity'].'</td>
+                                                    <td>'.number_format($jumlah,0,',','.').',-</td>
                                                     <td><span class="button"><input type="button" class="button" value="O K" onclick="saveImport('.$i.')"/></span></td>
                                                 </tr>';
                 }
+                $this->data['row_data'] .= '<tr><td colspan="6" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total,0,',','.').',-</td><td></td></tr>';
             }
             else
             {

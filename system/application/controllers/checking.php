@@ -44,7 +44,7 @@ class Checking extends Controller {
             if(!empty($id_barang))
             {
                 $this->load->model('barang');            
-                $query = $this->barang->get_barang($id_barang, 1);
+                $query = $this->barang->get_barang($id_barang, 4);                
                 if($query->num_rows() > 0)
                 {
                     $brg = $query->row();
@@ -71,7 +71,7 @@ class Checking extends Controller {
             
             $id_barang = $this->input->post('id_barang');
             $stok_opname = $this->input->post('stok_opname');
-            if($stok_opname > 0)
+            if($stok_opname >= 0)
             {
                 //update data stok_opname, disimpan
                 $this->load->model('barang');
@@ -88,8 +88,7 @@ class Checking extends Controller {
                 {
                     $this->data['err_msg'] = 'Gagal menyimpan stok opname';
                 }
-            }
-            
+            }                      
         }
         $this->load->view('checking-add',$this->data);
     }

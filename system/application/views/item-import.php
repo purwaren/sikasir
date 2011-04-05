@@ -39,6 +39,7 @@
                 <td class="head">Disc %</td>
                 <td class="head">Harga Jual (Rp)</td>
                 <td class="head">Quantity</td>
+                <td class="head">Jumlah</td>
                 <td class="head">Action</td>
             </tr>
             <?php echo $row_data ?>            

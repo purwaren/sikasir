@@ -29,14 +29,20 @@ class Barang extends Model
             $query = $this->db->get_where('barang',array('id_barang'=>$id_barang,'stok_barang >'=>'0'));
         }
         //retrieve barang untuk receipt
-        if($cond == 2)
+        else if($cond == 2)
         {
             $query = $this->db->get_where('barang',array('id_barang'=>$id_barang));
         }
         //retrieve barang untuk refund, mutasi keluar harus > 0
-        if($cond == 3)
+        else if($cond == 3)
         {
             $query = $this->db->get_where('barang',array('id_barang'=>$id_barang,'mutasi_keluar >' => '0'));
+        }
+        //retrieve barang untuk opname
+        else if($cond == 4)
+        {
+            $query = 'select * from barang where (id_barang="'.$id_barang.'" and stok_barang > 0) or (id_barang="'.$id_barang.'" and stok_opname > 0)';
+            $query = $this->db->query($query);
         }
         return $query;
     }
