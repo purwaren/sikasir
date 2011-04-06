@@ -308,6 +308,7 @@ class PointOfSales extends Controller {
         $id_pengganti = $this->input->post('id_pengganti');
         $qty_pengganti = $this->input->post('qty_pengganti');
         $disc_pengganti = $this->input->post('disc_pengganti');
+        $disc_tukar = $this->input->post('disc_tukar');
         $id_pramu = $this->input->post('id_pramu');
         $id_transaksi = time();
         $total = $this->input->post('total');
@@ -350,7 +351,7 @@ class PointOfSales extends Controller {
                     'id_transaksi'=>$id_transaksi,
                     'id_barang'=>$id_tukar[$i],
                     'qty'=> (-1 * $qty_tukar[$i]),
-                    'diskon'=> 0
+                    'diskon'=> $disc_tukar[$i]
                 );
                 if($this->item_transaksi->add_item_transaksi($data))
                 {

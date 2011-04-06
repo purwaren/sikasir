@@ -873,12 +873,12 @@ function transRefund() {
     //barang yang ditukar tambahkan ke stok   
     var brg_tukar = new Array();
     var qty_tukar = new Array();
-    //var disc_tukar = new Array();
+    var disc_tukar = new Array();
     var tukar = $('#detail-tukar tr');
     for(i=1;i<tukar.length;i++) {
         brg_tukar[i-1] = $('#detail-tukar tr:nth-child('+(i+1)+') td:nth-child(2)').html();
         qty_tukar[i-1] = $('#qty_refund_'+i).val();
-        //disc_tukar[i-1] = $('#disc_refund').val();
+        disc_tukar[i-1] = $('#disc_refund').val();
     }    
     var brg_pengganti = new Array();
     var qty_pengganti = new Array();
@@ -905,7 +905,7 @@ function transRefund() {
     if(bill <= cash) {
         $.post(
             "trans_refund",
-            {'id_tukar[]': brg_tukar,'qty_tukar[]':qty_tukar,'id_pengganti[]': brg_pengganti,'qty_pengganti[]':qty_pengganti, 'disc_pengganti[]':disc_pengganti, 'id_pramu': id_pramu, 'total': bill},
+            {'id_tukar[]': brg_tukar,'qty_tukar[]':qty_tukar,'id_pengganti[]': brg_pengganti,'qty_pengganti[]':qty_pengganti, 'disc_tukar':disc_tukar, 'disc_pengganti[]':disc_pengganti, 'id_pramu': id_pramu, 'total': bill},
             function(data){
                 if(data.status == 1) {
                     //print receipt + munculin angka kembalian
@@ -1008,18 +1008,56 @@ function validateQtyById(id_barang,stock) {
 /**
 *Validasi Qty untuk refund
 */
-function validateQtyRefund(num, qty) {
-    var qty_refund = parseInt($('#qty_refund_'+num).val());
-    if(qty_refund > qty) {
-        displayNotification('Qty melebihi penjualan dalam database');
-        $('#qty_refund_'+num).val(qty);
+function validateQtyRefund(item_code, qty) {    
+    //var item_code = $('#detail-tukar tr:nth-child('+(num+1)+') td:nth-child(2)').html();
+    //search all line contain this item_code
+    var line = $('#detail-tukar tr:contains('+item_code+') td:nth-child(6) input:text');
+    var total_qty = 0;
+    if(line.length > 0) {        
+        for(i=0;i<line.length;i++) {
+            idx = line[i].getAttribute('id');
+            temp = $('#'+idx).val();
+            if(temp=="") {
+                temp = 0
+            }
+            else {
+                temp = parseFloat(temp);
+            }
+            total_qty += temp;
+        }        
     }
+    if(total_qty >= qty) {
+        displayNotification('Total qty refund untuk <b>'+ item_code + '</b> berlebih, maksimal : '+qty);        
+        statusQty = false;
+    }
+    else {
+        statusQty = true;
+    }    
 }
-function validateQtyGanti(num, qty) {
-    var qty_ganti = parseInt($('#qty_ganti_'+num).val());
-    if(qty_ganti > qty) {
-        displayNotification('Qty melebihi stok barang dalam database');
-        $('#qty_ganti_'+num).val(qty);
+function validateQtyGanti(item_code, qty) {
+    //var item_code = $('#detail-pengganti tr:nth-child('+(num+1)+') td:nth-child(2)').html();
+    //search all line contain this item_code
+    var line = $('#detail-pengganti tr:contains('+item_code+') td:nth-child(6) input:text');
+    if(line.length > 0) {
+        var total_qty = 0;
+        for(i=0;i<line.length;i++) {
+            idx = line[i].getAttribute('id');
+            temp = $('#'+idx).val();
+            if(temp=="") {
+                temp = 0
+            }
+            else {
+                temp = parseFloat(temp);
+            }
+            total_qty += temp;
+        }        
+    }
+    if(total_qty >= qty) {
+        displayNotification('Total qty ganti untuk <b>'+ item_code + '</b>  berlebih, maksimal : '+qty);        
+        statusQty = false;
+    }
+    else {
+        statusQty = true;
     }
 }
 
@@ -1139,25 +1177,34 @@ function getItem(option) {
                     var row = '<tr class="head"><td style="width:40px">N0</td><td style="width:150px">KODE BARANG</td><td style="width:230px">NAMA BARANG</td><td style="width:170px">HARGA BARANG (Rp)</td><td style="width:90px">STOK BARANG</td><td style="width:90px">QTY</td></tr>';
                     var temp = $('#detail-tukar tr');
                     if(temp.length > 0) {
-                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+temp.length+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund('+temp.length+','+data.mutasi_keluar+');"/></td></tr>';                    
+                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+temp.length+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund('+data.id_barang+','+data.mutasi_keluar+');"/></td></tr>';                    
                     }
                     else {
-                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+1+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+1+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund(1,'+data.mutasi_keluar+');"/></td></tr>';                    
+                       row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_tukar_'+1+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_tukar">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_refund_'+1+'" style="width:25px" value="1" onkeyup="countRefund();validateQtyRefund('+data.id_barang+','+data.mutasi_keluar+');"/></td></tr>';                    
                     }
-                    $('#detail-tukar').append(row);
-                    countRefund();
+                    //validate qty                   
+                    validateQtyRefund(data.id_barang,data.mutasi_keluar);                    
+                    if(statusQty) {
+                        $('#detail-tukar').append(row);
+                        countRefund();
+                    }                    
                 }
                 if(option==2) {
                     var row = '<tr class="head"><td style="width:40px">N0</td><td style="width:150px">KODE BARANG</td><td style="width:230px">NAMA BARANG</td><td style="width:170px">HARGA BARANG (Rp)</td><td style="width:90px">STOK BARANG</td><td style="width:90px">QTY</td></tr>';
                     var temp = $('#detail-pengganti tr');
                     if(temp.length > 0) {                    
-                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+temp.length+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti('+temp.length+','+data.stok_barang+');"/></td></tr>';
+                        row = '<tr class="row"><td style="text-align:center">'+ temp.length +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_'+temp.length+'" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+temp.length+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti('+data.id_barang+','+data.stok_barang+');"/></td></tr>';
                     }
                     else {
-                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_1" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+1+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti(1,'+data.stok_barang+');"/></td></tr>';
+                        row += '<tr class="row"><td style="text-align:center">'+ 1 +'</td><td>'+data.id_barang+'</td><td>'+data.nama+'</td><td style="text-align: right">'+$.currency(data.harga,{s:".",d:",",c:0})+',-<input type="hidden" id="harga_pengganti_1" value="'+data.harga+'"/></td><td style="text-align:center" id="stok_pengganti">'+ data.stok_barang+'</td><td style="text-align:center"><input type="text" id="qty_ganti_'+1+'" style="width:25px" value="1" onkeyup="countPengganti();validateQtyGanti('+data.id_barang+','+data.stok_barang+');"/></td></tr>';
+                    }                    
+                    //validate Qty                    
+                    validateQtyGanti(data.id_barang,data.stok_barang);                    
+                    if(statusQty) {
+                        $('#detail-pengganti').append(row);
+                        countRefund();
+                        countPengganti();
                     }
-                    $('#detail-pengganti').append(row);
-                    countPengganti();
                 }                
             }
         },

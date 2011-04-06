@@ -23,7 +23,7 @@ Revisi 1.0
 10. Ubah untuk display buat untuk baris nama barang dipotong 20 karakter aja klo kelebihan -ok
 11. Di laporan penjualan, diskon ditampilkan nilai rupiahnya trus dibuat totalnya - ok
 12. Terus taro digrafik omset, qty terjual, dan total diskon hari itu -ok
-13. Check quantity untuk refund, di qty barang pengganti.
+13. Check quantity untuk refund, di qty barang tukar dan pengganti.-ok
 14. Ketika import bon, langsung muncul akumulasi datanya, spt total qty dan total rupiahnya. -ok
 15. Benerin mekanisme checking, ada fasilitas untuk update opname yang stok barangnya udh abis. -ok
 16. Cross check untuk pembayaran apakah datanya sudah masuk ke table item_transaksi_penjualan. -ok 
