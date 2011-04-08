@@ -19,6 +19,13 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
         <?php if(isset($search_result)) { ?>
+        <script type="text/javascript">
+        <!--//
+        $(document).ready(function(){
+            $('#stok_opname').focus();
+        });
+        //-->
+       </script>
         <?php _e(form_open(base_url().'checking/add'))?>
         <table class="table-data" cellspacing="0" cellpadding="0" style="margin:10px">
             <tr>
@@ -28,6 +35,14 @@
         </table>
         <p style="text-align:center;"><span class="button"> <input type="submit" value="Simpan" name="submit_save_opname" class="button" /></span></p>
         <?php _e(form_close()) ?>
+        <?php } else { ?>
+        <script type="text/javascript">
+        <!--//
+        $(document).ready(function(){
+            $('input[name="id_barang"]').focus();
+        });
+        //-->
+       </script>
         <?php } ?>
 </div>
 
