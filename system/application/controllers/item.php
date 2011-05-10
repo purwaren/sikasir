@@ -330,8 +330,8 @@ class Item extends Controller {
                         $row_data .= '<tr>
                                         <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td><td>'.$row->kelompok_barang.'</td><td style="text-align:right;padding-right:15px;">Rp '.number_format($row->harga,2,',','.').'</td><td>'.$row->qty.'</td>
                                         <td>
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span> 
-                                            <!--<span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                                                               
+                                            <!--<span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span> 
+                                            <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                                                               
                                             <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="deleteBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>-->                   
                                         </td>
                                     </tr>';

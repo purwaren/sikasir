@@ -270,6 +270,11 @@ class Barang extends Model
         {
             $query = 'select * from barang where kelompok_barang="'.$kel_brg.'" and stok_barang > 0';
         }
+        //ambil semua barang
+        else if($opsi == 4)
+        {
+            $query = 'select * from barang where stok_barang > 0 order by id_barang';
+        }
         return $this->db->query($query);
     }
     /**

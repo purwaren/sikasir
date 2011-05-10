@@ -137,7 +137,7 @@ class Graph extends Controller {
                 //jika pilih cetak pdf maka ekspor ke pdf
                 if($this->input->post('submit_graph_sales_pdf'))
                 {
-                    $head1 = '<h3 style="text-align:center">GRAFIK OMSET '.$this->data['bulan'].'<br /> DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>';
+                    $head1 = '<h3 style="text-align:center">'.config_item('shop_name').'<br />GRAFIK OMSET '.$this->data['bulan'].'<br /> DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>';
                     $img = base_url().'css/chart/sales.png';
                     $head2 = '<h3 style="text-align:center">TABEL OMSET '.$this->data['bulan'].'</h3>';
                     $table = '<table class="table-data" cellspacing="0" cellpadding="0" style="width:300px; text-align:center;border:1px solid;">
@@ -681,10 +681,10 @@ class Graph extends Controller {
             $pdf->AddPage();
             $pdf->writeHTML('<br />', true, 0, true, 0);
             $pdf->writeHTML($head1, true, 0, true, 0);
-            $pdf->Image($img,13,40,190,60);
+            $pdf->Image($img,13,45,190,60);
             $pdf->writeHTML('<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />', true, 0, true, 0);      
             $pdf->writeHTML($head2,true,0,true,0);     
-            $pdf->writeHTMLCell(0,0,50,110,$data);
+            $pdf->writeHTMLCell(0,0,50,115,$data);
         }
         if($opsi == 2)
         {

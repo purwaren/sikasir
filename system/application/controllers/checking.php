@@ -99,9 +99,20 @@ class Checking extends Controller {
     {
         if(!empty($param))
         {
-            $kel_barang = $param;
-            $this->load->model('barang');
-            $query = $this->barang->get_opname($kel_barang,3);
+            if($param == 'all')
+            {
+                $kel_barang = $param;
+                $this->load->model('barang');
+                $query = $this->barang->get_opname($kel_barang,4);
+                $harga = '<td>Harga Ganti (Rp)</td><td>Jumlah Ganti (Rp)</td>';
+            }
+            else
+            {
+                $kel_barang = $param;
+                $this->load->model('barang');
+                $query = $this->barang->get_opname($kel_barang,3);
+                $harga = '<td>Harga Jual <br /> (Rp)</td>';
+            }
             if($query->num_rows > 0)
             {
                 $head ='<div><h3 style="text-align:center;margin:0;">LAPORAN STOK OPNAME</h3>
@@ -120,7 +131,7 @@ class Checking extends Controller {
                                             <td>Stok <br /> Barang</td>
                                             <td>Stok <br /> Opname</td>                                        
                                             <td>Beda <br /> Stok</td>                                        
-                                            <td>Harga Jual <br /> (Rp)</td>                                        
+                                            '.$harga.'                                        
                                         </tr>';
                 $row_data = '';
                 //urusan paging                
@@ -128,22 +139,43 @@ class Checking extends Controller {
                 $total_beda = 0;
                 $total_opname= 0;
                 $total_stok = 0;
+                $total_ganti = 0;
                 foreach($query->result() as $row)
                 {
+                    $beda = $row->stok_barang - $row->stok_opname;
+                    $harga_ganti = $row->harga *(1-10/100);
+                    $ganti = $beda * $harga_ganti;
+                    if($param == 'all')
+                    {
+                        $row_harga = '<td>'.number_format($harga_ganti,0,',','.').'</td><td>'.number_format($ganti,0,',','.').'</td>';
+                    }
+                    else
+                    {
+                        $row_harga = '<td>'.number_format($row->harga,0,',','.').'</td>';
+                    }
                     $row_data .= '<tr>
                                     <td>'.++$i.'</td><td>'.$row->id_barang.'</td><td >'.$row->nama.'</td>
                                     <td>'.$row->mutasi_masuk.'</td><td>'.$row->mutasi_keluar.'</td>
                                     <td>'.$row->stok_awal.'</td><td>'.$row->stok_barang.'</td>
                                     <td>'.$row->stok_opname.'</td><td>'.($row->stok_barang-$row->stok_opname).'</td>
-                                    <td>'.number_format($row->harga,0,',','.').'</td>
+                                    '.$row_harga.'
                                 </tr>';
-                    $total_beda += ($row->stok_barang - $row->stok_opname);
+                    $total_beda += $beda;
                     $total_opname += $row->stok_opname;
-                    $total_stok += $row->stok_barang;                    
+                    $total_stok += $row->stok_barang;
+                    $total_ganti += $ganti;
                 }                
+                if($param == 'all')
+                {
+                    $total_harga = '<td >&nbsp;</td><td >'.number_format($total_ganti,0,',','.').'</td>';
+                }
+                else 
+                {
+                    $total_harga = '<td >&nbsp;</td>';
+                }
                 $row_total = '<tr><td colspan="6"> T O T A L</td>
                                 <td >'.$total_stok.'</td><td >'.$total_opname.'</td>
-                                <td >'.$total_beda.'</td><td >&nbsp;</td></tr>';
+                                <td >'.$total_beda.'</td>'.$total_harga.'</tr>';
                 $this->data['content'] = $head.$row_data.$row_total;       
             }
             $this->load->view('print-template',$this->data);

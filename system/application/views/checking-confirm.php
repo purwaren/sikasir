@@ -33,7 +33,7 @@
         <p style="text-align:center;color:#000;margin-bottom:10px"><?php if(!empty($pages))echo 'Page : '.$pages ?></p>
         <p style="text-align:center;">        
         <span class="button"><input type="button" value="Konfirm" class="button" onclick="confirmChecking()" /></span>&nbsp;&nbsp;
-        <!--<span class="button"><input type="submit" value="Cetak" name="submit_cetak_ganti" class="button" /></span>&nbsp;&nbsp;-->
+        <span class="button"><input type="button" value="Cetak"  class="button" onclick="printOpname('<?php _e(base_url().'checking/manage/all') ?>')"/></span>&nbsp;&nbsp;
         <span class="button"><input type="button" value="Batal"  class="button" onclick="batalChecking()" /></span>
         </p>
         <?php _e(form_close()) ?>

@@ -33,3 +33,4 @@ Revisi 1.0
 20. Matiin default keyboardnya si Chrome - gak bisa dimatiin
 21. Cetak grafik ditampilin nama tokonya.
 22. Import export data penjualan.
+23. Cetak penggantian barang untuk cross check pada saat checking
