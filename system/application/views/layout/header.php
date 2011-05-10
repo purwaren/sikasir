@@ -3,7 +3,7 @@
 <head>
 <title>Sistem Informasi Kasir :. Mode Fashion Group </title>
     <meta http-equiv="content-type" content="text/html;charset=iso-8859-2" />
-    <?php _e(link_tag(array('href'=>base_url().'css/style.css','rel'=>'stylesheet','type'=>'text/css','media'=>'screen'))) ?>
+    <?php _e(link_tag(array('href'=>'css/style.css','rel'=>'stylesheet','type'=>'text/css','media'=>'screen'))) ?>
     <link type="text/css" href="<?php _e(base_url()) ?>css/ui-lightness/jquery-ui-1.8.1.custom.css" rel="stylesheet" />   
     <link type="text/css" href="<?php _e(base_url()) ?>css/jquery.autocomplete.css" rel="stylesheet" />   
     <script type="text/javascript" src="<?php _e(base_url()) ?>js/jquery-1.4.2.min.js"></script>

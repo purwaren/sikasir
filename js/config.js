@@ -14,7 +14,7 @@ var kassaServer = new Array();
 /**
 * Base url
 */
-var baseUrl = 'http://localhost/sikasir/';
+var baseUrl = '/';
 /**
 * Row type
 * 0 -> not accumulated

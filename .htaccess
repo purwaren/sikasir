@@ -1,3 +1,0 @@
-RewriteEngine on
-RewriteCond $1 !^(index\.php|css|js|pos|system|user_guide|docs|robots\.txt)
-RewriteRule ^(.*)$ /sikasir/index.php/$1 [L]

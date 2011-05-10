@@ -43,7 +43,7 @@ class Item extends Controller {
     function item_autocomplete($param="") 
     {
         $this->load->model('barang');
-        $query = $this->barang->search_autocomplete($param);
+        $query = $this->barang->search_autocomplete($param);        
         foreach($query->result() as $row)
         {
             _e($row->id_barang.'|'.$row->nama.'|'.$row->kelompok_barang.'|'.$row->harga.'|'.$row->diskon.'|'.$row->stok_barang.chr(10));

@@ -27,4 +27,9 @@ Revisi 1.0
 14. Ketika import bon, langsung muncul akumulasi datanya, spt total qty dan total rupiahnya. -ok
 15. Benerin mekanisme checking, ada fasilitas untuk update opname yang stok barangnya udh abis. -ok
 16. Cross check untuk pembayaran apakah datanya sudah masuk ke table item_transaksi_penjualan. -ok 
-17. benerin pas cetak resi transaksi, ambil berdasarkan id transaksi, jangan transaksi terakhir.
+17. benerin pas cetak resi transaksi, ambil berdasarkan id transaksi, jangan transaksi terakhir. -ok
+18. Check untuk press enter di text box untuk input new items dan retur -ok
+19. Untuk retur bisa discan barcode terus langsung muncul hasilnya, jadi tidak perlu diketik -ok
+20. Matiin default keyboardnya si Chrome - gak bisa dimatiin
+21. Cetak grafik ditampilin nama tokonya.
+22. Import export data penjualan.
