@@ -28,6 +28,15 @@ class Transaksi extends Model
         }
     }
     /**
+    * Get transaksi from specific range of date
+    */
+    function get_transaksi($from,$to)
+    {
+        $this->db->select('tp.*,itp.id_barang,itp.qty,itp.diskon as disc_item')->from('transaksi_penjualan tp');
+        $this->db->join('item_transaksi_penjualan itp', 'tp.id_transaksi = itp.id_transaksi','left')->where(array('tp.tanggal >='=>$from, 'tp.tanggal <='=>$to));
+        return $this->db->get();
+    }
+    /**
     * hapus transaksi berdasar id transaksinya
     */
     function remove($id_transaksi)

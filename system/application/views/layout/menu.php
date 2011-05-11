@@ -53,6 +53,8 @@
         <a href="<?php _e(base_url().'checking/add')?>">Input Opname</a> .:.        
         <a href="<?php _e(base_url().'checking/manage')?>">Lihat Opname</a> .:.        
         <a href="<?php _e(base_url().'checking/confirm')?>">Penggantian Barang</a> .:.        
+        <a href="<?php _e(base_url().'checking/export')?>">Ekspor Data</a> .:.        
+        <a href="<?php _e(base_url().'checking/import')?>">Import Data</a> .:.        
     </p>
     <?php } if($page == 'graph') { ?>
     <p style="float:left;text-align: left; padding-right: 20px;">

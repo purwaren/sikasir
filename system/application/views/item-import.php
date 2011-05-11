@@ -34,7 +34,7 @@
             <tr>
                 <td class="head">No</td>
                 <td class="head">Kode Barang</td>
-                <td class="head">Nama Barang Barang</td>
+                <td class="head">Nama Barang</td>
                 <td class="head">Kelompok Barang</td>
                 <td class="head">Disc %</td>
                 <td class="head">Harga Jual (Rp)</td>

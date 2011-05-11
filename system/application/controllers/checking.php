@@ -497,6 +497,82 @@ class Checking extends Controller {
         $pdf->Output('Laporan.pdf', 'I');     
             
     }
+    /**
+    * Fungsi untuk ekspor data penjualan ke CSV
+    */
+    function export()
+    {
+        if($this->input->post('submit_export'))
+        {
+            $tabel = $this->input->post('tabel');
+            $this->load->helper('csv');
+            $this->load->model('transaksi');
+            $query = $this->transaksi->get_transaksi($this->input->post('tgl_awal'),$this->input->post('tgl_akhir'));
+           
+            echo query_to_csv($query,TRUE,config_item('shop_code').'-penjualan.csv');exit;
+        }
+        $this->load->view('checking-export',$this->data);
+    }
+    /**
+    * Fungsi untuk import data penjualan
+    */
+    function import()
+    {
+        //display import data
+        if($this->input->post('submit_import'))
+        {
+            //upload datanya terlebih dahulu
+            $config['upload_path'] = 'data/';
+            $config['allowed_types'] = 'csv';
+            $config['overwrite'] = TRUE;
+            $config['file_name'] = 'sales';
+            $this->load->library('upload', $config);
+            $this->load->model('karyawan');
+            //do upload            
+            if($this->upload->do_upload('csv_file'))
+            {            
+                $this->load->library('csvreader');
+                $file_name = 'data/sales.csv';
+                $item = $this->csvreader->parse_file($file_name);
+                $this->data['row_data'] = '';
+                $i=0;
+                $total_qty = 0;
+                $total = 0;
+                foreach($item as $row)
+                {                    
+                    $total_qty += $row['qty'];
+                    $tmp = $this->karyawan->get_karyawan($row['id_pramuniaga']);
+                    $pramuniaga = '';
+                    $kasir = '';
+                    if($tmp->num_rows())
+                        $pramuniaga = $tmp->row()->nama;
+                    $tmp = $this->karyawan->get_karyawan($row['id_kasir']);
+                    if($tmp->num_rows())
+                        $kasir = $tmp->row()->nama;
+                    $this->data['row_data'] .= '<tr>
+                                                    <td>'.++$i.'</td>
+                                                    <td>'.$row['tanggal'].'</td>
+                                                    <td>'.$row['id_transaksi'].'</td>
+                                                    <td>'.$row['id_barang'].'</td>
+                                                    <td>nama barang</td>
+                                                    <td>'.$row['qty'].'</td>
+                                                    <td>'.$row['disc_item'].'</td>
+                                                    <td>'.$row['diskon'].'</td>
+                                                    <td>'.$kasir.'<input type="hidden" id="id_kasir_'.$i.'" value="'.$row['id_kasir'].'" /></td>
+                                                    <td>'.$pramuniaga.'<input type="hidden" id="id_pramuniaga_'.$i.'" value="'.$row['id_pramuniaga'].'" /></td>                                                    
+                                                    <td>'.number_format($row['total'],0,',','.').',- <input type="hidden" id="total_'.$i.'" value="'.$row['total'].'" /></td>
+                                                    <td><span class="button"><input type="button" class="button" value="O K" onclick="saveSales('.$i.')"/></span></td>
+                                                </tr>';
+                }
+                $this->data['row_data'] .= '<tr><td colspan="5" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td colspan="4"></td><td>'.number_format($total,0,',','.').',-</td><td>&nbsp</td></tr>';
+            }
+            else
+            {
+                $this->data['err_msg'] = '<span style="color:red">Gagal upload data! Pastikan file yang di upload adalah CSV</span>';
+            }            
+        }
+        $this->load->view('checking-import',$this->data);
+    }
 }
 
 //End of file checking.php
