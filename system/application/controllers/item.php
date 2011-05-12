@@ -318,6 +318,7 @@ class Item extends Controller {
         {
             if($this->input->post('date_input'))
             {
+                $this->data['tgl_input'] = $this->input->post('date_input');
                 //ambil data barang masuk pada tanggal tersebut
                 $this->load->model('barang');
                 $query = $this->barang->get_barang_masuk($this->input->post('date_input'));                
@@ -328,7 +329,8 @@ class Item extends Controller {
                     foreach($query->result() as $row)
                     {
                         $row_data .= '<tr>
-                                        <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td><td>'.$row->kelompok_barang.'</td><td style="text-align:right;padding-right:15px;">Rp '.number_format($row->harga,2,',','.').'</td><td>'.$row->qty.'</td>
+                                        <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td><td>'.$row->kelompok_barang.'</td><td style="text-align:right;padding-right:15px;">Rp '.number_format($row->harga,2,',','.').'</td>
+                                        <td>'.$row->qty.'</td><td>'.$row->stok_barang.'</td><td>'.$row->mutasi_keluar.'</td>
                                         <td>
                                             <!--<span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span> 
                                             <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                                                               

@@ -18,11 +18,13 @@
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
-        <?php if(isset($row_data)) { ?>        
+        <?php if(isset($row_data)) { ?>
+        <h3>Data Masuk Tanggal : <?php echo date_to_string($tgl_input) ?></h3>
         <table class="table-data" cellspacing="0" cellpadding="0" style="width:950px">
             <tr>
                 <td class="head"> No </td><td class="head"> Kode BON </td><td class="head"> Kode Barang </td><td class="head"> Nama Barang </td>
                 <td class="head"> Kelompok Barang </td><td class="head">Harga Barang</td><td class="head">Mutasi Masuk</td>
+                <td class="head"> Stok Barang</td><td class="head">Mutasi Keluar</td>
                 <td class="head">Action</td>
             </tr>
             <?php _e($row_data) ?>            
