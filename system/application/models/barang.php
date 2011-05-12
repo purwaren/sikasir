@@ -68,9 +68,10 @@ class Barang extends Model
     */
     function search_stok($keywords)
     {
-        $this->db->like('id_barang',$keywords,'after');
-        $this->db->or_like('nama',$keywords,'both');
-        return $this->db->get('barang');
+        $this->db->select('*')->from('barang b')->join('barang_masuk bm','b.id_barang = bm.id_barang','left');
+        $this->db->like('b.id_barang',$keywords,'after');
+        $this->db->or_like('nama',$keywords,'both')->order_by('tanggal','desc');        
+        return $this->db->get();
     }
     /**
     *Search barang untuk autocomplete
