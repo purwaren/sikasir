@@ -41,6 +41,21 @@ class Item_transaksi extends Model
     {
         return $this->db->where('id_transaksi',$id_transaksi)->delete('item_transaksi_penjualan');
     }
+    /**
+    * check klo item_transaksi sudah ada
+    */
+    function item_trans_exist($data)
+    {
+        $query = $this->db->get_where('item_transaksi_penjualan',$data);        
+        if($query->num_rows() > 0)
+        {
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
 }
 //End of item_transaksi.php
 //Location: system/application/models

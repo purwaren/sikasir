@@ -34,8 +34,9 @@
                 <td class="head">Kode Barang</td>
                 <td class="head">Nama Barang</td>
                 <td class="head">Qty</td>
-                <td class="head">Diskon Item</td>
-                <td class="head">Diskon All</td>
+                <td class="head">No CC</td>
+                <td class="head">Diskon <br /> Item</td>
+                <td class="head">Diskon <br /> All</td>
                 <td class="head">Kasir</td>
                 <td class="head">Pramuniaga</td>
                 <td class="head">Jumlah</td>

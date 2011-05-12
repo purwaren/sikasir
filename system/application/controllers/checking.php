@@ -517,7 +517,7 @@ class Checking extends Controller {
     * Fungsi untuk import data penjualan
     */
     function import()
-    {
+    {        
         //display import data
         if($this->input->post('submit_import'))
         {
@@ -528,6 +528,7 @@ class Checking extends Controller {
             $config['file_name'] = 'sales';
             $this->load->library('upload', $config);
             $this->load->model('karyawan');
+            $this->load->model('barang');
             //do upload            
             if($this->upload->do_upload('csv_file'))
             {            
@@ -537,10 +538,13 @@ class Checking extends Controller {
                 $this->data['row_data'] = '';
                 $i=0;
                 $total_qty = 0;
-                $total = 0;
+                $total = 0;                
                 foreach($item as $row)
                 {                    
                     $total_qty += $row['qty'];
+                    
+                    $brg = $this->barang->get_barang($row['id_barang'],2)->row();                    
+                    
                     $tmp = $this->karyawan->get_karyawan($row['id_pramuniaga']);
                     $pramuniaga = '';
                     $kasir = '';
@@ -554,8 +558,9 @@ class Checking extends Controller {
                                                     <td>'.$row['tanggal'].'</td>
                                                     <td>'.$row['id_transaksi'].'</td>
                                                     <td>'.$row['id_barang'].'</td>
-                                                    <td>nama barang</td>
+                                                    <td>'.$brg->nama.' </td>
                                                     <td>'.$row['qty'].'</td>
+                                                    <td>'.$row['no_cc'].'</td>
                                                     <td>'.$row['disc_item'].'</td>
                                                     <td>'.$row['diskon'].'</td>
                                                     <td>'.$kasir.'<input type="hidden" id="id_kasir_'.$i.'" value="'.$row['id_kasir'].'" /></td>
@@ -564,14 +569,80 @@ class Checking extends Controller {
                                                     <td><span class="button"><input type="button" class="button" value="O K" onclick="saveSales('.$i.')"/></span></td>
                                                 </tr>';
                 }
-                $this->data['row_data'] .= '<tr><td colspan="5" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td colspan="4"></td><td>'.number_format($total,0,',','.').',-</td><td>&nbsp</td></tr>';
+                $this->data['row_data'] .= '<tr><td colspan="5" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td colspan="5"></td><td>'.number_format($total,0,',','.').',-</td><td>&nbsp</td></tr>';
             }
             else
             {
                 $this->data['err_msg'] = '<span style="color:red">Gagal upload data! Pastikan file yang di upload adalah CSV</span>';
             }            
+        }     
+        $this->load->view('checking-import',$this->data);        
+    }
+    /**
+    * Save imported data, ini sama aja menjual barang, jadi harus di cek apakah stok nya memenuhi
+    */
+    function save_import()
+    {
+        if($this->input->post('save_import'))
+        {                  
+            $transaksi = array(
+                'id_transaksi'=>trim($this->input->post('id_transaksi')),
+                'tanggal'=>trim($this->input->post('tanggal')),
+                'total'=>trim($this->input->post('total')),
+                'diskon'=>trim($this->input->post('disc_all')),
+                'no_cc'=>trim($this->input->post('no_cc')),
+                'id_kasir'=>trim($this->input->post('id_kasir')),
+                'id_pramuniaga'=>trim($this->input->post('id_pramuniaga'))
+            );
+            $item_transaksi = array(
+                'id_transaksi'=>trim($this->input->post('id_transaksi')),
+                'id_barang'=>trim($this->input->post('id_barang')),
+                'qty'=>trim($this->input->post('qty')),
+                'diskon'=>trim($this->input->post('disc_item'))
+            );
+            $this->load->model('transaksi');
+            $this->load->model('barang');
+            $this->load->model('item_transaksi');
+            $brg = $this->barang->get_barang($item_transaksi['id_barang'], 1);            
+            //simpan hnya untuk barang yang stoknya mencukupi
+            if($brg->num_rows() && $brg->row()->stok_barang >= $item_transaksi['qty'])
+            {
+                //if not exist, add the transaction
+                if(!$this->transaksi->trans_exist($transaksi['id_transaksi']))
+                {
+                    $this->transaksi->add_transaksi($transaksi);
+                    $this->session->set_userdata('id_transaksi',$transaksi['id_transaksi']);
+                }
+                //add item transaksi
+                if($this->session->userdata('id_transaksi') == $transaksi['id_transaksi'])
+                {                
+                    if(!$this->item_transaksi->item_trans_exist($item_transaksi))
+                    {
+                        $this->item_transaksi->add_item_transaksi($item_transaksi);
+                        //update table barang
+                        $cond = array('id_barang'=>$item_transaksi['id_barang']);
+                        $data = array(
+                                'stok_barang'=>$item_transaksi['qty'],
+                                'jumlah_terjual'=>$item_transaksi['qty']
+                            );
+                        $this->barang->update_barang($cond,$data);
+                        echo '1';
+                    }
+                    else
+                    {
+                        echo '-1';
+                    }
+                }
+                else 
+                {
+                    echo '0';
+                }
+            }
+            else
+            {
+                echo '2';
+            }
         }
-        $this->load->view('checking-import',$this->data);
     }
 }
 

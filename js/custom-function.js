@@ -777,33 +777,37 @@ function saveSales(line) {
     var id_transaksi = $('.table-data tr:nth-child('+idx_save+') td:nth-child(3)').html();
     var id_barang = $('.table-data tr:nth-child('+idx_save+') td:nth-child(4)').html();
     var qty = $('.table-data tr:nth-child('+idx_save+') td:nth-child(6)').html();
-    var disc_item = $('.table-data tr:nth-child('+idx_save+') td:nth-child(7)').html();
-    var disc_all = $('.table-data tr:nth-child('+idx_save+') td:nth-child(8)').html();
+    var no_cc = $('.table-data tr:nth-child('+idx_save+') td:nth-child(7)').html();
+    var disc_item = $('.table-data tr:nth-child('+idx_save+') td:nth-child(8)').html();
+    var disc_all = $('.table-data tr:nth-child('+idx_save+') td:nth-child(9)').html();
     var id_kasir = $('#id_kasir_'+line).val();
     var id_pramuniaga = $('#id_pramuniaga_'+line).val();;
-    var total = $('.table-data tr:nth-child('+idx_save+') td:nth-child(11) input').val();
-    //do post
-    alert(id_kasir);
-        /*$.post(
-            baseUrl+"item/import",
-            {'item_code': item_code, 'item_name':item_name, 'cat_code':cat_code, 'item_disc':item_disc, 'quantity':quantity, 'item_hj':item_hj,'kode_bon':kode_bon, 'tgl_bon':tgl_bon},
-            function(data) {            
-                if(data == '1') { //sukses
-                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
-                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:green">Tersimpan</span>');
-                    });                    
-                }
-                else if(data == '-1') { //duplikasi data
-                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
-                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Sudah Diproses</span>');
-                    }); 
-                }
-                else if(data == '0') { //error saat insert
-                    $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
-                        $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Error Database</span>');
-                    });
-                }
+    var total = $('#total_'+line).val();    
+    //do post    
+    $.post(
+        baseUrl+"checking/save_import",
+        {'save_import': 1,'tanggal': tanggal, 'id_transaksi':id_transaksi, 'id_barang':id_barang, 'qty':qty,'no_cc':no_cc, 'disc_item':disc_item, 'disc_all':disc_all,'id_kasir':id_kasir, 'id_pramuniaga':id_pramuniaga,'total':total},
+        function(data) {            
+            if(data == '1') { //sukses
+                $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:green">Tersimpan</span>');
+                });                    
             }
-        );*/
-    
+            else if(data == '-1') { //duplikasi data                
+                $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Sudah Diproses</span>');
+                }); 
+            }
+            else if(data == '0') { //error saat insert
+                $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Error Database</span>');
+                });
+            }
+            else if(data == '2') { //error saat insert
+                $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){
+                    $('.table-data tr:nth-child('+idx_save+') td:last-child').html('<span style="color:red">Stok Habis</span>');
+                });
+            }
+        }
+    );    
 }

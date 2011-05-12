@@ -82,7 +82,7 @@ class Barang extends Model
         return $this->db->get('barang');
     }
     /**
-    *Update data barang, stok_barang nya berkurang
+    *Update data barang, stok_barang nya berkurang karena penjualan
     */
     function update_barang($cond,$data) 
     {

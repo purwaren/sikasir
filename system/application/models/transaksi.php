@@ -299,6 +299,21 @@ class Transaksi extends Model
                 group by tanggal';
         return $this->db->query($query);
     }
+    /**
+    * Check apakah sudah ada transaksi dengan id tsb
+    */
+    function trans_exist($id_transaksi)
+    {
+        $query = $this->db->get_where('transaksi_penjualan',array('id_transaksi'=>$id_transaksi));
+        if($query->num_rows() > 1)
+        {
+            return TRUE;
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
 }
 //End of Transaksi.php
 //Location: system/application/models
