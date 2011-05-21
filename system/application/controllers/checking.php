@@ -508,7 +508,7 @@ class Checking extends Controller {
             $this->load->helper('csv');
             $this->load->model('transaksi');
             $query = $this->transaksi->get_transaksi($this->input->post('tgl_awal'),$this->input->post('tgl_akhir'));
-           
+            
             echo query_to_csv($query,TRUE,config_item('shop_code').'-penjualan.csv');exit;
         }
         $this->load->view('checking-export',$this->data);

@@ -32,9 +32,9 @@ class Transaksi extends Model
     */
     function get_transaksi($from,$to)
     {
-        $this->db->select('tp.*,itp.id_barang,itp.qty,itp.diskon as disc_item')->from('transaksi_penjualan tp');
-        $this->db->join('item_transaksi_penjualan itp', 'tp.id_transaksi = itp.id_transaksi','left')->where(array('tp.tanggal >='=>$from, 'tp.tanggal <='=>$to));
-        return $this->db->get();
+        $this->db->select('tp.*,itp.id_barang,sum(itp.qty) as qty,itp.diskon as disc_item')->from('transaksi_penjualan tp');
+        $this->db->join('item_transaksi_penjualan itp', 'tp.id_transaksi = itp.id_transaksi','left')->where(array('tp.tanggal >='=>$from, 'tp.tanggal <='=>$to,'itp.id_barang !='=> 'NULL'));
+        return $this->db->group_by('itp.id_transaksi, itp.id_barang')->get();
     }
     /**
     * hapus transaksi berdasar id transaksinya
