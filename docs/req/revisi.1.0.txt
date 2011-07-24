@@ -32,5 +32,5 @@ Revisi 1.0
 19. Untuk retur bisa discan barcode terus langsung muncul hasilnya, jadi tidak perlu diketik -ok
 20. Matiin default keyboardnya si Chrome - gak bisa dimatiin
 21. Cetak grafik ditampilin nama tokonya. -ok
-22. Import export data penjualan.
+22. Import export data penjualan. -ok
 23. Cetak penggantian barang untuk cross check pada saat checking -ok
