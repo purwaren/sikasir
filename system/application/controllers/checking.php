@@ -20,6 +20,8 @@ class Checking extends Controller {
             $this->data['userinfo'] = $data_karyawan->nama;
             $this->data['jabatan'] = $this->session->userdata('jabatan');
             $this->data['now'] = strtoupper(date('M')).'<br />'.date('d'); 
+            if($this->session->userdata('jabatan') != 'admin')
+                redirect('home/error');
         }
         else
         {

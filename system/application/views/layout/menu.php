@@ -5,10 +5,10 @@
       <?php } if($jabatan=='admin') {?>
       <li><a class="<?php if($page=='user') echo 'current' ?>" href="<?php _e(base_url().'user') ?>" accesskey="m"><span class="key">U</span>ser</a></li>
       <li><a class="<?php if($page=='tools') echo 'current' ?>" href="<?php _e(base_url().'tools') ?>" accesskey="m"><span class="key">T</span>ools</a></li>
+      <li><a class="<?php if($page=='checking') echo 'current' ?>" href="<?php _e(base_url().'checking/add') ?>" accesskey="c"><span class="key">C</span>hecking</a></li>
       <?php } if($jabatan=='kasir') { ?>
       <li><a class="<?php if($page=='pos') echo 'current' ?>" href="<?php _e(base_url().'pointofsales') ?>" accesskey="v"><span class="key">L</span>aunch POS</a></li>
-      <?php } if($jabatan=='supervisor') { ?>
-      <li><a class="<?php if($page=='checking') echo 'current' ?>" href="<?php _e(base_url().'checking/add') ?>" accesskey="c"><span class="key">C</span>hecking</a></li>
+      <?php } if($jabatan=='supervisor') { ?>      
       <li><a class="<?php if($page=='item') echo 'current' ?>" href="<?php _e(base_url().'item/add') ?>" accesskey="d"><span class="key">D</span>ata</a></li>
       <li><a class="<?php if($page=='report') echo 'current' ?>" href="<?php _e(base_url().'report/sales')?>" accesskey="i"><span class="key">R</span>eporting</a></li>
       <li><a class="<?php if($page=='graph') echo 'current' ?>" href="<?php _e(base_url().'graph/sales')?>" href="#" accesskey="r"><span class="key">G</span>raph</a></li>
