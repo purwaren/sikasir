@@ -161,9 +161,17 @@ class Barang extends Model
     /**
     *Ambil barang masuk berdasarkan tanggal, ini untuk fungsi manajemen
     */
-    function get_barang_masuk($tanggal)
+    function get_barang_masuk($kode_bon)
     {
-        $query = 'select bm.*,b.nama, b.kelompok_barang, b.harga, b.mutasi_masuk, b.stok_barang, b.mutasi_keluar from barang_masuk bm left join barang b on bm.id_barang = b.id_barang  where tanggal = "'.$tanggal.'" order by bm.id';
+        $query = 'select bm.*,b.nama, b.kelompok_barang, b.harga from barang_masuk bm left join barang b on bm.id_barang = b.id_barang  where id_mutasi_masuk = "'.$kode_bon.'" order by bm.id';
+        return $this->db->query($query);
+    }
+    /**
+    * Ambil bon yang masuk pada tanggal terntentu
+    */
+    function get_bon_barang_masuk($tanggal)
+    {
+        $query = 'select id_mutasi_masuk, tanggal, count(id_barang) as jumlah_barang, sum(qty) as total from barang_masuk where tanggal="'.$tanggal.'" group by id_mutasi_masuk';
         return $this->db->query($query);
     }
     /**

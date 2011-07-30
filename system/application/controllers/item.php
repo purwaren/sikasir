@@ -312,16 +312,15 @@ class Item extends Controller {
     /**
     *Untuk manajemen data barang yang diinput, per tanggal penginputan
     */
-    function manage()
+    function manage($kode_bon="")
     {
         if($this->input->post('submit_item_manage'))
         {
             if($this->input->post('date_input'))
             {
                 $this->data['tgl_input'] = $this->input->post('date_input');
-                //ambil data barang masuk pada tanggal tersebut
-                $this->load->model('barang');
-                $query = $this->barang->get_barang_masuk($this->input->post('date_input'));                
+                //ambil data barang masuk pada tanggal tersebut                
+                $query = $this->barang->get_bon_barang_masuk($this->input->post('date_input'));                
                 if($query->num_rows() >= 1)
                 {
                     $i=0;
@@ -329,12 +328,10 @@ class Item extends Controller {
                     foreach($query->result() as $row)
                     {
                         $row_data .= '<tr>
-                                        <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td><td>'.$row->kelompok_barang.'</td><td style="text-align:right;padding-right:15px;">Rp '.number_format($row->harga,2,',','.').'</td>
-                                        <td>'.$row->qty.'</td><td>'.$row->stok_barang.'</td><td>'.$row->mutasi_keluar.'</td>
-                                        <td>
-                                            <!--<span class="button">&nbsp;<input type="button" class="button" value="Edit" onclick="editBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span> 
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Detail" onclick="viewDetail('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>                                                               
-                                            <span class="button">&nbsp;<input type="button" class="button" value="Remove" onclick="deleteBarang('.$i.',\''.$row->id_barang.'\',\''.$row->id_mutasi_masuk.'\')"/></span>-->                   
+                                        <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.date_to_string($row->tanggal).'</td>
+                                        <td>'.$row->jumlah_barang.'</td><td>'.$row->total.'</td>                                        
+                                        <td>                                            
+                                            <span class="button">&nbsp;<a href="'.base_url().'item/manage/'.$row->id_mutasi_masuk.'"><input type="button" class="button" value="Detail"/></a></span>                                                                                                                              
                                         </td>
                                     </tr>';
                     }
@@ -350,8 +347,37 @@ class Item extends Controller {
                 $this->data['row_data']='';
                 $this->data['err_msg']='Tanggal penginputan tidak boleh dikosongkan';
             }
+            $this->load->view('item-manage',$this->data);
         }
-        $this->load->view('item-manage',$this->data);
+        else if(!empty($kode_bon))
+        {
+            //ambil data barang masuk dengan kode bon ini
+            $this->load->model('barang');
+            $query = $this->barang->get_barang_masuk($kode_bon);
+            if($query->num_rows())
+            {   
+                $i = 0;
+                $row_data = '';
+                $total = '';
+                $total_jumlah = '';                
+                foreach($query->result() as $row)
+                {
+                    $jumlah = $row->qty * $row->harga;
+                    $row_data .= '<tr><td>'.++$i.'</td><td>'.$row->id_barang.'</td><td>'.$row->nama.'</td>
+                                <td>'.number_format($row->harga,0,',','.').'</td><td>'.$row->qty.'</td><td>'.number_format($jumlah,0,',','.').'</td></tr>';
+                    $total += $row->qty;
+                    $total_jumlah += $jumlah;
+                }
+                $row_data .= '<tr><td colspan="4" style="text-align:right">T O T A L</td><td>'.$total.'</td><td>'.number_format($total_jumlah,0,',','.').'</td></tr>';
+                $this->data['row_data'] = $row_data;
+                $this->data['kode_bon'] = $kode_bon;
+                $this->data['tanggal_bon'] = $row->tanggal;
+            }
+            $this->load->view('item-detailbon',$this->data);
+        }
+        else
+            $this->load->view('item-manage',$this->data);
+        
     }
     /**
     *Fungsi import data dari csv
