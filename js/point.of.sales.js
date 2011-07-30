@@ -65,7 +65,7 @@ try {
 		*Listen event keyup, untuk shortcut dan lain lain.
 		*/        
 		$(window).keyup(function(event){               
-			//$('#trigger').html(event.keyCode); 
+			$('#trigger').html(event.keyCode); 
             //F2 -- fokus ke text box kode label / barcode
 			if(event.keyCode == 113) {
 				$('#barcode').focus();
@@ -242,7 +242,7 @@ try {
                     } 
                 );
             }
-            //F12 - Close Application-return to windows
+            //Escape- Close Application-return to windows
             if(event.keyCode == 123) {
                $('#dialog-confirm-exit').dialog({
                     resizable: false,
@@ -261,6 +261,25 @@ try {
                 $('.ui-button').focus();
             }
 		});
+        $('#dialog-form').keyup(function(event){
+            if(event.keyCode == 27) {
+                $('#dialog-confirm-exit').dialog({
+                    resizable: false,
+                    height:160,
+                    modal: true,
+                    buttons: {
+                        Cancel: function() {
+                            $(this).dialog('close');
+                        },
+                        OK: function() {
+                            $(this).dialog('close');
+                            window.location.replace('home');
+                        }                       
+                    }
+                });
+                $('.ui-button').focus();
+            }
+        });
         /**
 		*Handling event key pada saat focus di textbox barcode
 		*/        
@@ -269,7 +288,8 @@ try {
 			//keyCode : 8 -- backspace
 			//keycode : 46 -- delete            
 			//keycode : 48-57 && 96-105 -- numeric
-			if(!((event.keyCode >= 112 && event.keyCode <= 123) || event.keyCode==18 || event.keyCode == 35 || event.keyCode == 33 ||event.keyCode == 34 || event.keyCode == 32 || event.keyCode == 45  || event.keyCode == 36 || event.keyCode == 46 || event.keyCode == 13 || event.keyCode == 8 || (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))){
+            //keyCode : 27 -- escape
+			if(!((event.keyCode >= 112 && event.keyCode <= 123) || event.keyCode==18 || event.keyCode == 35 || event.keyCode == 33 ||event.keyCode == 34 || event.keyCode == 32 || event.keyCode == 45  || event.keyCode == 36 || event.keyCode == 46 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 27 || (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))){
 				displayNotification('Hanya boleh diisi angka');				
 			}
 			else {

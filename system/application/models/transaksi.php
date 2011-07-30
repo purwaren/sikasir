@@ -89,7 +89,7 @@ class Transaksi extends Model
     */
     function total_sales_a_day($date)
     {
-        $query = 'select sum(total) as temp_sales from transaksi_penjualan where tanggal="'.$date.'"';
+        $query = 'select sum(total) as temp_sales from transaksi_penjualan where tanggal="'.$date.'" and kassa = '.$this->session->userdata('no_kassa');
         return $this->db->query($query);
     }
     /**
@@ -119,7 +119,7 @@ class Transaksi extends Model
     {
         $query = 'select barang.kelompok_barang, sum(penjualan.qty) as total_jual 
                     from 
-                    (select itp.* as total from transaksi_penjualan tp left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi where tanggal="'.$date.'")
+                    (select itp.* from transaksi_penjualan tp left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi where tanggal="'.$date.'" and kassa = '.$this->session->userdata('no_kassa').')
                     as penjualan 
                   left join barang on penjualan.id_barang = barang.id_barang 
                   group by barang.kelompok_barang';

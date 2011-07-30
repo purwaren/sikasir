@@ -103,6 +103,7 @@ class PointOfSales extends Controller {
     function transaction()
     {
         //data berasal dari  pos system
+        $kassa = $this->session->userdata('no_kassa');
         $id_transaksi = $this->input->post('id_trans');
         $id_barang = $this->input->post('id_barang');
         $item_valid = $this->input->post('item_valid');
@@ -120,7 +121,8 @@ class PointOfSales extends Controller {
                 'total'=>$total,
                 'diskon'=>$disc_all,
                 'id_kasir'=>$this->session->userdata('nik'),
-                'id_pramuniaga'=>$id_pramuniaga
+                'id_pramuniaga'=>$id_pramuniaga,
+                'kassa'=> $kassa
                 );
         $this->load->model('transaksi');
         if($this->transaksi->add_transaksi($data))
@@ -176,6 +178,7 @@ class PointOfSales extends Controller {
     function transaction_credit()
     {
         //data berasal dari  pos system
+        $kassa = $this->session->userdata('no_kassa');
         $id_transaksi = $this->input->post('id_trans');
         $id_barang = $this->input->post('id_barang');
         $qty = $this->input->post('qty');
@@ -194,7 +197,8 @@ class PointOfSales extends Controller {
                 'diskon'=>$disc_all,
                 'no_cc'=>$cc_num,
                 'id_kasir'=>$this->session->userdata('nik'),
-                'id_pramuniaga'=>$id_pramuniaga
+                'id_pramuniaga'=>$id_pramuniaga,
+                'kassa' => $kassa,
                 );
         $this->load->model('transaksi');
         if($this->transaksi->add_transaksi($data))
