@@ -319,7 +319,8 @@ class Item extends Controller {
             if($this->input->post('date_input'))
             {
                 $this->data['tgl_input'] = $this->input->post('date_input');
-                //ambil data barang masuk pada tanggal tersebut                
+                //ambil data barang masuk pada tanggal tersebut     
+                 $this->load->model('barang');
                 $query = $this->barang->get_bon_barang_masuk($this->input->post('date_input'));                
                 if($query->num_rows() >= 1)
                 {
