@@ -10,7 +10,7 @@ var screenConfig = '14';
 */
 var kassaServer = new Array();
     kassaServer[1] = 'localhost';
-    kassaServer[2] = 'localhost';
+    kassaServer[2] = '152.118.31.172';
 /**
 * Base url
 */

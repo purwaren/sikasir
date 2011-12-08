@@ -195,8 +195,10 @@ class Report extends Controller {
                                 }
                                 else
                                 {
-                                    print_r($row[$i]);
-                                    echo $this->db->last_query();exit;
+                                    //klo masuk sini berarti ada data yang tercatat di table transaksi_penjualan tapi tidak masuk ditabel item transaksi penjualan
+                                    //otomatis hapus aja baris yang ada di table transaksi penjualan
+                                    $this->transaksi->remove($row[$i]->id_transaksi);
+                                    $k=0;//break the loop
                                 }
                             }
                             $total_tunai += $bon->total;
