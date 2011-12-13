@@ -39,7 +39,7 @@ table#report input[type=text] {
 
 /* header */
 #header { height: 100px; }
-#logo { height: 100px; padding: 10px 0 0 100px; background: #fff url(images/logo_mode.png) no-repeat 5px left;}
+#logo { height: 100px; padding: 10px 0 0 100px; background: #fff url(images/logo_mode.png) no-repeat left;}
 #logo p { margin: 0; padding: 0 0 0 0px; color: #808080;}
 #top_info { float: right; width: 570px; margin: 20px 5px 0 0; text-align: right;}
 

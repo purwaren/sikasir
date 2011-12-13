@@ -65,7 +65,7 @@ try {
 		*Listen event keyup, untuk shortcut dan lain lain.
 		*/        
 		$(window).keyup(function(event){               
-			$('#trigger').html(event.keyCode); 
+			//$('#trigger').html(event.keyCode); 
             //F2 -- fokus ke text box kode label / barcode
 			if(event.keyCode == 113) {
 				$('#barcode').focus();
