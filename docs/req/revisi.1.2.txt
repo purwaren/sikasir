@@ -1,0 +1,5 @@
++ Absensi dijadikan sebuah subsistem bagian dari sistem kasir.
++ Benerin masalah yang sering terjadi yaitu masalah error pada saat cash, bikin penanggulangannya.
++ Bikin sistem shift supaya berjalan, jadi transaksi yang lwat pergantian hari tidak perlu memundurkan jam
++ Periksa masalah omset yang nyasar2 ke kassa lain. Apa yang terjadi ?
++ Bikin fungsi untuk undo batal transaksi.
