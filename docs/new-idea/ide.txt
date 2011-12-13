@@ -1,5 +1,7 @@
 IDE SIKASIR
 Sikasir Extends
+- Module untuk absensi
+  Absensi dijadikan sebuah subsistem bagian dari sistem kasir//next feature
 - Module untuk membership
 - Module untuk reading magnetic card / smart card, bisa untuk absensi, baca kartu kredit dan kartu member
 - Module untuk user interfaces

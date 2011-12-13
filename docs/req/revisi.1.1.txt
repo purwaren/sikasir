@@ -1,8 +1,7 @@
-+ Absensi dijadikan sebuah subsistem bagian dari sistem kasir.
 + Manajemen Data
   - Urutan menampilkan pada menu manajemen data disamakan dengan urutan bon -ok
-  - tambah row total di bagian akhir 
-+ Checking stok barang dijadikan fungsi admin
+  - tambah row total di bagian akhir -ok
++ Checking stok barang dijadikan fungsi admin -ok
 + Membedakan transaksi berdasarkan kassa -ok
 + Total sales dibuat per kassa yang meminta - ok
 + Cetak laporan penjualan ada kolom kassa -ok
