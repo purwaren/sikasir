@@ -209,7 +209,7 @@ try {
             //Page Down - cut last two digit, make zero
             if(event.keyCode == 34) {
                 var total = parseFloat($('#total_val').val());
-                var disc = parseFloat($('#disc_all').val())
+                var disc = parseFloat($('#disc_all').val());
                 total = total * (1 - disc/100);
                 total = Math.floor(total/100) * 100;
                 $('#total').val($.currency(total,{s:".",d:",",c:0})+',-');
@@ -347,7 +347,7 @@ try {
         *Handling event saat focus ke text box pramuniaga
         */
         $('#id_pramu').keyup(function(event){   
-            var nama = $('#id_pramu').val()            
+            var nama = $('#id_pramu').val();            
             $('#id_pramu').autocomplete({
                 source: function(request,response){
                             $.ajax({
@@ -359,8 +359,8 @@ try {
                                                 return {
                                                     label: item.nama,
                                                     value: item.NIK
-                                                }
-                                            }))
+                                                };
+                                            }));
                                         }
                             });                        
                         },
@@ -382,7 +382,7 @@ try {
         });
         /*Pramuniaga untuk proses refund*/
         $('#ref_pramu').keyup(function(event){   
-            var nama = $('#ref_pramu').val()            
+            var nama = $('#ref_pramu').val();           
             $('#ref_pramu').autocomplete({
                 source: function(request,response){
                             $.ajax({
@@ -394,8 +394,8 @@ try {
                                                 return {
                                                     label: item.nama,
                                                     value: item.NIK
-                                                }
-                                            }))
+                                                };
+                                            }));
                                         }
                             });                        
                         },
@@ -951,7 +951,7 @@ function transRefund() {
             },
             "json"
         );
-        $('#dialog-prompt-refund').dialog('close')
+        $('#dialog-prompt-refund').dialog('close');
     }
     else {
         $('#err-msg-refund').html('Pembayaran kurang');
@@ -970,7 +970,7 @@ function validateQty(num) {
         idx = line[i].getAttribute('id');
         temp = $('#'+idx).val();
         if(temp=="") {
-           temp = 0
+           temp = 0;
         }
         else {
             temp = parseFloat(temp);
@@ -1006,7 +1006,7 @@ function validateQtyById(id_barang,stock) {
             idx = line[i].getAttribute('id');
             temp = $('#'+idx).val();
             if(temp=="") {
-                temp = 0
+                temp = 0;
             }
             else {
                 temp = parseFloat(temp);
@@ -1038,7 +1038,7 @@ function validateQtyRefund(item_code, qty) {
             idx = line[i].getAttribute('id');
             temp = $('#'+idx).val();
             if(temp=="") {
-                temp = 0
+                temp = 0;
             }
             else {
                 temp = parseFloat(temp);
@@ -1064,7 +1064,7 @@ function validateQtyGanti(item_code, qty) {
             idx = line[i].getAttribute('id');
             temp = $('#'+idx).val();
             if(temp=="") {
-                temp = 0
+                temp = 0;
             }
             else {
                 temp = parseFloat(temp);
@@ -1179,11 +1179,11 @@ function getItem(option) {
             if(data == 0) {
                 if(option==1) {
                     $('#err-tukar').html('Data tidak ditemukan');
-                    $('#detail-tukar tr').remove()
+                    $('#detail-tukar tr').remove();
                 }
                 if(option==2) {
                     $('#err-pengganti').html('Data tidak ditemukan');
-                    $('#detail-pengganti tr').remove()
+                    $('#detail-pengganti tr').remove();
                 }
             }
             else {
@@ -1247,7 +1247,7 @@ function countRefund() {
         else {
             qty = parseFloat(qty);
         }
-        disc = parseFloat($('#disc_refund').val())
+        disc = parseFloat($('#disc_refund').val());
         total_tukar += (harga *(1 - disc/100)* qty);         
     }  
     $('#total_tukar').val(total_tukar);
@@ -1268,7 +1268,7 @@ function countPengganti() {
         else {
             qty = parseFloat(qty);
         }
-        disc = parseFloat($('#disc_refund').val())
+        disc = parseFloat($('#disc_refund').val());
         total_ganti += (harga *(1 - disc/100)* qty);        
     }    
     $('#total_pengganti').val(total_ganti);
