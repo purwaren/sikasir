@@ -1,5 +1,12 @@
 + Absensi dijadikan sebuah subsistem bagian dari sistem kasir.
 + Benerin masalah yang sering terjadi yaitu masalah error pada saat cash, bikin penanggulangannya.
+  Id transaksi masih berdasarkan timestamp unix, jd masih mungkin kejadian id transaksinya gak unik. 
+  opsi :
+  1. Mestinya primary key nya jgn cm id transaksi, tpi id transaksi padding dgn user id dan no kassa.
+     - Ini butuh mengubah model untuk transaksi dan untuk reporting
+     - field id transaksi yang tadinya int 11 harus diganti varchar dengan panjang 16
+  2. Primary key nya jadi komposit antara kassa dan id transaksi yang sekarang, tapi ini butuh merubah model untuk 
+     transaksi penjualan dan reporting juga
 + Bikin sistem shift supaya berjalan, jadi transaksi yang lwat pergantian hari tidak perlu memundurkan jam
 + Periksa masalah omset yang nyasar2 ke kassa lain. Apa yang terjadi ?
 + Bikin fungsi untuk undo batal transaksi.

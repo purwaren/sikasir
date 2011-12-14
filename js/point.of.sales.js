@@ -816,7 +816,7 @@ function payTrans(mop) {
                         $('.ui-button').focus();
                     }
                     else {
-                        alert('error');
+                    	displayNotification('Transaksi sudah dicash, minta supervisor untuk periksa laporan penjualan. Tekan F5');
                     }
                 }
             );

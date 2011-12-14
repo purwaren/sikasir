@@ -104,7 +104,8 @@ class PointOfSales extends Controller {
     {
         //data berasal dari  pos system
         $kassa = $this->session->userdata('no_kassa');
-        $id_transaksi = $this->input->post('id_trans');
+        $id_transaksi = $this->input->post('id_trans').$kassa;
+        //$id_transaksi = '13238221611';
         $id_barang = $this->input->post('id_barang');
         $item_valid = $this->input->post('item_valid');
         $qty = $this->input->post('qty');

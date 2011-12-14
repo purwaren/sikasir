@@ -16,7 +16,10 @@ class Transaksi extends Model
     */
     function add_transaksi($data)
     {
-        $query = $this->db->get_where('transaksi_penjualan',array('id_transaksi'=>$data['id_transaksi']));
+        $query = $this->db->get_where('transaksi_penjualan',array(
+        	'id_transaksi'=>$data['id_transaksi'],
+        	//'kassa'=>$data['kassa']
+        ));
         if($query->num_rows() > 0)
         {
             return FALSE;
@@ -64,7 +67,7 @@ class Transaksi extends Model
     */
     function trans_a_day($date)
     {
-        $query = 'select time(from_unixtime(transaksi_penjualan.id_transaksi)) as jam_transaksi, transaksi_penjualan.*,id_barang,sum(qty) as qty,item_transaksi_penjualan.diskon as diskon_item 
+        $query = 'select time(from_unixtime(substr(transaksi_penjualan.id_transaksi,1,10))) as jam_transaksi, transaksi_penjualan.*,id_barang,sum(qty) as qty,item_transaksi_penjualan.diskon as diskon_item 
                 from transaksi_penjualan left join item_transaksi_penjualan on transaksi_penjualan.id_transaksi = item_transaksi_penjualan.id_transaksi 
                 where tanggal ="'.$date.'"
                 group by jam_transaksi,id_barang
@@ -76,7 +79,7 @@ class Transaksi extends Model
     */
     function trans_based_bon($tanggal)
     {
-        $query = 'select * from (select tp.id_transaksi,tp.diskon, time( from_unixtime( tp.id_transaksi ) ) AS jam_transaksi, total, count(distinct id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
+        $query = 'select * from (select tp.id_transaksi,tp.diskon, time( from_unixtime( substr(tp.id_transaksi,1,10)) ) AS jam_transaksi, total, count(distinct id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
                             on tp.id_transaksi = itp.id_transaksi where tanggal="'.$tanggal.'" group by tp.id_transaksi) as tab1
                 left join (select itp.id_transaksi,b.harga,sum(itp.diskon/100*b.harga*itp.qty) as rupiah_diskon 
                             from item_transaksi_penjualan itp left join barang b on  itp.id_barang = b.id_barang left join transaksi_penjualan tp on itp.id_transaksi = tp.id_transaksi 
