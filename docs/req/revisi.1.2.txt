@@ -7,6 +7,12 @@
      - field id transaksi yang tadinya int 11 harus diganti varchar dengan panjang 16
   2. Primary key nya jadi komposit antara kassa dan id transaksi yang sekarang, tapi ini butuh merubah model untuk 
      transaksi penjualan dan reporting juga
+  sementara opsi 1 yg dipilih
 + Bikin sistem shift supaya berjalan, jadi transaksi yang lwat pergantian hari tidak perlu memundurkan jam
-+ Periksa masalah omset yang nyasar2 ke kassa lain. Apa yang terjadi ?
++ Periksa masalah omset yang nyasar2 ke kassa lain. Apa yang terjadi ? 
+  1. Jika yang dipake hanya 1 kassa tapi masih nyasar, dugaanya adalah salah konfigurasi yaitu kassa 1 dan kassa 2 di set untuk IP
+     komputer yang sama, jadi ketika kasir memasukkan kassa 1 / 2 cashdrawer dan printer yang aktif tetap yang ada di komputer tersebut
+     sehingga secara tidak sadar, omset sudah nyasar.
+  2. Jika yang dipake lebih dari satu kassa, kemungkinan terbesar adalah karena id transaksi dicatat berdasarkan jam. Jadi klo ada
+  transaksi pada waktu bersamaan berpotensi timbul masalah. Bisa jg salah konfigurasi kassa
 + Bikin fungsi untuk undo batal transaksi.
