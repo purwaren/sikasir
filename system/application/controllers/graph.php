@@ -513,7 +513,7 @@ class Graph extends Controller {
             $DataSet->SetYAxisName($param['y_axis_name']);
             $DataSet->SetXAxisName($param['x_axis_name']);
             //$DataSet->SetYAxisUnit(" rb");
-            
+          
             // Initialise the graph   
             $Test = new pChart(750,250);
             $Test->setFontProperties("lib/chart/Fonts/tahoma.ttf",8);   
