@@ -11,6 +11,7 @@ class PointOfSales extends Controller {
     {
         parent::Controller();
         
+        ini_set('date.timezone', 'Asia/Jakarta');
         $this->data['page'] ='pos';
         //check if user logged in
         if($this->session->userdata('logged_in'))

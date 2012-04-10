@@ -14,13 +14,13 @@ var kassaServer = new Array();
 /**
 * Base url
 */
-var baseUrl = '/';
+var baseUrl = '/sikasir/';
 /**
 * Row type
 * 0 -> not accumulated
 * 1 -> automatic accumulated
 */
-var rowType = 0
+var rowType = 0;
 /**
 * Allow more than 1 pramuniaga on 1 transakction
 * 0 -> not allowed
@@ -31,5 +31,5 @@ var allowPramu = 0;
 * Tulisan default di Display
 */
 var defMsg = new Array();
-defMsg[0] = 'Welcome To'
+defMsg[0] = 'Welcome To';
 defMsg[1] = 'Mode Fashion Group';
