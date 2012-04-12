@@ -599,7 +599,11 @@ class Report extends Controller {
             {
                 //tulis opsi ke session untuk pagination
                 $this->session->set_userdata('opsi','2');
-                $query = $this->barang->get_barang_all();
+                if($this->input->post('id_barang'))
+               		$id_barang=$this->input->post('id_barang');
+                else $id_barang='';
+                $query = $this->barang->get_barang_all($id_barang);
+                
                 $this->data['total_item'] = $query->num_rows();                
                 //create paginations
                 //setting up pagination

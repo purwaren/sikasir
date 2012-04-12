@@ -14,9 +14,12 @@ class Barang extends Model
     /**
     *Retrieve semua data barang
     */
-    function get_barang_all()
+    function get_barang_all($id_barang='')
     {
-        return $this->db->get('barang');
+    	if(empty($id_barang))
+        	return $this->db->get('barang');
+    	else 
+    		return $this->db->get_where('barang',array('id_barang'=>$id_barang));
     }
     /**
     *Retrieve data barang

@@ -13,12 +13,16 @@
             <tr>
                 <td>Pilihan</td>
                 <td>: 
-                <select name="opsi">
+                <select name="opsi" id="opsi_search">
                     <option value="1">Kelompok Barang</option>
                     <option value="2">Kode Barang</option>                    
                 </select>
                 <span class="button">&nbsp;<input type="submit" name="submit_item_view" value="Display" class="button"/></span>            
-            </td></tr>          
+            </td></tr>
+            <tr id="row_id_barang" style="display:none">
+            	<td>Kode Label</td>
+            	<td>: <input type="text" name="id_barang" style="width:130px"/></td>
+            </tr>          
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>        

@@ -41,6 +41,17 @@ $(function(){
             checkPresence(id_karyawan,2);
         }
     });
+    
+    /**
+     * Opsi laporan
+     */
+    $('#opsi_search').change(function(){
+    	var opsi = $('#opsi_search').val();
+    	if(opsi == 1)
+    		$('#row_id_barang').css('display','none');
+    	else if(opsi == 2)
+    		$('#row_id_barang').css('display','table-row');
+    });
 });
 //autocomplete searching
 function findValue(li) {
