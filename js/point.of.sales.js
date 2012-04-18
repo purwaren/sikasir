@@ -653,6 +653,7 @@ function printReceipt(mode,tunai,id_transaksi) {
         "print_receipt",
         {'option': mode, 'cash': tunai,'id_transaksi':id_transaksi}, 
         function(receipt){
+        	//alert(receipt);
             /*$.post(
                     "get_kassa",                     
                     function(kassa){                        

@@ -296,7 +296,7 @@ class PointOfSales extends Controller {
             fwrite($file,$report);
             fclose($file);
             //output to ajax
-            $this->send_receipt($resi);
+            $this->send_receipt($report);
         }
         else
         {
@@ -381,13 +381,16 @@ class PointOfSales extends Controller {
     {
         //baca input parameter
         $cash = $this->input->post('cash');
-        $id_transaksi = $this->input->post('id_transaksi');
+        $kassa = $this->session->userdata('no_kassa');
+        $id_transaksi = $this->input->post('id_transaksi').$kassa;
         //resi transaksi normal
         if($this->input->post('option')==1 && !empty($id_transaksi))
         {
             //siapkan data resi yang akan diprint
-            $this->load->model('transaksi');
+            
+           	$this->load->model('transaksi');
             $query = $this->transaksi->last_transaksi($id_transaksi);
+            
             if($query->num_rows() > 0)
             {
                 //ambil item transaksi yang ada di tabel item_transaksi_penjualan
@@ -419,6 +422,7 @@ class PointOfSales extends Controller {
                 $sub_detail = "";
                 if($query->num_rows() > 0)
                 {
+                	
                     $this->load->model('barang');         
                     $subtotal = 0;     
                     $all = 0;                    
@@ -452,7 +456,8 @@ class PointOfSales extends Controller {
                     {
                         $resi .= fgets($file);
                     }
-                    fclose($file);
+                    fclose($file);                   
+                    
                     //do resi stuff ..hehe apalah namanya itu..nyusun resinye...
                     $resi = str_replace('<jam>',$transaksi->jam,$resi); //tulis no resi
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
@@ -487,6 +492,7 @@ class PointOfSales extends Controller {
                     fwrite($file,$resi);
                     fclose($file);
                     //output receipt for printing 
+                    //echo $resi;
                     $this->send_receipt($resi);
                 }
             }
