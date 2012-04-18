@@ -296,7 +296,7 @@ class PointOfSales extends Controller {
             fwrite($file,$report);
             fclose($file);
             //output to ajax
-            _e($report);
+            $this->send_receipt($resi);
         }
         else
         {
@@ -487,7 +487,7 @@ class PointOfSales extends Controller {
                     fwrite($file,$resi);
                     fclose($file);
                     //output receipt for printing 
-                    _e($resi);
+                    $this->send_receipt($resi);
                 }
             }
         }
@@ -499,7 +499,7 @@ class PointOfSales extends Controller {
             $file = fopen($filename,'r');
             $resi = fread($file,filesize($filename));
             //output resi for printing
-            _e($resi);
+            $this->send_receipt($resi);
         }
         //resi untuk refund
         if($this->input->post('option')==3)
@@ -611,7 +611,7 @@ class PointOfSales extends Controller {
                     fwrite($file,$resi);
                     fclose($file);
                     //output receipt for printing 
-                    _e($resi);
+                    $this->send_receipt($resi);
                 }
             }
         }      
@@ -624,6 +624,36 @@ class PointOfSales extends Controller {
             $spacer .= " ";
         }
         return $spacer;
+    }
+    /**
+    * Print receipt to printer
+    */
+    function send_receipt($str)
+    {
+    	$timeout = array('sec'=>2,'usec'=>50);
+    	$printer = array('ip'=>$_SERVER['REMOTE_ADDR'],'port'=>config_item('port'));
+    	$sock = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+    	//socket_set_option($sock,SOL_SOCKET,SO_RCVTIMEO,$timeout);
+    	$result = @socket_connect($sock,$printer['ip'],$printer['port']);
+    	//$result = @socket_connect($sock,$_SERVER['REMOTE_ADDR'], Yii::app()->params['printer']['port']);
+    	//$result = false;
+    	if($result === false )
+    	{
+    		$message = '';
+    		return FALSE;
+    	}
+    	else
+    	{
+    		@socket_set_block($sock);
+    		@socket_write($sock,  $str."\r\n");
+    		$message="";
+    		//while($buffer=@socket_read($sock,512))
+    		//{
+    		//    $message .= $buffer;
+    		//}
+    		@socket_close($sock);
+    		return TRUE;
+    	}
     }
     /**
     *Autocomplete pramuniaga

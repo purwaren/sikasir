@@ -653,12 +653,12 @@ function printReceipt(mode,tunai,id_transaksi) {
         "print_receipt",
         {'option': mode, 'cash': tunai,'id_transaksi':id_transaksi}, 
         function(receipt){
-            $.post(
+            /*$.post(
                     "get_kassa",                     
                     function(kassa){                        
                         $('#appletPrinter')[0].sendReceipt(receipt,kassaServer[kassa]);           
                     }        
-            );                       
+            );*/                       
         }        
     );   
 }
@@ -670,12 +670,12 @@ function printRefundReceipt(mode,tunai,brg_tukar,qty_tukar,id_transaksi) {
         "print_receipt",
         {'option': mode, 'cash': tunai,'brg_tukar[]': brg_tukar, 'qty_tukar[]':qty_tukar,'id_transaksi':id_transaksi}, 
         function(receipt){
-            $.post(
+            /*$.post(
                     "get_kassa",                     
                     function(kassa){                        
                         $('#appletPrinter')[0].sendReceipt(receipt,kassaServer[kassa]);           
                     }        
-            );   
+            );*/   
         }        
     );
 }
@@ -687,13 +687,13 @@ function printTempSales() {
         "temp_sales",
         {print: '1'}, 
         function(receipt){
-            $.post(
+            /*$.post(
                     "get_kassa",                     
                     function(kassa){                        
                         $('#appletPrinter')[0].sendReceipt(receipt,kassaServer[kassa]);
                         //alert(receipt);
                     }        
-            );             
+            );*/             
         }        
     );
     $('#dialog-sales').dialog('close');

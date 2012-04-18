@@ -20,5 +20,10 @@ $config['screen'] = '14';
 */
 $config['work_cycle'] = 8;
 
+/**
+ * Printer port
+ */
+$config['port'] =  1234;
+
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */
