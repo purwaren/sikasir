@@ -13,6 +13,7 @@ Subtotal = <subtotal>#
 ------------------------------(-)#
 Total   : <total>#
 Tunai   : <cash>#
+Infaq   : <infaq>#
 Kembali : <cashback>#
 =================================#
 Kasir : <kasir>#

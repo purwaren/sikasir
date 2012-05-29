@@ -44,8 +44,9 @@
     <p style="padding:0;margin:0;text-align:right;font-size:3em" id="refund-view"></p>
 </div>
 <!--dialog jumlah kembalian-->
-<div id="dialog-cashback" title="Jumlah Kembalian">
-    <span id="cashback" style="font-size: 2em"></span>
+<div id="dialog-cashback" title="Jumlah Kembalian" style="display:none;text-align:right">
+    <span id="cashback" style="font-size: 2em;text-align:right;"></span><br />
+    <input type="text" style="font-size:2em;text-align:right;width:120px;" id="infaq"/>
 </div>
 <!--dialog jumlah total penjualan -->
 <div id="dialog-sales" title="Total Sales">

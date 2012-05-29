@@ -2,24 +2,24 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 =================================#
-Tanggal: 2011-08-07 12:30:07#
+Tanggal: 2012-05-12 #
  #
         DETAIL TRANSAKSI#
-0011100071 OBL CYBERSHOT#
-  1 @49.900 disc 5 % #
-                         = 47.405#
+0101200002 CL TRAINING DIADORA#
+               1 @45.900 = 45.900#
 
 1 items#
 ------------------------------(+)#
-Subtotal =                 47.405#
+Subtotal =                 45.900#
 
 ------------------------------(-)#
-Total   :                  47.400#
+Total   :                  45.900#
 Tunai   :                  50.000#
-Kembali :                   2.600#
+Infaq   :                     100#
+Kembali :                   4.000#
 =================================#
 Kasir : Erna Wati#
-Pramuniaga: #
+Pramuniaga: Desi Anggraini#
  #
           TERIMAKASIH# 
     BERBELANJA DENGAN KAMI#

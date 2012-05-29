@@ -71,16 +71,17 @@ class Report extends Controller {
                                     <tr>
                                         <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">No</td>
                                         <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kassa</td>
-                                        <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">JAM</td>
+                                        <td style="width:40px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">JAM</td>
                                         <td style="width:90px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Nama Kasir</td>
                                         <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kode Label</td>
-                                        <td style="width:120px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Nama Barang</td>
+                                        <td style="width:110px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Nama Barang</td>
                                         <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kelompok <br />Barang</td>                                
-                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Harga Jual (Rp)</td>
+                                        <td style="width:60px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Harga <br />Jual (Rp)</td>
                                         <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Qty</td>
-                                        <td style="width:60px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Jumlah (Rp)</td>
-                                        <td style="width:65px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Diskon (Rp)</td>
-                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Omset (Rp)</td>
+                                        <td style="width:70px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Jumlah (Rp)</td>
+                                        <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Diskon <br />(Rp)</td>
+                                        <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Infaq <br />(Rp)</td>
+                                        <td style="width:70px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Omset (Rp)</td>
                                     </tr>';
                         $i=0;
                         $j=0;
@@ -90,6 +91,7 @@ class Report extends Controller {
                         $total_tunai=0;
                         $total_qty=0;
                         $total_disc = 0;
+                        $total_infaq = 0;
                         $row = $query->result();
                         foreach($query_per_bon->result() as $bon)
                         {
@@ -125,13 +127,13 @@ class Report extends Controller {
                                         if(($i+1)>30 && ($i+1)%30==1)
                                         {
                                            $temp .='<td rowspan="'.$kurang.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$kurang.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$kurang.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
                                                     <td rowspan="'.$kurang.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>'; 
                                         }                                    
                                         if(($i+1)==$n)
                                         {
                                             $temp .='<td rowspan="'.$ada.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$ada.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$ada.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
                                                     <td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
                                         }
                                     }
@@ -140,16 +142,16 @@ class Report extends Controller {
                                         if($k==$bon->jml_item)
                                         {
                                             $temp .='<td rowspan="'.$bon->jml_item.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                                    <td rowspan="'.$bon->jml_item.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
                                                     <td rowspan="'.$bon->jml_item.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
                                         }
                                     }
                                     $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
-                                                <td style="width:120px;border: 1px solid;">'.$barang->nama.'</td>
+                                                <td style="width:110px;border: 1px solid;">'.$barang->nama.'</td>
                                                 <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>                                                                                              
-                                                <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($barang->harga,2,',','.').'&nbsp;&nbsp;</td>
+                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($barang->harga,2,',','.').'&nbsp;&nbsp;</td>
                                                 <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
-                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
+                                                <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
                                        
                                     //menyisipkan total sebenarnya, dibuat colspan
                                     if(!empty($kurang))
@@ -161,8 +163,9 @@ class Report extends Controller {
                                             $disc_all = ($bon->diskon/100)*$temp_jumlah;
                                             $disc = $bon->rupiah_diskon + $disc_all;
                                             $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$kurang.'"  style="width:65px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                                    <td rowspan="'.$kurang.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
+                                            $temp .= '<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+                                            		<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+                                                    <td rowspan="'.$kurang.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
                                         }
                                         if(($i+1)==$n)
                                         {
@@ -171,8 +174,9 @@ class Report extends Controller {
                                             $disc_all = ($bon->diskon/100)*$temp_jumlah;
                                             $disc = $bon->rupiah_diskon + $disc_all;
                                             $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$ada.'" style="width:65px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                                    <td rowspan="'.$ada.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+                                            $temp .= '<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+                                            		<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+                                                    <td rowspan="'.$ada.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
                                         }
                                     }
                                     else 
@@ -184,8 +188,9 @@ class Report extends Controller {
                                             $disc_all = ($bon->diskon/100)*$temp_jumlah;
                                             $disc = $bon->rupiah_diskon + $disc_all;
                                             $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:65px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                                    <td rowspan="'.$bon->jml_item.'" style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+                                            $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+                                            		<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+                                                    <td rowspan="'.$bon->jml_item.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
                                         }
                                     }
                                     $temp .='</tr>';
@@ -207,13 +212,15 @@ class Report extends Controller {
                             }
                             $total_tunai += $bon->total;
                             $total_disc += $disc;
+                            $total_infaq += $bon->infaq;
                         }
                         $list[$j] = $temp;
-                        $row_total = '<tr><td colspan="8" style="width:520px;border: 1px solid;text-align:right">T O T A L &nbsp;&nbsp;</td>
+                        $row_total = '<tr><td colspan="8" style="width:485px;border: 1px solid;text-align:right">T O T A L &nbsp;&nbsp;</td>
                                         <td style="width:30px;border: 1px solid;">'.$total_qty.'</td>
-                                        <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_jumlah,2,',','.').'&nbsp;&nbsp;</td>
-                                        <td style="width:65px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_disc,2,',','.').'&nbsp;&nbsp;</td>
-                                        <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_tunai,2,',','.').'&nbsp;&nbsp;</td>
+                                        <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_jumlah,2,',','.').'&nbsp;&nbsp;</td>
+                                        <td style="width:50px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_disc,2,',','.').'&nbsp;&nbsp;</td>
+                                        <td style="width:50px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_infaq,2,',','.').'&nbsp;&nbsp;</td>
+                                        <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($total_tunai,2,',','.').'&nbsp;&nbsp;</td>
                                     </tr>';
                         //ambil data supervisor sama data kasir
                         $query = $this->transaksi->get_kasir($tanggal);

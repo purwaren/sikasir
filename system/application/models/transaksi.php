@@ -30,6 +30,18 @@ class Transaksi extends Model
             return TRUE;
         }
     }
+    
+    /**
+     * Update infaq and total transaction
+     */
+    function update_infaq($data)
+    {
+    	return $this->db->update('transaksi_penjualan',
+    		array('total'=>$data['total'],'infaq'=>$data['infaq']),
+    		array('id_transaksi'=>$data['id_transaksi'])
+    	);
+    }
+    
     /**
     * Get transaksi from specific range of date
     */
@@ -79,7 +91,7 @@ class Transaksi extends Model
     */
     function trans_based_bon($tanggal)
     {
-        $query = 'select * from (select tp.id_transaksi,tp.diskon, time( from_unixtime( substr(tp.id_transaksi,1,10)) ) AS jam_transaksi, total, count(distinct id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
+        $query = 'select * from (select tp.id_transaksi,tp.diskon, tp.infaq, time( from_unixtime( substr(tp.id_transaksi,1,10)) ) AS jam_transaksi, total, count(distinct id_barang) as jml_item from transaksi_penjualan as tp left join item_transaksi_penjualan as itp
                             on tp.id_transaksi = itp.id_transaksi where tanggal="'.$tanggal.'" group by tp.id_transaksi) as tab1
                 left join (select itp.id_transaksi,b.harga,sum(itp.diskon/100*b.harga*itp.qty) as rupiah_diskon 
                             from item_transaksi_penjualan itp left join barang b on  itp.id_barang = b.id_barang left join transaksi_penjualan tp on itp.id_transaksi = tp.id_transaksi 

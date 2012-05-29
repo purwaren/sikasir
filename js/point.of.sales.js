@@ -323,7 +323,7 @@ try {
         *Handling event untuk pembatalan transaksi
         */
         $('#trans-nth').keyup(function(event){
-            if(event.keyCode == 13) {
+        	if(event.keyCode == 13) {
                 cancelTrans();
             }
         });
@@ -566,7 +566,7 @@ function formatMsg(msg) {
 }
 function spacer(n) {
     var msg = '';
-    for(i=0;i < n;i++) {
+    for(var i=0;i < n;i++) {
         msg += ' ';
     }
     return msg;
@@ -641,9 +641,10 @@ function digitalClock() {
 /* Display message to PD Series */
 function displayMsg(msg) {
     $.post(
-            "get_kassa",                     
-            function(kassa){                        
-                $('#appletPrinter')[0].writeMessage(msg,kassaServer[kassa]);          
+            "write_display",  
+            {'message':msg},
+            function(data){                        
+                //$('#appletPrinter')[0].writeMessage(msg,kassaServer[kassa]);          
             }        
     );    
 }
@@ -758,7 +759,7 @@ function payTrans(mop) {
     total = total*(1- (disc_all/100));
     total = Math.floor(total/100) * 100;
     var check = "";
-    for(i=0; i<num; i++) {        
+    for(var i=0; i<num; i++) {        
         cek = $('#row-data tr:nth-child('+(i+1)+')').css('text-decoration');        
         if(cek == "none") {            
             id_barang[i] = $('#row-data tr:nth-child('+(i+1)+') td:nth-child(2)').html();
@@ -794,7 +795,7 @@ function payTrans(mop) {
                     //success
                     if(data == 1) { 
                         //print receipt + munculin angka kembalian
-                        printReceipt(1,cash,id_transaksi);
+                        //printReceipt(1,cash,id_transaksi);
                         //kalau tdk ok, kasih taw kesalahannya
                         //ketika kembalian dipilih ok, maka kembali ke siap transaksi
                         var kembalian = cash - bill;
@@ -809,12 +810,21 @@ function payTrans(mop) {
                             buttons: {
                                 Ok : function() {
                                     $(this).dialog('close');
+                                    var infaq = $('#infaq').val();
+                                    saveInfaq(1,cash,bill,id_transaksi,infaq);
                                     //var cash = bill + kembalian;                        
-                                    setTimeout("location.reload()",500);
+                                    //setTimeout("location.reload()",500);
                                 }
                             }
                         });
-                        $('.ui-button').focus();
+                        $('#infaq').focus();
+                        $('#infaq').keyup(function(event){
+                        	if(event.keyCode==13) {
+                        		$('#dialog-cashback').dialog('close');
+                        		var infaq = $('#infaq').val();
+                                saveInfaq(1,cash,bill,id_transaksi,infaq);
+                        	}
+                        });
                     }
                     else {
                     	displayNotification('Transaksi sudah dicash, minta supervisor untuk periksa laporan penjualan. Tekan F5');
@@ -864,6 +874,35 @@ function payTrans(mop) {
     }        
 }
     
+/**
+ * Melakukan pencatatan infaq,
+ */
+function saveInfaq(mode,cash,bill,id_transaksi,infaq) {
+	$.post(
+	        "print_receipt",
+	        {'option': mode, 'cash': cash,'id_transaksi':id_transaksi,'infaq':infaq}, 
+	        function(receipt){
+	        	var kembalian = cash - bill - infaq;
+                $('#cashback').html('Rp. '+$.currency(kembalian,{s:".",d:",",c:0})+',-');
+                //display message
+                var msg = new Array();
+                msg[0] = 'Kembali (Rp)';
+                msg[1] = $.currency(kembalian,{s:".",d:",",c:0})+',-';
+                displayMsg(formatMsg(msg));
+                $('#infaq').remove();
+	        	$('#dialog-cashback').dialog({                     
+                    modal: true,
+                    buttons: {
+                        Ok : function() {
+                            $(this).dialog('close');                                           
+                            setTimeout("location.reload()",500);
+                        }
+                    }
+                });
+                $('.ui-button').focus();                    
+	        }        
+	    );
+}
 
 /**
 *Bayar penukaran (refund) dengan pencet tombol refund
@@ -896,7 +935,7 @@ function transRefund() {
     var qty_tukar = new Array();
     var disc_tukar = new Array();
     var tukar = $('#detail-tukar tr');
-    for(i=1;i<tukar.length;i++) {
+    for(var i=1;i<tukar.length;i++) {
         brg_tukar[i-1] = $('#detail-tukar tr:nth-child('+(i+1)+') td:nth-child(2)').html();
         qty_tukar[i-1] = $('#qty_refund_'+i).val();
         disc_tukar[i-1] = $('#disc_refund').val();

@@ -25,5 +25,10 @@ $config['work_cycle'] = 8;
  */
 $config['port'] =  1234;
 
+/**
+ * Display port
+ */
+$config['display'] = 2345;
+
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */

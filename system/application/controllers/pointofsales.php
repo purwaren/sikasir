@@ -72,6 +72,38 @@ class PointOfSales extends Controller {
         $kassa = $this->session->userdata('no_kassa');
         _e($kassa);
     }
+    
+    function write_display()
+    {
+    	$str = $this->input->post('message');
+    	if(!empty($str))
+    	{
+	    	$timeout = array('sec'=>2,'usec'=>50);
+	    	$display = array('ip'=>$_SERVER['REMOTE_ADDR'],'port'=>config_item('display'));
+	    	$sock = @socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
+	    	//socket_set_option($sock,SOL_SOCKET,SO_RCVTIMEO,$timeout);
+	    	$result = @socket_connect($sock,$display['ip'],$display['port']);
+	    	//$result = @socket_connect($sock,$_SERVER['REMOTE_ADDR'], Yii::app()->params['printer']['port']);
+	    	//$result = false;
+	    	if($result === false )
+	    	{
+	    		$message = '';
+	    		return FALSE;
+	    	}
+	    	else
+	    	{
+	    		@socket_set_block($sock);
+	    		@socket_write($sock,  $str."\r\n");
+	    		$message="";
+	    		//while($buffer=@socket_read($sock,512))
+	    		//{
+	    		//    $message .= $buffer;
+	    		//}
+	    		@socket_close($sock);
+	    		return TRUE;
+	    	}
+    	}
+    }
     /*redirect page to home controller*/
     function home()
     {
@@ -383,6 +415,10 @@ class PointOfSales extends Controller {
         $cash = $this->input->post('cash');
         $kassa = $this->session->userdata('no_kassa');
         $id_transaksi = $this->input->post('id_transaksi').$kassa;
+        $infaq = $this->input->post('infaq');
+        if(isset($infaq))
+        	$infaq = doubleval($infaq);
+        else $infaq = 0;
         //resi transaksi normal
         if($this->input->post('option')==1 && !empty($id_transaksi))
         {
@@ -464,7 +500,8 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<detail>',$detail,$resi);//tulis detail transaksi                    
                     $resi = str_replace('<all>',$all.' items',$resi);//all item                     
                     $resi = str_replace('<subtotal>',$this->spacer(22-strlen(number_format($subtotal,0,',','.'))).number_format($subtotal,0,',','.'),$resi);                    
-                    $resi = str_replace('<total>',$this->spacer(23-strlen(number_format($transaksi->total,0,',','.'))).number_format($transaksi->total,0,',','.'),$resi); 
+                    $resi = str_replace('<total>',$this->spacer(23-strlen(number_format($transaksi->total,0,',','.'))).number_format($transaksi->total,0,',','.'),$resi);
+                    $resi = str_replace('<infaq>',str_pad(number_format($infaq,0,',','.'), 23, ' ', STR_PAD_LEFT),$resi); 
                     $disc = '';
                     if($transaksi->diskon > 0) 
                     {
@@ -484,7 +521,12 @@ class PointOfSales extends Controller {
                         $tunai = '[CdtCrd]'.number_format($cash,0,',','.');
                         $resi = str_replace('<cash>',$this->spacer(23 - strlen($tunai)).'[CdtCrd]'.number_format($cash,0,',','.'),$resi);
                     }
-                    $cashback = $cash - $transaksi->total;                    
+                    $cashback = $cash - $transaksi->total - $infaq; 
+                    $this->transaksi->update_infaq(array(
+                    	'id_transaksi'=>$id_transaksi,
+                    	'total'=>$transaksi->total,
+                    	'infaq'=>$infaq
+                    ));                   
                     $resi = str_replace('<cashback>',$this->spacer(23 - strlen(number_format($cashback,0,',','.'))).number_format($cashback,0,',','.'),$resi);                               
                     //open file to write
                     $filename = 'lib/receipt-'.$this->session->userdata('nik').'-'.$this->session->userdata('no_shift').'.txt';
