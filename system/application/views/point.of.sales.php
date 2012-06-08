@@ -95,7 +95,7 @@
         </div>
     </div>        
     <p style=";margin:3px 0 3px 0;">No. Tunggu : <input type="text" id="no_tunggu" readonly="readonly" value="<?php _e($no_tunggu)?>"/></p>
-    <applet codebase="<?php _e(base_url().'js') ?>" code="EchoClient.class" id="appletPrinter" height="0" width="20"></applet>
+    <!-- <applet codebase="<?php _e(base_url().'js') ?>" code="EchoClient.class" id="appletPrinter" height="0" width="20"></applet> -->
     <table cellspacing="0" cellpadding="0" class="data">
         <tr class="head">
             <td width="5%">NO</td>

@@ -10,6 +10,7 @@ Tanggal: <tanggal> <jam>#
 -----------------------------(+)#
 Total  : Rp<total>#
 Tunai  : Rp<cash>#
+Infaq  : Rp<infaq>#
 Kembali: Rp<cashback>#
 ================================#
 Kasir : <kasir>#

@@ -968,9 +968,9 @@ function transRefund() {
             {'id_tukar[]': brg_tukar,'qty_tukar[]':qty_tukar,'id_pengganti[]': brg_pengganti,'qty_pengganti[]':qty_pengganti, 'disc_tukar':disc_tukar, 'disc_pengganti[]':disc_pengganti, 'id_pramu': id_pramu, 'total': bill},
             function(data){
                 if(data.status == 1) {
-                    //print receipt + munculin angka kembalian
-                    printRefundReceipt(3,cash,brg_tukar,qty_tukar,data.id_transaksi);
+                    //print receipt + munculin angka kembalian                    
                     var kembalian = cash - bill;
+                    var id_transaksi = data.id_transaksi;
                     $('#cashback').html('Rp. '+$.currency(kembalian,{s:".",d:",",c:0})+',-');
                     //display message
                     var msg = new Array();
@@ -981,12 +981,21 @@ function transRefund() {
                         modal: true,
                         buttons: {
                             Ok : function() {
-                                $(this).dialog('close');                                                         
-                                setTimeout("window.location.replace('launch')",500);
+                                $(this).dialog('close');  
+                                var infaq = $('#infaq').val();
+                                //setTimeout("window.location.replace('launch')",500);
+                            	saveInfaq(3,cash,bill,id_transaksi,infaq);
                             }
                         }
                     });
-                    $('.ui-button').focus();                                                            
+                    $('#infaq').focus();
+                    $('#infaq').keyup(function(event){
+                    	if(event.keyCode==13) {
+                    		$('#dialog-cashback').dialog('close');
+                    		var infaq = $('#infaq').val();
+                            saveInfaq(3,cash,bill,id_transaksi,infaq);
+                    	}
+                    });                                                            
                 }
             },
             "json"

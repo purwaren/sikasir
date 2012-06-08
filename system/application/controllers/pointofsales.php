@@ -349,7 +349,7 @@ class PointOfSales extends Controller {
         $disc_pengganti = $this->input->post('disc_pengganti');
         $disc_tukar = $this->input->post('disc_tukar');
         $id_pramu = $this->input->post('id_pramu');
-        $id_transaksi = time();
+        $id_transaksi = time().$kassa;
         $total = $this->input->post('total');
         $total = floor($total/100) * 100;
         //tambah data ke tabel item_transaksi dulu        
@@ -553,6 +553,7 @@ class PointOfSales extends Controller {
         if($this->input->post('option')==3)
         {
             //baca input parameter
+            $id_transaksi = $this->input->post('id_transaksi');
             $cash = $this->input->post('cash');
             $id_tukar = $this->input->post('brg_tukar');
             $qty_tukar = $this->input->post('qty_tukar');
@@ -562,6 +563,7 @@ class PointOfSales extends Controller {
             if($query->num_rows() > 0)
             {
                 //ambil data barang pengganti yang disimpan sebagai transaksi penjualan
+                echo 'ketemu id_transaksinya';
                 $transaksi = $query->row();              
                 $this->load->model('item_transaksi');
                 $query = $this->item_transaksi->get_item_transaksi($transaksi->id_transaksi);                
@@ -571,6 +573,7 @@ class PointOfSales extends Controller {
                 $total_pengganti = 0;
                 if($query->num_rows() > 0)
                 {
+                	echo 'ketemu item transaksinya';
                     $this->load->model('barang');        
                     
                     //susun barang pengganti untuk ditaro resi
@@ -650,7 +653,13 @@ class PointOfSales extends Controller {
                     $resi = str_replace('<pramu>',$pramu,$resi);                                        
                     $tmp = number_format($cash,0,',','.');
                     $resi = str_replace('<cash>',$this->spacer(20-strlen($tmp)).$tmp,$resi); 
-                    $cashback = $cash - $total;                    
+                    $resi = str_replace('<infaq>',str_pad(number_format($infaq,0,',','.'), 20, ' ', STR_PAD_LEFT),$resi);
+                    $cashback = $cash - $transaksi->total - $infaq; 
+                    $this->transaksi->update_infaq(array(
+                    	'id_transaksi'=>$id_transaksi,
+                    	'total'=>$transaksi->total,
+                    	'infaq'=>$infaq
+                    ));                       
                     $tmp = number_format($cashback,0,',','.');
                     $resi = str_replace('<cashback>',$this->spacer(20-strlen($tmp)).$tmp,$resi);
                     //open file to write
