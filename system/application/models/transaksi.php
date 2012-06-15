@@ -71,7 +71,7 @@ class Transaksi extends Model
     */
     function last_transaksi($id_transaksi)
     {
-        $query = 'select time(from_unixtime(id_transaksi)) as jam,tp.* from transaksi_penjualan tp where tp.id_transaksi="'.$id_transaksi.'"';
+        $query = 'select time(from_unixtime(substr(id_transaksi,1,10))) as jam,tp.* from transaksi_penjualan tp where tp.id_transaksi="'.$id_transaksi.'"';
         return $this->db->query($query);
     }
     /**

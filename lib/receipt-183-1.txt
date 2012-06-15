@@ -2,24 +2,24 @@ MODE FASHION PERBAUNGAN#
 Jln. Serdang No. 141#
 Telp.(061) 799 0009#
 =================================#
-Tanggal: 2012-05-12 #
+Tanggal: 2012-06-15 10:14:34#
  #
         DETAIL TRANSAKSI#
-0101200002 CL TRAINING DIADORA#
-               1 @45.900 = 45.900#
+0101100009 CL TRAINING ADS#
+               1 @27.900 = 27.900#
 
 1 items#
 ------------------------------(+)#
-Subtotal =                 45.900#
+Subtotal =                 27.900#
 
 ------------------------------(-)#
-Total   :                  45.900#
+Total   :                  27.900#
 Tunai   :                  50.000#
 Infaq   :                     100#
-Kembali :                   4.000#
+Kembali :                  22.000#
 =================================#
 Kasir : Erna Wati#
-Pramuniaga: Desi Anggraini#
+Pramuniaga: #
  #
           TERIMAKASIH# 
     BERBELANJA DENGAN KAMI#
