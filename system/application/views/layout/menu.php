@@ -32,7 +32,8 @@
         <a href="<?php _e(base_url().'report/sales')?>">Laporan Penjualan</a> .:. 
         <a href="<?php _e(base_url().'report/stok')?>">Laporan Stok Barang</a> .:. 
         <a href="<?php _e(base_url().'report/retur')?>">Laporan Retur Barang</a> .:. 
-        <a href="<?php _e(base_url().'report/checking')?>">Laporan Penggantian Barang</a>
+        <a href="<?php _e(base_url().'report/checking')?>">Laporan Penggantian Barang</a> .:. 
+        <a href="<?php _e(base_url().'report/infaq')?>">Rekap Infaq</a>
     </p>
     <? } if($page == 'pos') { ?>
     

@@ -75,6 +75,7 @@ class Graph extends Controller {
                 $total_omset=0;
                 $total_qty=0;
                 $total_disc=0;
+                $total_infaq=0;
                 $i=0;
                 $min_omset='';
                 $max_omset='';
@@ -87,6 +88,7 @@ class Graph extends Controller {
                                     <td style="width:50px">'.$row->tgl.'</td>
                                     <td style="width:50px">'.$qty_sales[$i-1]->total.'</td>
                                     <td style="width:100px">'.number_format($row_disc[$i-1]->total_diskon,'0',',','.').',-</td>
+                                    <td style="width:100px">'.number_format($row->total_infaq,'0',',','.').',-</td>
                                     <td style="width:100px">'.number_format($row->omset,'0',',','.').',-</td></tr>';
                     $line .= $row->tgl.','.($row->omset/1000). chr(10);
                     if($i==1)
@@ -113,8 +115,9 @@ class Graph extends Controller {
                     $total_omset += $row->omset;
                     $total_qty += $qty_sales[$i-1]->total;
                     $total_disc += $row_disc[$i-1]->total_diskon;
+                    $total_infaq += $row->total_infaq;
                 }                
-                $row_total = '<tr><td colspan="2" style="width:70px;">T O T A L</td><td style="width:50px">'.$total_qty.'</td><td style="width:100px">'.number_format($total_disc,'0',',','.').',-</td><td style="width:100px">'.number_format($total_omset,'0',',','.').',-</td></tr>';
+                $row_total = '<tr><td colspan="2" style="width:70px;">T O T A L</td><td style="width:50px">'.$total_qty.'</td><td style="width:100px">'.number_format($total_disc,'0',',','.').',-</td><td style="width:100px">'.number_format($total_infaq,'0',',','.').',-</td><td style="width:100px">'.number_format($total_omset,'0',',','.').',-</td></tr>';
                 $this->data['row_data']=$row_data.$row_total;
                 $file = @fopen('lib/omset.csv','w');
                 fwrite($file,$line);
@@ -146,6 +149,7 @@ class Graph extends Controller {
                                     <td class="head" style="width:50px">Tanggal</td>
                                     <td class="head" style="width:50px">Qty Terjual</td>
                                     <td class="head" style="width:100px">Total Diskon(Rp)</td>
+                                    <td class="head" style="width:100px">Total Infaq(Rp)</td>
                                     <td class="head" style="width:100px">Omset (Rp)</td>
                                 </tr>';
                     $table .= $this->data['row_data'].'</table>';
@@ -684,7 +688,7 @@ class Graph extends Controller {
             $pdf->Image($img,13,45,190,60);
             $pdf->writeHTML('<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />', true, 0, true, 0);      
             $pdf->writeHTML($head2,true,0,true,0);     
-            $pdf->writeHTMLCell(0,0,50,115,$data);
+            $pdf->writeHTMLCell(0,0,35,115,$data);
         }
         if($opsi == 2)
         {

@@ -37,6 +37,63 @@ class Report extends Controller {
 	{        
         $this->load->view('report',$this->data);
 	}
+	/**
+	 * Rekap infaq
+	 */
+	function infaq()
+	{
+		$this->load->model('transaksi');
+		if($this->input->post('submit_preview'))
+		{
+			$month = $this->input->post('bulan');
+			$year = $this->input->post('tahun');
+			$query = $this->transaksi->search_infaq(array(
+				'month'=>$month,
+				'year'=>$year,
+			));
+			if($query->num_rows() > 0)
+			{
+				$table = '<table class="table-data" cellspacing="0" cellpadding="0">
+				            <tr>
+				                <td class="head">No</td><td class="head"> Tanggal </td><td class="head"> Total Infaq </td>
+				            </tr>';
+				$i=0;
+				$total = 0;
+				foreach ($query->result() as $row)
+				{
+					$table .= '<tr>
+								<td>'.++$i.'</td>
+								<td>'.date_to_string($row->tanggal).'</td>
+								<td>'.number_format($row->total_infaq).'</td>
+							</tr>';
+					$total += $row->total_infaq;
+				}
+				$table .= '<tr>
+							<td colspan="2">T O T A L</td>
+							<td>'.number_format($total).'</td>
+						</tr></table>';
+				$this->data['result']=$table;
+			}
+		}		
+		//ambil bulan dan tahun
+		$query = $this->transaksi->month_of_trans();
+		$month = '<select name="bulan" style="width:148px;">';
+		foreach($query->result() as $row)
+		{
+			$month .= '<option value="'.$row->bulan.'">'.$this->month_to_string($row->bulan).'</option>';
+		}
+		$month .= '</select>';
+		$query = $this->transaksi->year_of_trans();
+		$year = '<select name="tahun" style="width:50px;">';
+		foreach($query->result() as $row)
+		{
+			$year .= '<option value="'.$row->tahun.'">'.$row->tahun.'</option>';
+		}
+		$year .= '</select>';
+		$this->data['month'] = $month;
+		$this->data['year'] = $year;
+		$this->load->view('report-infaq',$this->data);
+	}
     /**
     *Sales report / laporan penjualan
     */

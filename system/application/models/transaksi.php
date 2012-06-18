@@ -182,6 +182,16 @@ class Transaksi extends Model
         return $this->db->query($query);
     }
     /**
+     * Search infaq
+     */
+    function search_infaq($param)
+    {
+    	$sql = 'select tanggal, sum(infaq) as total_infaq from transaksi_penjualan 
+    		where month(tanggal)="'.$param['month'].'" and year(tanggal)="'.$param['year'].'" 
+    		group by tanggal order by tanggal asc';
+    	return $this->db->query($sql);
+    }
+    /**
     *Ambil tahun terjadinya transaksi
     */
     function year_of_trans()
@@ -240,7 +250,7 @@ class Transaksi extends Model
     */
     function get_omset($bulan,$tahun)
     {
-        $query = 'select day(tp.tanggal) as tgl,sum(tp.total) as omset from transaksi_penjualan tp where month(tp.tanggal)="'.$bulan.'" and year(tp.tanggal) ="'.$tahun.'" group by tanggal';
+        $query = 'select day(tp.tanggal) as tgl,sum(tp.total) as omset, sum(infaq) as total_infaq from transaksi_penjualan tp where month(tp.tanggal)="'.$bulan.'" and year(tp.tanggal) ="'.$tahun.'" group by tanggal';
         return $this->db->query($query);
     }
     /**    
