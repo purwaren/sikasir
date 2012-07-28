@@ -206,7 +206,7 @@ class Report extends Controller {
                                     $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
                                                 <td style="width:110px;border: 1px solid;">'.$barang->nama.'</td>
                                                 <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>                                                                                              
-                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($barang->harga,2,',','.').'&nbsp;&nbsp;</td>
+                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($barang->harga),2,',','.').'&nbsp;&nbsp;</td>
                                                 <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
                                                 <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
                                        
@@ -354,7 +354,7 @@ class Report extends Controller {
                                         <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row->id_barang.'</td>
                                         <td style="width:120px;border: 1px solid;">'.$row->nama.'</td>
                                         <td style="width:50px;border: 1px solid;">'.$row->kelompok_barang.'</td>                                        
-                                        <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($row->harga,2,',','.').'&nbsp;&nbsp;</td>
+                                        <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($row->harga),2,',','.').'&nbsp;&nbsp;</td>
                                         <td style="width:75px;border: 1px solid;">'.$row->stok_barang.'</td>                                        
                                         <td style="width:75px;border: 1px solid;">'.$row->jml_terjual.'</td>                                        
                                     </tr>';
