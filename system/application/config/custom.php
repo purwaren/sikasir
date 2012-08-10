@@ -29,6 +29,7 @@ $config['port'] =  1234;
  * Display port
  */
 $config['display'] = 2345;
+$config['base_url'] = '/sikasir/';
 
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */
