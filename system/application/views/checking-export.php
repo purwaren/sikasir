@@ -9,7 +9,7 @@
         <h2><a href="#">Ekspor Data</a></h2>
         <p class="description">Untuk mengekspor data penjualan, digunakan ketika finalisasi proses checking</p>
         <br />
-        <?php _e(form_open(base_url().'checking/export'))?>
+        <?php _e(form_open('checking/export'))?>
         <table id="report">
             <tr>
                 <td>Pilihan</td>

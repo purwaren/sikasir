@@ -9,7 +9,7 @@
         <h2><a href="#">Lihat Opname</a></h2>
         <p class="description">Untuk melihat stok opname, data dengan stok barang tidak nol saja yang ditampilkan</p>
         <br />
-        <?php _e(form_open(base_url().'checking/manage'))?>
+        <?php _e(form_open('checking/manage'))?>
         <table id="report">
             <tr>
                 <td>Pilihan</td>
@@ -26,7 +26,7 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
         <?php if(isset($search_result)) { ?>
-        <?php _e(form_open(base_url().'checking/manage'))?>
+        <?php _e(form_open('checking/manage'))?>
         <table class="table-data" cellspacing="0" cellpadding="0" style="margin:10px">
             <tr>
                 <td class="head">No</td><td class="head">Kode Barang</td><td class="head">Nama Barang</td>

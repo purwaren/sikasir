@@ -9,7 +9,7 @@
         <h2><a href="#">Grafik Penjualan Toko </a></h2>
         <p class="description">Grafik penjualan toko harian dan bulanan</p>
         <br />
-        <?php _e(form_open(base_url().'graph/sales'))?>
+        <?php _e(form_open('graph/sales'))?>
         <table id="report">
            <tr id="bulanan">
                 <td>Bulan</td><td> : <?php _e($month)._e('--')._e($year)?> </td><td>            

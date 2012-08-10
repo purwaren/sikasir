@@ -9,7 +9,7 @@
         <h2><a href="#">Rekap Infaq</a></h2>
         <p class="description">Laporan pengumpulan dana infaq</p>
         <br />
-        <?php _e(form_open(base_url().'report/infaq'))?>
+        <?php _e(form_open('report/infaq'))?>
         <table id="report">            
             <tr id="harian">               
                 <td>Bulan</td><td> : <?php _e($month.'--'.$year)?></td>

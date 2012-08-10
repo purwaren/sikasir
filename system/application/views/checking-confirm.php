@@ -12,7 +12,7 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p> 
         <p style="text-align:center"><?php if(!empty($pages)) echo 'Page : '.$pages ?></p>
         <?php if(isset($search_result)) { ?>
-        <?php _e(form_open(base_url().'checking/confirm'))?>                   
+        <?php _e(form_open('checking/confirm'))?>                   
             <?php _e($search_result) ?>     
         <br />
         <div style="display:none" id="dialog-confirm-checking" Title="Konfirmasi Checking Barang">

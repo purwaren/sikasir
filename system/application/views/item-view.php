@@ -7,7 +7,7 @@
         </div>        
         <h2><a href="#">Laporan Stok Barang</a></h2>
         <p class="description">Laporan stok barang per kode kelompok barang dan per kode barang</p>        
-        <?php _e(form_open(base_url().'report/stok'))?>
+        <?php _e(form_open('report/stok'))?>
         <br />
         <table>
             <tr>

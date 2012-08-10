@@ -9,7 +9,7 @@
         <h2><a href="#">Grafik Prestasi Karyawan </a></h2>
         <p class="description">Grafik prestasi karyawan disajikan per bulan operasional</p>
         <br />
-        <?php _e(form_open(base_url().'graph/performance'))?>
+        <?php _e(form_open('graph/performance'))?>
         <table id="report">
            <tr id="bulanan">
                 <td>Bulan</td><td> : <?php _e($month)._e('--')._e($year)?> </td><td>            

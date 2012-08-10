@@ -9,7 +9,7 @@
         <h2><a href="#">Laporan Retur Barang</a></h2>
         <p class="description">Laporan retur barang / mutasi keluar disajikan per bon pada hari tertentu</p>
         <br />
-        <?php _e(form_open(base_url().'report/retur'))?>
+        <?php _e(form_open('report/retur'))?>
         <table id="report">            
             <tr id="harian">
                 <td>Tanggal</td><td> : <input type="text" name="date-report" id="date-report" style="width: 100px" readonly="readonly"/></td>

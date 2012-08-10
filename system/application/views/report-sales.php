@@ -9,7 +9,7 @@
         <h2><a href="#">Laporan Penjualan Toko </a></h2>
         <p class="description">Laporan penjualan barang disajikan dalam bentuk laporan harian dan bulanan, masing - masing dengan pilihan per kode barang ataupun per kode kelompok barang</p>
         <br />
-        <?php _e(form_open(base_url().'report/sales'))?>
+        <?php _e(form_open('report/sales'))?>
         <table id="report">
             <tr><td>Pilih jenis laporan </td><td>: 
             <select name="report-type" id="report-type" onchange="showMonth()" onclick="showMonth()">

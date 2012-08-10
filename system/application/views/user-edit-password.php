@@ -9,7 +9,7 @@
         <h2><a href="#">Edit User's Password</a></h2>
         <p class="description">Editing password user</p>  <br />
         <?php if(isset($pengguna)) { ?>
-        <?php _e(form_open(base_url().'user/editpasswd/'.$pengguna->NIK)) ?>
+        <?php _e(form_open('user/editpasswd/'.$pengguna->NIK)) ?>
         <h3>Informasi Akun Pengguna</h3>
         <table cellspacing="0" cellpadding="2">
             <tr>

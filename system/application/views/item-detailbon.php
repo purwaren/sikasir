@@ -7,7 +7,7 @@
         </div>        
         <h2><a href="#">Manage Items</a></h2>
         <p class="description">This is designed for items management and will be renewed periodically</p>        
-        <?php _e(form_open(base_url().'item/manage'))?>
+        <?php _e(form_open('item/manage'))?>
         <br />
         <table>
             <tr>

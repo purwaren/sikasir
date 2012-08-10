@@ -7,7 +7,7 @@
         </div>        
         <h2><a href="#">Search Items</a></h2>
         <p class="description">This is designed for items searching</p>        
-        <?php _e(form_open(base_url().'item/cari'))?>
+        <?php _e(form_open('item/cari'))?>
         <br />
         <table>
             <tr>

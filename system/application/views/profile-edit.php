@@ -9,7 +9,7 @@
         <h2><a href="#">Edit Profile</a></h2>
         <p class="description">This was design to edit profile.</p>  <br />
         <?php if(isset($pengguna)) { ?>
-        <?php _e(form_open(base_url().'profile/ubah')) ?>        
+        <?php _e(form_open('profile/ubah')) ?>        
         <table cellspacing="0" cellpadding="2">
             <tr>
             <td colspan="2"><h3>Informasi Akun Pengguna</h3></td>

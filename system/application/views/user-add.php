@@ -8,7 +8,7 @@
         
         <h2><a href="#">Add New Users</a></h2>
         <p class="description">This was design to create new user for sikasir.</p>  <br />      
-        <?php _e(form_open(base_url().'user/add')) ?>
+        <?php _e(form_open('user/add')) ?>
         <h3>Informasi Akun Pengguna</h3>
         <table cellspacing="0" cellpadding="2">
             <tr>

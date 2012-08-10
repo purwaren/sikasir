@@ -7,7 +7,7 @@
         </div>        
         <h2><a href="#">Check Data</a></h2>
         <p class="description">This tools was design to check the consistent of data</p>        
-        <?php _e(form_open(base_url().'tools/check'))?>
+        <?php _e(form_open('tools/check'))?>
         <br />
         <table>              
             <tr>

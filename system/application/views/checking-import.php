@@ -9,7 +9,7 @@
         <h2><a href="#">Import Data</a></h2>
         <p class="description">Untuk mengimport penjualan dari mesin yang lama, pada saat checking</p>
         <br />
-        <?php _e(form_open_multipart(base_url().'checking/import'))?>
+        <?php _e(form_open_multipart('checking/import'))?>
         <table id="report">
             <tr>
                 <td>Pilihan</td>

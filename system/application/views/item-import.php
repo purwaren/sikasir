@@ -9,7 +9,7 @@
         <h2><a href="#">Import Data</a></h2>
         <p class="description">Import data CSV yang dibawa dari gudang.</p>
         <br />
-        <?php _e(form_open_multipart(base_url().'item/import'))?>
+        <?php _e(form_open_multipart('item/import'))?>
         <table>            
             <tr>
                 <td>Pilih Data</td><td> : <input type="file" name="csv_file" /></td> 

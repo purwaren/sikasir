@@ -7,7 +7,7 @@
         </div>        
         <h2><a href="#">Search Sales</a></h2>
         <p class="description">This is designed for searching sales on a spesific day</p>        
-        <?php _e(form_open(base_url().'report/search'))?>
+        <?php _e(form_open('report/search'))?>
         <br />
         <table>
             <tr>

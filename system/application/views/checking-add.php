@@ -9,7 +9,7 @@
         <h2><a href="#">Input Opname</a></h2>
         <p class="description">Prosedur awal pelaksanaan checking barang, memeriksa ketersediaan barang</p>
         <br />
-        <?php _e(form_open(base_url().'checking/add'))?>
+        <?php _e(form_open('checking/add'))?>
         <table id="report">            
             <tr id="harian">
                 <td>Kode Barang </td><td> : <input type="text" name="id_barang"  style="width: 100px" maxlength="10"/></td>
@@ -26,7 +26,7 @@
         });
         //-->
        </script>
-        <?php _e(form_open(base_url().'checking/add'))?>
+        <?php _e(form_open('checking/add'))?>
         <table class="table-data" cellspacing="0" cellpadding="0" style="margin:10px">
             <tr>
                 <td class="head">Kode Barang</td><td class="head">Nama Barang</td><td class="head"> Stok Barang </td><td class="head">Stok Opname </td><td class="head">Beda Stok</td>

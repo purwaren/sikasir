@@ -9,7 +9,7 @@
         <h2><a href="#">Launch POS</a></h2>
         <p class="description">Before launching POS Application, cashire must fill some information</p>
         <p>Please fill the form information bellow </p>
-        <form action="<?php _e(base_url().'pointofsales/index')?>" method="post">
+        <form action="<?php _e('pointofsales/index')?>" method="post">
             <table>
                 <tr><td>No Shift </td><td>: <input type="text" name="no_shift" /> *) Shift number : 1.Morning, 2. Evening</td></tr>
                 <tr><td>No Kassa </td><td>: <input type="text" name="no_kassa" /> *) Kassa number (terminal pos number)</td></tr>

@@ -9,7 +9,7 @@
         <h2><a href="#">Rekap Absensi </a></h2>
         <p class="description">Rekapitulasi absensi karyawan per hari / per bulan</p>
         <br />
-        <?php _e(form_open(base_url().'presence/report'))?>
+        <?php _e(form_open('presence/report'))?>
         <table id="report">
             <tr>
                 <td>Pilihan</td><td>: 
