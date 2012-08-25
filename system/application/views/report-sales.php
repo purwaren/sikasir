@@ -14,7 +14,8 @@
             <tr><td>Pilih jenis laporan </td><td>: 
             <select name="report-type" id="report-type" onchange="showMonth()" onclick="showMonth()">
                 <option value="">--Pilih--</option>
-                <option value="1">Laporan Penjualan Harian</option><!-- terurut waktu -->                
+                <option value="1">Laporan Penjualan Harian</option><!-- terurut waktu -->  
+                <option value="4">Laporan Rekap Transaksi Harian</option>              
                 <option value="2">Laporan Akumulasi Penjualan Harian</option><!--per kode barang -->                      
                 <option value="3">Laporan Akumulasi Penjualan Bulanan</option><!--per kode kel barang -->
                                 

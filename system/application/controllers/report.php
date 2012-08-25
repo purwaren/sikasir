@@ -117,7 +117,7 @@ class Report extends Controller {
                      //ambil data transaksi hari yang diminta, 
                     $query = $this->transaksi->trans_a_day($tanggal); 
                     $query_per_bon = $this->transaksi->trans_based_bon($tanggal);
-                    if(isset($query_per_bon) && $query_per_bon->num_rows() > 0)                    {
+                    if(isset($query_per_bon) && $query_per_bon->num_rows() > 0) {
                                               
                         $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENJUALAN HARIAN</h3>
                                 <table style="text-align:left">
@@ -604,6 +604,10 @@ class Report extends Controller {
                     {                            
                         $this->cetak_pdf(4,$head,$list,$row_total,$foot);
                     }                   
+                }
+                else if($tipe == 4)
+                {
+                	
                 }
             }
             else

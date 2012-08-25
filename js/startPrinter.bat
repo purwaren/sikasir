@@ -1,3 +1,1 @@
-@echo off
-echo Running Printer
-java Server
+start java -jar printer.jar
