@@ -1,0 +1,24 @@
+SERVER
+user: sikasir
+pass: s1k@s!r2012
+
+MYSQL
+user: root
+pass: s1k@s!rDb
+
+Update database
+Yang dibutuhkan:
+- putty
+- winscp
+
+Urutan:
+1. Buka winscp, login ke ip server dengan username dan password milik sikasir
+2. Copy file sql yang akan diimport ke server.
+3. Buka putty, login ke ip server dengan username dan password milik sikasir
+4. Masuk ke mysql dengan perintah: mysql -u root -p
+5. Gunakan password mysql untuk root.
+6. Jalankan perintah untuk hapus database kasir : drop database kasir;
+7. Jalankan perintah untuk buat database kasir: create database kasir;
+8. Masuk ke database kasir dengan perintah: use kasir;
+9. Jalankan perintah untuk import: source namafile.sql
+

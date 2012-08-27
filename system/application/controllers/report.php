@@ -607,7 +607,113 @@ class Report extends Controller {
                 }
                 else if($tipe == 4)
                 {
+                	//akumulasi per kelompok barang
+                	$query = $this->transaksi->acc_sales_a_day($tanggal,2);
+                	$temp ='';                	
+                	$i=0;
+                	$j=0;                	
+                	$total_terjual = 0;
+                	if($query->num_rows() > 0)
+                	{
+                		$head[0] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN REKAP TRANSAKSI HARIAN</h3>
+                	                                <table style="text-align:left">
+                	                                    <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
+                	                                    <tr><td style="width: 50px">TANGGAL </td><td>: '.$this->convert_date($tanggal).'</td></tr>
+                	                                    <tr><td style="width: 50px">TIPE</td><td>: REKAP TRANSAKSI HARIAN</td></tr>
+                	                                </table>
+                	                               <br />
+                	                                <table style="width: 940px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="0">
+                	                                    <tr>
+                	                                        <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">No</td>
+                	                                        <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kelompok <br />Barang</td>                                        
+                	                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kode Label</td>
+                	                                        <td style="width:120px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Nama Barang</td>                                                                                
+                	                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Harga Jual (Rp)</td>
+                	                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Stok Barang</td>                                        
+                	                                        <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Jumlah Terjual</td>                                        
+                	                                    </tr>';
+                		
+                		
+                		foreach($query->result() as $catsales)
+                		{
+                			$query2 = $this->transaksi->acc_sales_by_categori_per_day($tanggal,$catsales->kelompok_barang);
+                			if($query->num_rows() > 0)
+                			{
+                				//ambil row data untuk disusun ke dalam table  
+                				$total_harian=0;                  				     				
+                				foreach($query2->result() as $row)
+                				{
+                					$temp .= '<tr>
+                			                                        <td style="width:30px;border: 1px solid;">'.++$i.'</td>   
+                			                                        <td style="width:50px;border: 1px solid;">'.$row->kelompok_barang.'</td>                                     
+                			                                        <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row->id_barang.'</td>
+                			                                        <td style="width:120px;border: 1px solid;">'.$row->nama.'</td>                                                                                
+                			                                        <td style="width:75px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($row->harga),2,',','.').'&nbsp;&nbsp;</td>
+                			                                        <td style="width:75px;border: 1px solid;">'.$row->stok_barang.'</td>                                        
+                			                                        <td style="width:75px;border: 1px solid;">'.$row->jml_terjual.'</td>                                        
+                			                                    </tr>';
+                					$total_harian += $row->jml_terjual;
+                					if($i%45 == 0)
+                					{
+                						$list[]= $temp;
+                						$temp ='';
+                						$j++;
+                					}
+                				}
+                				$temp .= '<tr>
+                				             <td style="width:425px;border: 1px solid;background-color: #aaa" colspan="6">SUBTOTAL</td>
+                				             <td style="width:75px;border: 1px solid;background-color: #aaa">'.$catsales->acc_terjual.'</td>                    
+                				          </tr>';
+                				$total_terjual += $catsales->acc_terjual;                				                				
+                			}                			
+                			
+                		}
+                		$list[]= $temp;
+                		$row_total[0] = '<tr><td  colspan="6" style="text-align:right;width:425px;border: 1px solid;">T O T A L &nbsp;</td><td style="width:75px;border: 1px solid;">'.$total_terjual.'</td></tr>';
+                		//ambil data supervisor sama data kasir
+                		$query = $this->transaksi->get_kasir($tanggal);
+                		foreach($query->result() as $row)
+                		{
+                			$qry = $this->karyawan->get_karyawan($row->id_kasir);
+                			$data_kasir[] = $qry->row();
+                		}
+                		$query = $this->karyawan->get_supervisor();
+                		$supervisor = $query->row();
+                		//nyusun data untuk ditampilkan
+                		$line1 = '<td style="text-align:center">S U P E R V I S O R</td>';
+                		$line2 = '<td style="text-align:center"><br />('.strtoupper($supervisor->nama).')</td>';
+                		$i=0;
+                		foreach($data_kasir as $row)
+                		{
+                			$line1 .= '<td style="text-align:center">K A S I R '.++$i.'</td>';
+                			$line2 .= '<td style="text-align:center"><br />('.strtoupper($row->nama).')</td>';
+                		}
+                		$foot ='</table>
+                		            <br />
+                		            <table>
+                		            <tr>'.$line1.'</tr>
+                		            <tr>'.$line2.'</tr>
+                		            </table></div>';
+                	}
                 	
+                    if(isset($list))
+                    {
+                        $this->data['report_sales']=$head[0];
+                        foreach($list as $row)
+                        {
+                            $this->data['report_sales'] .= $row;
+                        }
+                        $this->data['report_sales'] .= $row_total[0].'</table></div>';                       
+                    }
+                    if(!empty($list) && $this->input->post('submit_report_sales_pdf'))
+                    {                            
+                        $itemreport[0] = $list;
+                        //echo count($itemreport[1]);exit;
+                        //$itemreport[1] = $acc_kb;
+                        //$row_total="";
+                        $this->cetak_pdf(6,$head,$itemreport,$row_total,$foot);
+                    }
+
                 }
             }
             else
@@ -1232,6 +1338,11 @@ class Report extends Controller {
             $pdf->SetFont('dejavusans', '', 8);
             $pdf->setPageFormat('A4','P');
         }
+        else if($opsi == 6) //cetak laporan rekap
+        {
+        	$pdf->SetFont('dejavusans', '', 8);
+        	$pdf->setPageFormat('A4','P');
+        }
         //set image scale factor
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO); 
         
@@ -1314,6 +1425,22 @@ class Report extends Controller {
                 }
                 $i++;
             }
+        }
+        if($opsi == 6)
+        {
+        	//acc per kode label
+        	foreach($row[0] as $data)
+        	{
+        		// add a page
+        		$pdf->AddPage();
+        		$foot1 = $foot;
+        		if($i == (count($row[0]) - 1))
+        		{
+        			$foot1 = $row_total[0].$foot;
+        		}
+        		$pdf->writeHTML($head[0].$data.$foot1, true, 0, true, 0);
+        		$i++;
+        	}        	
         }
         // ---------------------------------------------------------
 

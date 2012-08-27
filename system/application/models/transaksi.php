@@ -163,6 +163,17 @@ class Transaksi extends Model
         return $this->db->query($query);
     }
     /**
+     * Akumulasi perhari untuk kateogri barang tertentu
+     */
+    function acc_sales_by_categori_per_day($date,$cat)
+    {
+    	$query = 'select b.*, trans.jml_terjual from (select id_barang,sum(qty) as jml_terjual
+    	                    from transaksi_penjualan tp left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi
+    	                    where tanggal = "'.$date.'" group by id_barang)
+    	                    as trans left join barang b on trans.id_barang = b.id_barang where b.kelompok_barang="'.$cat.'"';
+    	return $this->db->query($query);
+    }
+    /**
     *Akumulasi penjualan bulanan
     */
     function acc_sales_a_month($kb,$month,$year)
