@@ -1,3 +1,1 @@
-@echo off
-echo Running Display
-java ServerDisplay
+start java -jar display.jar
