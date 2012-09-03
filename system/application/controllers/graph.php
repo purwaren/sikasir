@@ -141,7 +141,7 @@ class Graph extends Controller {
                 if($this->input->post('submit_graph_sales_pdf'))
                 {
                     $head1 = '<h3 style="text-align:center">'.config_item('shop_name').'<br />GRAFIK OMSET '.$this->data['bulan'].'<br /> DALAM RIBUAN RUPIAH (Rp 1.000,-)</h3>';
-                    $img = base_url().'css/chart/sales.png';
+                    $img = BASEPATH.'../css/chart/sales.png';                             
                     $head2 = '<h3 style="text-align:center">TABEL OMSET '.$this->data['bulan'].'</h3>';
                     $table = '<table class="table-data" cellspacing="0" cellpadding="0" style="width:300px; text-align:center;border:1px solid;">
                                 <tr>
