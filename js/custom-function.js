@@ -793,11 +793,12 @@ function saveSales(line) {
     var disc_all = $('.table-data tr:nth-child('+idx_save+') td:nth-child(9)').html();
     var id_kasir = $('#id_kasir_'+line).val();
     var id_pramuniaga = $('#id_pramuniaga_'+line).val();;
-    var total = $('#total_'+line).val();    
+    var total = $('#total_'+line).val(); 
+    var infaq = $('#infaq_'+line).val();
     //do post    
     $.post(
         baseUrl+"checking/save_import",
-        {'save_import': 1,'tanggal': tanggal, 'id_transaksi':id_transaksi, 'id_barang':id_barang, 'qty':qty,'no_cc':no_cc, 'disc_item':disc_item, 'disc_all':disc_all,'id_kasir':id_kasir, 'id_pramuniaga':id_pramuniaga,'total':total},
+        {'save_import': 1,'tanggal': tanggal, 'id_transaksi':id_transaksi, 'id_barang':id_barang, 'qty':qty,'no_cc':no_cc, 'disc_item':disc_item, 'disc_all':disc_all,'id_kasir':id_kasir, 'id_pramuniaga':id_pramuniaga,'total':total,'infaq':infaq},
         function(data) {            
             if(data == '1') { //sukses
                 $('.table-data tr:nth-child('+idx_save+') td:last-child span').fadeOut('slow',function(){

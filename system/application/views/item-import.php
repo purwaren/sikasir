@@ -19,7 +19,7 @@
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>
         <br />
         <?php _e(form_close()) ?>
-        <?php if(isset($row_data)) { ?>
+        <?php if(!isset($err_msg) && isset($row_data)) { ?>
         <form>
         <table cellspacing="0" cellpadding="0">
             <tr>

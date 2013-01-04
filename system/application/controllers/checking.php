@@ -555,6 +555,11 @@ class Checking extends Controller {
                     $tmp = $this->karyawan->get_karyawan($row['id_kasir']);
                     if($tmp->num_rows())
                         $kasir = $tmp->row()->nama;
+                    $id_barang_belum_input='';
+					if(!isset($brg->nama))
+					{
+						$id_barang_belum_input .= $row['id_barang'].', ';
+					}
                     $this->data['row_data'] .= '<tr>
                                                     <td>'.++$i.'</td>
                                                     <td>'.$row['tanggal'].'</td>
@@ -565,13 +570,17 @@ class Checking extends Controller {
                                                     <td>'.$row['no_cc'].'</td>
                                                     <td>'.$row['disc_item'].'</td>
                                                     <td>'.$row['diskon'].'</td>
-                                                    <td>'.$kasir.'<input type="hidden" id="id_kasir_'.$i.'" value="'.$row['id_kasir'].'" /></td>
+                                                    <td>'.$kasir.'<input type="hidden" id="id_kasir_'.$i.'" value="'.$row['id_kasir'].'" /><input type="hidden" id="infaq_'.$i.'" value="'.$row['infaq'].'"/></td>
                                                     <td>'.$pramuniaga.'<input type="hidden" id="id_pramuniaga_'.$i.'" value="'.$row['id_pramuniaga'].'" /></td>                                                    
                                                     <td>'.number_format($row['total'],0,',','.').',- <input type="hidden" id="total_'.$i.'" value="'.$row['total'].'" /></td>
                                                     <td><span class="button"><input type="button" class="button" value="O K" onclick="saveSales('.$i.')"/></span></td>
                                                 </tr>';
                 }
                 $this->data['row_data'] .= '<tr><td colspan="5" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td colspan="5"></td><td>'.number_format($total,0,',','.').',-</td><td>&nbsp</td></tr>';
+                if(!empty($id_barang_belum_input)) 
+                {
+                	$this->data['err_msg'] = '<span style="color:red">Kode label '.$id_barang_belum_input.' belum di mutasi masuk</span>';
+                }
             }
             else
             {
@@ -594,8 +603,10 @@ class Checking extends Controller {
                 'diskon'=>trim($this->input->post('disc_all')),
                 'no_cc'=>trim($this->input->post('no_cc')),
                 'id_kasir'=>trim($this->input->post('id_kasir')),
-                'id_pramuniaga'=>trim($this->input->post('id_pramuniaga'))
+                'id_pramuniaga'=>trim($this->input->post('id_pramuniaga')),
+            	'infaq'=>trim($this->input->post('infaq')),
             );
+            //print_r($transaksi);exit;
             $item_transaksi = array(
                 'id_transaksi'=>trim($this->input->post('id_transaksi')),
                 'id_barang'=>trim($this->input->post('id_barang')),
