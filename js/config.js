@@ -33,3 +33,10 @@ var allowPramu = 0;
 var defMsg = new Array();
 defMsg[0] = 'Welcome To';
 defMsg[1] = 'Mode Fashion Group';
+
+/**
+ * Config for open price
+ * false -> close
+ * true -> open
+ */
+var openPrice = false;

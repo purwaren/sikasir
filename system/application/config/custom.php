@@ -23,7 +23,7 @@ $config['work_cycle'] = 8;
 /**
  * Printer port
  */
-$config['port'] =  1234;
+$config['port'] =  20000;
 
 /**
  * Display port
