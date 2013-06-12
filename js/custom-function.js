@@ -9,6 +9,7 @@ $(function(){
     $('#date-input').datepicker({dateFormat: 'yy-mm-dd'});
     $('#date_bon').datepicker({dateFormat: 'yy-mm-dd'});
     $('#date_absensi').datepicker({dateFormat: 'yy-mm-dd'});
+    $('.date').datepicker({dateFormat: 'yy-mm-dd'});
     $('.date_sales').datepicker({dateFormat: 'yy-mm-dd'});
     $(".item_code").autocomplete (
 			baseUrl+"item/item_autocomplete",
@@ -51,6 +52,21 @@ $(function(){
     		$('#row_id_barang').css('display','none');
     	else if(opsi == 2)
     		$('#row_id_barang').css('display','table-row');
+    });
+
+    /**
+     * Tipe laporan untuk item/report
+     */
+    $('#report_type').change(function(){
+        var type = $('#report_type').val();
+        if(type == '1') {
+            $('#periode').css('display','table-row');
+            $('#umur').css('display','none');
+        }
+        else if(type==2) {
+            $('#periode').css('display','none');
+            $('#umur').css('display','table-row');
+        }
     });
 });
 //autocomplete searching

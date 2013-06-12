@@ -310,18 +310,18 @@ class Item extends Controller {
         $this->load->view('item-edit',$this->data);
     }
     /**
-    *Untuk manajemen data barang yang diinput, per tanggal penginputan
-    */
-    function manage($kode_bon="")
+     *Untuk manajemen data barang yang diinput, per tanggal penginputan
+     */
+    function manage($kode_bon="",$cetak="")
     {
         if($this->input->post('submit_item_manage'))
         {
             if($this->input->post('date_input'))
             {
                 $this->data['tgl_input'] = $this->input->post('date_input');
-                //ambil data barang masuk pada tanggal tersebut     
-                 $this->load->model('barang');
-                $query = $this->barang->get_bon_barang_masuk($this->input->post('date_input'));                
+                //ambil data barang masuk pada tanggal tersebut
+                $this->load->model('barang');
+                $query = $this->barang->get_bon_barang_masuk($this->input->post('date_input'));
                 if($query->num_rows() >= 1)
                 {
                     $i=0;
@@ -330,9 +330,10 @@ class Item extends Controller {
                     {
                         $row_data .= '<tr>
                                         <td>'.++$i.'</td><td>'.$row->id_mutasi_masuk.'</td><td>'.date_to_string($row->tanggal).'</td>
-                                        <td>'.$row->jumlah_barang.'</td><td>'.$row->total.'</td>                                        
-                                        <td>                                            
-                                            <span class="button">&nbsp;<a href="'.base_url().'item/manage/'.$row->id_mutasi_masuk.'"><input type="button" class="button" value="Detail"/></a></span>                                                                                                                              
+                                        <td>'.$row->jumlah_barang.'</td><td>'.$row->total.'</td>
+                                        <td>
+                                            <span class="button">&nbsp;<a href="'.base_url().'item/manage/'.$row->id_mutasi_masuk.'"><input type="button" class="button" value="Detail"/></a></span>
+                                            <span class="button">&nbsp;<a href="'.base_url().'item/manage/'.$row->id_mutasi_masuk.'/cetak"><input type="button" class="button" value="Cetak"/></a></span>
                                         </td>
                                     </tr>';
                     }
@@ -340,7 +341,7 @@ class Item extends Controller {
                 }
                 else
                 {
-                   $this->data['err_msg'] = '<p style="color:red">Tidak ada data penginputan pada tanggal tersebut</p>'; 
+                    $this->data['err_msg'] = '<p style="color:red">Tidak ada data penginputan pada tanggal tersebut</p>';
                 }
             }
             else
@@ -352,15 +353,16 @@ class Item extends Controller {
         }
         else if(!empty($kode_bon))
         {
+
             //ambil data barang masuk dengan kode bon ini
             $this->load->model('barang');
             $query = $this->barang->get_barang_masuk($kode_bon);
             if($query->num_rows())
-            {   
+            {
                 $i = 0;
                 $row_data = '';
                 $total = '';
-                $total_jumlah = '';                
+                $total_jumlah = '';
                 foreach($query->result() as $row)
                 {
                     $jumlah = $row->qty * $row->harga;
@@ -374,12 +376,498 @@ class Item extends Controller {
                 $this->data['kode_bon'] = $kode_bon;
                 $this->data['tanggal_bon'] = $row->tanggal;
             }
-            $this->load->view('item-detailbon',$this->data);
+            if($cetak=='cetak')
+            {
+                $head = '<div style="margin-top: 5px;">
+            	         	<h3 style="text-align: center;">LAPORAN BARANG MASUK</h3>
+            	         	<table style="width: 700px;">
+            	         		<tr>
+            	         			<td style="width: 80px;">Kode Bon</td><td style="width:260px;">: '.$kode_bon.'</td>
+            	         		</tr>
+            	         		<tr>
+            	         			<td style="width: 80px;">Tanggal</td><td style="width:260px;">: '.date_to_string($row->tanggal).'</td>
+            	         		</tr>
+            	        	</table>
+            	        </div><br />
+            			<table style="width: 700px" border="1" cellpadding="4">
+            				<tr>
+            					<td style="width:30px; background-color:  #dedede;font-weight: bold;">No</td>
+            					<td style="width:100px; background-color:  #dedede;font-weight: bold;">Kode Label</td>
+            					<td style="width:170px; background-color:  #dedede;font-weight: bold;">Nama Barang</td>
+            					<td style="width:100px; background-color:  #dedede;font-weight: bold;">Harga (Rp)</td>
+            					<td style="width:50px; background-color:  #dedede;font-weight: bold;">Qty</td>
+            					<td style="width:100px; background-color:  #dedede;font-weight: bold;">Jumlah</td>
+            				</tr>';
+                $list_item= array();
+                $i=0;
+                $row_data='';
+                $total=0;$total_qty=0;
+                foreach($query->result() as $row)
+                {
+                    $jumlah = $row->harga*$row->qty;
+                    $row_data .= '<tr><td style="width:30px;">'.++$i.'</td>
+            						<td style="width:100px;">'.$row->id_barang.'</td>
+            						<td style="width:170px;">'.$row->nama.'</td>
+            						<td style="width:100px;text-align:right">'.number_format($row->harga,0,',','.').'</td>
+            						<td style="width:50px;text-align:center">'.$row->qty.'</td>
+            						<td style="width:100px;text-align:right;">'.number_format($jumlah,0,',','.').'</td></tr>
+            					';
+                    $total += $jumlah;
+                    $total_qty += $row->qty;
+                    if($i%35 == 0)
+                    {
+                        $list_item[] = $row_data;
+                        $row_data='';
+                    }
+                }
+                $footer = '</table>';
+                $row_data .= '<tr>
+            					<td colspan="3" style="text-align:right;width:300px">TOTAL</td>
+            					<td style="width:100px;">&nbsp;</td>
+            					<td style="width:50px;text-align:center">'.$total_qty.'</td>
+            					<td style="width:100px;text-align:right;">'.number_format($total,0,',','.').'</td>
+            				</tr>';
+                $list_item[]=$row_data;
+                $this->cetak_input_pdf($head, $list_item, $footer);
+            }
+            else
+                $this->load->view('item-detailbon',$this->data);
         }
         else
             $this->load->view('item-manage',$this->data);
-        
+
     }
+
+    function date_to_string($tgl)
+    {
+        $month = array('','Januari','Februari','Maret','April','Mei','Juni',
+        'Juli','Agustus','September','Oktober','November','Desember');
+        $tmp = explode('-',$tgl);
+
+        return $tmp[2].' '.$month[intval($tmp[1])].' '.$tmp[0];
+    }
+
+    /**
+     * Laporan stok dan umur barang
+     */
+    function report()
+    {
+        //display report
+        if($this->input->post('submit_report_display') || $this->input->post('submit_report_print'))
+        {
+            $this->load->model('barang');
+            $type = $this->input->post('type');
+            //laporan data barang
+            if($type == 1)
+            {
+                $param['from'] = $this->input->post('date_from');
+                $param['to'] = $this->input->post('date_to');
+                $query = $this->barang->stat_item_cat($param);
+                if($query->num_rows() >0)
+                {
+                    $data = $query->result();
+                    $head = '<br />
+                                <h3 style="text-align:center;font-size: 14px">LAPORAN DATA BARANG </h3>
+                                 <h3 style="text-align:center;font-size: 14px"> PERIODE : '.$this->date_to_string($param['from']).' s.d. '.$this->date_to_string($param['to']).'</h3>
+                                <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
+                                    <tr>
+                                        <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
+                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
+                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Stok Terakhir</td>
+                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Masuk Toko</td>
+                                        <td style="width:120px;background-color:#dedede;font-weight: bold;border:1px solid;">Terjual</td>
+                                    </tr>';
+                    $footer = '</table>';
+                    $i=0;$temp='';$total_stok=0;$body=array();
+                    $total_masuk=0;$total_jual=0;
+
+                    foreach($data as $row)
+                    {
+
+                        $temp .= '<tr>
+                            <td style="width:50px; border: 1px solid">'.++$i.'</td>
+                            <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
+                            <td style="width:110px; border: 1px solid">'.number_format($row->stok).'</td>
+                            <td style="width:110px; border: 1px solid">'.number_format($row->masuk).'</td>
+                            <td style="width:120px; border: 1px solid">'.number_format($row->jual).'</td>
+                        </tr>';
+                        if($i%50 == 0)
+                        {
+
+                            $body[] = $temp;
+                            $temp = '';
+                        }
+                        $total_masuk+= $row->masuk;
+                        $total_stok += $row->stok;
+                        $total_jual += $row->jual;
+                    }
+                    $body[] = $temp;
+                    $row_total = '<tr>
+                        <td colspan="2" style="width:160px; border: 1px solid">TOTAL</td>
+                        <td style="width:110px; border: 1px solid">'.number_format($total_stok).'</td>
+                        <td style="width:110px; border: 1px solid">'.number_format($total_masuk).'</td>
+                        <td style="width:120px; border: 1px solid">'.number_format($total_jual).'</td>
+                    </tr>';
+
+                    if($this->input->post('submit_report_print'))
+                    {
+                        $this->cetak_pdf(6,$head, $body, $row_total, $footer);
+                    }
+                    $this->data['table'] = $head.$body[0].$footer;
+                }
+            }
+            //laporan umur barang
+            else if($type == 2)
+            {
+                $umur = $this->input->post('umur');
+                if($umur == 1)
+                {
+                    $to = '';
+                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                }
+                else if($umur == 2)
+                {
+                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                }
+                else if($umur == 3)
+                {
+                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                }
+                else if($umur == 4)
+                {
+                    $from = '';
+                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                }
+                $query = $this->barang->stat_item_age(array('from'=>$from,'to'=>$to));
+                if($query->num_rows() > 0)
+                {
+                    $data = $query->result();
+                    $head = '<br /><h3 style="text-align:center;font-size: 14px">LAPORAN REKAP UMUR BARANG</h3><br />
+                                <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
+                                    <tr>
+                                        <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
+                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
+                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kode Barang</td>
+                                        <td style="width:80px;background-color:#dedede;font-weight: bold;border:1px solid;">Qty</td>
+                                        <td style="width:150px;background-color:#dedede;font-weight: bold;border:1px solid;">Umur</td>
+                                    </tr>';
+                    $body='';$i=0;$j=0;$temp='';
+                    $total_qty=0;
+                    foreach($data as $row)
+                    {
+                        $temp .= '<tr>
+                                <td style="width:50px; border: 1px solid">'.++$i.'</td>
+                                <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
+                                <td style="width:110px; border: 1px solid">'.$row->id_barang.'</td>
+                                <td style="width:80px; border: 1px solid">'.$row->qty.'</td>
+                                <td style="width:150px; border: 1px solid">'.$this->parse_age($row->umur).'</td>
+                        </tr>';
+                        if($i%50==0)
+                        {
+                            $body[] = $temp;
+                            $temp = '';
+                        }
+                        $total_qty += $row->qty;
+                    }
+                    $body[] = $temp;
+                    $footer = '</table>';
+                    $row_total = '<tr>
+                                    <td colspan="3" style="width: 270px; border: 1px solid"></td>
+                                    <td style="width:80px; border: 1px solid">'.$total_qty.'</td>
+                                    <td style="width:150px; border: 1px solid"></td>
+                                </tr>';
+                    $this->data['table'] = $head.$body[0].$footer;
+                    if($this->input->post('submit_report_print'))
+                    {
+                        //echo 'masuk pdf';
+                        //var_dump($body);
+                        $this->cetak_pdf(6, $head, $body, $row_total, $footer);
+                    }
+                }
+            }
+        }
+
+        $this->load->view('item-report',$this->data);
+    }
+
+    /*
+    **Funngsi cetak pdf
+    */
+    function cetak_pdf($opsi,$head,$row,$row_total,$foot)
+    {
+        require_once('lib/tcpdf/config/lang/eng.php');
+        require_once('lib/tcpdf/tcpdf.php');
+
+        // create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('PuRwa ReN');
+        $pdf->SetTitle('Laporan Sikasir');
+        $pdf->SetSubject('Laporan');
+        $pdf->SetKeywords('Penjualan, Barang, Harga');
+
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        $pdf->SetMargins(PDF_MARGIN_LEFT, 20, PDF_MARGIN_RIGHT);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(10);
+
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+        // set font
+        //$pdf->SetFont('dejavusans', '', 8);
+        //$size = array(216,165);
+        if($opsi == 1) //cetak laporan untuk penjualan harian
+        {
+            $pdf->SetFont('dejavusans', '', 8);
+            $pdf->setPageFormat('A4','L');
+        }
+        else if($opsi == 2) //cetak laporan akumulasi
+        {
+            $pdf->SetFont('dejavusans', '', 8);
+            $pdf->setPageFormat('A4','P');
+        }
+        else if($opsi == 3)
+        {
+            $pdf->setPageUnit('mm');
+            $size = array(216,165);
+            $pdf->SetFont('dejavusans', '', 8);
+            $pdf->setPageFormat($size, 'P');
+        }
+        else if($opsi == 4)
+        {
+            //set font
+            $pdf->SetFont('dejavusans', '', 10);
+            $pdf->setPageUnit('mm');
+            $size = array(216,330);
+            $pdf->setPageFormat($size,'L');
+
+        }
+        else if($opsi == 5)
+        {
+            $pdf->SetFont('dejavusans', '', 8);
+            $pdf->setPageFormat('A4','P');
+        }
+        else if($opsi == 6) //cetak laporan rekap
+        {
+            $pdf->SetFont('dejavusans', '', 8);
+            $pdf->setPageFormat('A4','P');
+        }
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+
+        // ---------------------------------------------------------
+
+        $i = 0;
+        $j = 0;
+        if($opsi == 1)
+        {
+            foreach($row as $data)
+            {
+                // add a page
+                $pdf->AddPage();
+                if($i == (count($row) - 1))
+                {
+                    $foot = $row_total.$foot;
+                }
+                $pdf->writeHTML($head.$data.$foot, true, 0, true, 0);
+                $i++;
+            }
+        }
+        if($opsi == 2)
+        {
+            //acc per kode label
+            foreach($row[0] as $data)
+            {
+                // add a page
+                $pdf->AddPage();
+                $foot1 = $foot;
+                if($i == (count($row[0]) - 1))
+                {
+                    $foot1 = $row_total[0].$foot;
+                }
+                $pdf->writeHTML($head[0].$data.$foot1, true, 0, true, 0);
+                $i++;
+            }
+            //acc per kel barang
+            foreach($row[1] as $data)
+            {
+                $pdf->AddPage();
+                $foot2 = $foot;
+                if($j == (count($row[1]) - 1))
+                {
+                    $foot2 = $row_total[1].$foot;
+                }
+                $pdf->writeHTML($head[1].$data.$foot2, true, 0, true, 0);
+                $j++;
+            }
+        }
+        if($opsi == 3 || $opsi == 5)
+        {
+
+            foreach($row as $data)
+            {
+                if($i == (count($row) - 1))
+                {
+                    $foot = $row_total.$foot;
+                }
+                $pdf->AddPage();
+                $pdf->writeHTML($head.$data.$foot, true, 0, true, 0);
+                $i++;
+            }
+        }
+        if($opsi == 4)
+        {
+            $i = 0;
+            foreach($row as $data)
+            {
+                $pdf->AddPage();
+                if($i == count($row)-1)
+                {
+                    $pdf->writeHTML($head.$data.$row_total.$foot, true, 0, true, 0);
+                }
+                else
+                {
+                    $pdf->writeHTML($head.$data.'</table>', true, 0, true, 0);
+                }
+                $i++;
+            }
+        }
+        if($opsi == 6)
+        {
+            //acc per kode label
+            foreach($row as $data)
+            {
+                // add a page
+                $pdf->AddPage();
+                $foot1 = $foot;
+                if($i == (count($row) - 1))
+                {
+                    $foot1 = $row_total.$foot;
+                }
+                $pdf->writeHTML($head.$data.$foot1, true, 0, true, 0);
+                $i++;
+                //break;
+            }
+        }
+        // ---------------------------------------------------------
+
+        //Close and output PDF document
+        $pdf->Output('Laporan.pdf', 'I');
+
+    }
+
+    /*
+    **Funngsi cetak pdf
+    */
+    function cetak_input_pdf($head,$list_item,$footer)
+    {
+        require_once('lib/tcpdf/config/lang/eng.php');
+        require_once('lib/tcpdf/tcpdf.php');
+
+        // create new PDF document
+        $pdf = new TCPDF(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, true, 'UTF-8', false);
+
+        // set document information
+        $pdf->SetCreator(PDF_CREATOR);
+        $pdf->SetAuthor('Nicola Asuni');
+        $pdf->SetTitle('TCPDF Example 006');
+        $pdf->SetSubject('TCPDF Tutorial');
+        $pdf->SetKeywords('TCPDF, PDF, example, test, guide');
+
+        // set default header data
+        $pdf->SetHeaderData(PDF_HEADER_LOGO, PDF_HEADER_LOGO_WIDTH, PDF_HEADER_TITLE, PDF_HEADER_STRING);
+
+        // set header and footer fonts
+        $pdf->setHeaderFont(Array(PDF_FONT_NAME_MAIN, '', PDF_FONT_SIZE_MAIN));
+        $pdf->setFooterFont(Array(PDF_FONT_NAME_DATA, '', PDF_FONT_SIZE_DATA));
+
+        // set default monospaced font
+        $pdf->SetDefaultMonospacedFont(PDF_FONT_MONOSPACED);
+
+        //set margins
+        $pdf->SetMargins(9, 20, 9);
+        $pdf->SetHeaderMargin(PDF_MARGIN_HEADER);
+        $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
+
+        //set auto page breaks
+        $pdf->SetAutoPageBreak(TRUE, 10);
+        $pdf->setPageUnit('mm');
+        $size = array(216,297);
+        $pdf->setPageFormat($size,'P');
+        //set image scale factor
+        $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
+
+        //set some language-dependent strings
+        $pdf->setLanguageArray($l);
+
+        // ---------------------------------------------------------
+
+        // set font
+        $pdf->SetFont('dejavusans', '', 8);
+
+        foreach($list_item as $rows)
+        {
+            // add a page
+            $pdf->AddPage();
+
+            $html = $head.$rows.$footer;
+            //echo $html; exit;
+            $pdf->writeHTML($html, true, 0, true, 0);
+        }
+
+        // ---------------------------------------------------------
+
+        //Close and output PDF document
+        $pdf->Output('tes.pdf', 'I');
+
+    }
+
+
+
+    /**
+     * Parse age for display
+     * @param $age in days
+     */
+    function parse_age($age)
+    {
+        $year = floor($age/365);
+        $day = $age%365;
+        $month = floor($day/30);
+        $rest = $day%30;
+
+        $umur = '';
+        if($year > 0)
+        {
+            $umur .= $year.' tahun ';
+        }
+        if($month > 0)
+        {
+            $umur .= $month.' bulan ';
+        }
+        if($rest > 0)
+        {
+            $umur .= $rest.' hari ';
+        }
+        return $umur;
+    }
+
     /**
     *Fungsi import data dari csv
     */

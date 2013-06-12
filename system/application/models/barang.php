@@ -11,6 +11,53 @@ class Barang extends Model
     {
         parent::Model();
     }
+
+    /**
+     * Akumulasi per kelompok barang untuk tahu stok
+     */
+    function stat_item_cat($data)
+    {
+        $sql = 'select tbl1.kelompok_barang, sum(tbl1.stok_barang) as stok, sum(tbl1.qty) as masuk,sum(tbl2.qty) as jual
+                from (select b.kelompok_barang, b.id_barang, b.stok_barang, bm.tanggal, sum(bm.qty) as qty from barang b
+                    left join barang_masuk bm on b.id_barang = bm.id_barang
+                    where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by b.id_barang) tbl1
+                 left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as qty from transaksi_penjualan tp
+                 left join item_transaksi_penjualan itp on tp.id_transaksi= itp.id_transaksi
+                 where tp.tanggal >= "'.$data['from'].'" and tp.tanggal <= "'.$data['to'].'" group by itp.id_barang) tbl2
+                 on tbl1.id_barang=tbl2.id_barang group by tbl1.kelompok_barang';
+        return $this->db->query($sql);
+    }
+
+    /**
+     * Rekap data usia barang
+     */
+    function stat_item_age($data)
+    {
+        // < dari x tahun
+        if(empty($data['to']))
+        {
+            $sql='select b.kelompok_barang, b.id_barang, b.stok_barang, datediff(now(), bm.tanggal) as umur,
+            sum(bm.qty) as qty from barang b left join barang_masuk bm on b.id_barang = bm.id_barang
+            where bm.tanggal >= "'.$data['from'].'" group by b.id_barang order by b.kelompok_barang, b.id_barang';
+        }
+        //> dari y tahun
+        else if(empty($data['from']))
+        {
+            $sql='select b.kelompok_barang, b.id_barang, b.stok_barang, datediff(now(), bm.tanggal) as umur,
+            sum(bm.qty) as qty from barang b left join barang_masuk bm on b.id_barang = bm.id_barang
+            where bm.tanggal ,<= "'.$data['to'].'" group by b.id_barang order by b.kelompok_barang, b.id_barang';
+        }
+        //antara x sampe y tahun
+        else
+        {
+            $sql='select b.kelompok_barang, b.id_barang, b.stok_barang, datediff(now(), bm.tanggal) as umur,
+            sum(bm.qty) as qty from barang b left join barang_masuk bm on b.id_barang = bm.id_barang
+            where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by b.id_barang
+            order by b.kelompok_barang, b.id_barang';
+        }
+        return $this->db->query($sql);
+    }
+
     /**
     *Retrieve semua data barang
     */

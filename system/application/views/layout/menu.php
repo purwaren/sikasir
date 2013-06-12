@@ -43,7 +43,8 @@
         <a href="<?php _e(base_url().'item/retur')?>">Retur Barang</a> .:. 
         <a href="<?php _e(base_url().'item/import')?>">Import Data</a> .:.         
         <a href="<?php _e(base_url().'item/syncronize')?>">Import Online</a> .:.
-        <a href="<?php _e(base_url().'item/manage')?>">Manajemen Data</a> 
+        <a href="<?php _e(base_url().'item/manage')?>">Manajemen Data</a> .:.
+        <a href="<?php _e(base_url().'item/report')?>">Rekap Barang</a>
     </p>
     <?php } if($page=='user') { ?>
     <p style="float:left;text-align: left; padding-right: 20px;">
