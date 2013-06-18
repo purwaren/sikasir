@@ -45,7 +45,7 @@ class Barang extends Model
         {
             $sql='select b.kelompok_barang, b.id_barang, b.stok_barang, datediff(now(), bm.tanggal) as umur,
             sum(bm.qty) as qty from barang b left join barang_masuk bm on b.id_barang = bm.id_barang
-            where bm.tanggal ,<= "'.$data['to'].'" group by b.id_barang order by b.kelompok_barang, b.id_barang';
+            where bm.tanggal <= "'.$data['to'].'" group by b.id_barang order by b.kelompok_barang, b.id_barang';
         }
         //antara x sampe y tahun
         else
