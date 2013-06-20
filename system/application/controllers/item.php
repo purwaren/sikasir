@@ -450,146 +450,323 @@ class Item extends Controller {
     /**
      * Laporan stok dan umur barang
      */
-    function report()
+    function report($option='')
     {
         //display report
-        if($this->input->post('submit_report_display') || $this->input->post('submit_report_print'))
+        if(empty($option))
         {
-            $this->load->model('barang');
-            $type = $this->input->post('type');
-            //laporan data barang
-            if($type == 1)
+            if($this->input->post('submit_report_display') || $this->input->post('submit_report_print'))
             {
-                $param['from'] = $this->input->post('date_from');
-                $param['to'] = $this->input->post('date_to');
-                $query = $this->barang->stat_item_cat($param);
-                if($query->num_rows() >0)
+                $this->load->model('barang');
+                $type = $this->input->post('type');
+                $param['type'] = $type;
+                //laporan data barang
+                if($type == 1)
                 {
-                    $data = $query->result();
-                    $head = '<br />
-                                <h3 style="text-align:center;font-size: 14px">LAPORAN DATA BARANG </h3>
-                                 <h3 style="text-align:center;font-size: 14px"> PERIODE : '.$this->date_to_string($param['from']).' s.d. '.$this->date_to_string($param['to']).'</h3>
-                                <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
-                                    <tr>
-                                        <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
-                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
-                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Stok Terakhir</td>
-                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Masuk Toko</td>
-                                        <td style="width:120px;background-color:#dedede;font-weight: bold;border:1px solid;">Terjual</td>
-                                    </tr>';
-                    $footer = '</table>';
-                    $i=0;$temp='';$total_stok=0;$body=array();
-                    $total_masuk=0;$total_jual=0;
+                    $param['from'] = $this->input->post('date_from');
+                    $param['to'] = $this->input->post('date_to');
 
-                    foreach($data as $row)
+                    $this->session->set_userdata($param);
+                    $query = $this->barang->stat_item_cat($param);
+                    if($query->num_rows() >0)
                     {
+                        $data = $query->result();
+                        $head = '<br />
+                                    <h3 style="text-align:center;font-size: 14px">LAPORAN DATA BARANG </h3>
+                                     <h3 style="text-align:center;font-size: 14px"> PERIODE : '.$this->date_to_string($param['from']).' s.d. '.$this->date_to_string($param['to']).'</h3>
+                                    <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
+                                        <tr>
+                                            <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
+                                            <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
+                                            <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Stok Terakhir</td>
+                                            <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Masuk Toko</td>
+                                            <td style="width:120px;background-color:#dedede;font-weight: bold;border:1px solid;">Terjual</td>
+                                        </tr>';
+                        $footer = '</table>';
+                        $i=0;$temp='';$total_stok=0;$body=array();
+                        $total_masuk=0;$total_jual=0;
 
-                        $temp .= '<tr>
-                            <td style="width:50px; border: 1px solid">'.++$i.'</td>
-                            <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
-                            <td style="width:110px; border: 1px solid">'.number_format($row->stok).'</td>
-                            <td style="width:110px; border: 1px solid">'.number_format($row->masuk).'</td>
-                            <td style="width:120px; border: 1px solid">'.number_format($row->jual).'</td>
-                        </tr>';
-                        if($i%50 == 0)
+                        foreach($data as $row)
                         {
 
-                            $body[] = $temp;
-                            $temp = '';
-                        }
-                        $total_masuk+= $row->masuk;
-                        $total_stok += $row->stok;
-                        $total_jual += $row->jual;
-                    }
-                    $body[] = $temp;
-                    $row_total = '<tr>
-                        <td colspan="2" style="width:160px; border: 1px solid">TOTAL</td>
-                        <td style="width:110px; border: 1px solid">'.number_format($total_stok).'</td>
-                        <td style="width:110px; border: 1px solid">'.number_format($total_masuk).'</td>
-                        <td style="width:120px; border: 1px solid">'.number_format($total_jual).'</td>
-                    </tr>';
-
-                    if($this->input->post('submit_report_print'))
-                    {
-                        $this->cetak_pdf(6,$head, $body, $row_total, $footer);
-                    }
-                    $this->data['table'] = $head.$body[0].$footer;
-                }
-            }
-            //laporan umur barang
-            else if($type == 2)
-            {
-                $umur = $this->input->post('umur');
-                if($umur == 1)
-                {
-                    $to = '';
-                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
-                }
-                else if($umur == 2)
-                {
-                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
-                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
-                }
-                else if($umur == 3)
-                {
-                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
-                    $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
-                }
-                else if($umur == 4)
-                {
-                    $from = '';
-                    $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
-                }
-                $query = $this->barang->stat_item_age(array('from'=>$from,'to'=>$to));
-                if($query->num_rows() > 0)
-                {
-                    $data = $query->result();
-                    $head = '<br /><h3 style="text-align:center;font-size: 14px">LAPORAN REKAP UMUR BARANG</h3><br />
-                                <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
-                                    <tr>
-                                        <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
-                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
-                                        <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kode Barang</td>
-                                        <td style="width:80px;background-color:#dedede;font-weight: bold;border:1px solid;">Qty</td>
-                                        <td style="width:150px;background-color:#dedede;font-weight: bold;border:1px solid;">Umur</td>
-                                    </tr>';
-                    $body='';$i=0;$j=0;$temp='';
-                    $total_qty=0;
-                    foreach($data as $row)
-                    {
-                        $temp .= '<tr>
+                            $temp .= '<tr>
                                 <td style="width:50px; border: 1px solid">'.++$i.'</td>
                                 <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
-                                <td style="width:110px; border: 1px solid">'.$row->id_barang.'</td>
-                                <td style="width:80px; border: 1px solid">'.$row->qty.'</td>
-                                <td style="width:150px; border: 1px solid">'.$this->parse_age($row->umur).'</td>
-                        </tr>';
-                        if($i%50==0)
-                        {
-                            $body[] = $temp;
-                            $temp = '';
+                                <td style="width:110px; border: 1px solid">'.number_format($row->stok).'</td>
+                                <td style="width:110px; border: 1px solid">'.number_format($row->masuk).'</td>
+                                <td style="width:120px; border: 1px solid">'.number_format($row->jual).'</td>
+                            </tr>';
+                            if($i%50 == 0)
+                            {
+
+                                $body[] = $temp;
+                                $temp = '';
+                            }
+                            $total_masuk+= $row->masuk;
+                            $total_stok += $row->stok;
+                            $total_jual += $row->jual;
                         }
-                        $total_qty += $row->qty;
+                        $body[] = $temp;
+                        $row_total = '<tr>
+                            <td colspan="2" style="width:160px; border: 1px solid">TOTAL</td>
+                            <td style="width:110px; border: 1px solid">'.number_format($total_stok).'</td>
+                            <td style="width:110px; border: 1px solid">'.number_format($total_masuk).'</td>
+                            <td style="width:120px; border: 1px solid">'.number_format($total_jual).'</td>
+                        </tr>';
+
+                        if($this->input->post('submit_report_print'))
+                        {
+                            $this->cetak_pdf(6,$head, $body, $row_total, $footer);
+                        }
+                        $this->data['table'] = $head.$body[0].$footer;
                     }
-                    $body[] = $temp;
-                    $footer = '</table>';
-                    $row_total = '<tr>
-                                    <td colspan="3" style="width: 270px; border: 1px solid"></td>
-                                    <td style="width:80px; border: 1px solid">'.$total_qty.'</td>
-                                    <td style="width:150px; border: 1px solid"></td>
-                                </tr>';
-                    $this->data['table'] = $head.$body[0].$footer;
-                    if($this->input->post('submit_report_print'))
+                }
+                //laporan umur barang
+                else if($type == 2)
+                {
+                    $umur = $this->input->post('umur');
+                    $param['umur'] = $umur;
+                    $this->session->set_userdata($param);
+                    if($umur == 1)
                     {
-                        //echo 'masuk pdf';
-                        //var_dump($body);
-                        $this->cetak_pdf(6, $head, $body, $row_total, $footer);
+                        $to = '';
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                    }
+                    else if($umur == 2)
+                    {
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                    }
+                    else if($umur == 3)
+                    {
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                    }
+                    else if($umur == 4)
+                    {
+                        $from = '';
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                    }
+                    $query = $this->barang->stat_item_age(array('from'=>$from,'to'=>$to));
+                    if($query->num_rows() > 0)
+                    {
+                        $data = $query->result();
+                        $head = '<br /><h3 style="text-align:center;font-size: 14px">LAPORAN REKAP UMUR BARANG</h3><br />
+                                    <table style="width: 500px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="1">
+                                        <tr>
+                                            <td style="width:50px;background-color:#dedede;font-weight: bold;border:1px solid;">No</td>
+                                            <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kelompok Barang</td>
+                                            <td style="width:110px;background-color:#dedede;font-weight: bold;border:1px solid;">Kode Barang</td>
+                                            <td style="width:80px;background-color:#dedede;font-weight: bold;border:1px solid;">Qty</td>
+                                            <td style="width:150px;background-color:#dedede;font-weight: bold;border:1px solid;">Umur</td>
+                                        </tr>';
+                        $body='';$i=0;$j=0;$temp='';
+                        $total_qty=0;
+                        foreach($data as $row)
+                        {
+                            $temp .= '<tr>
+                                    <td style="width:50px; border: 1px solid">'.++$i.'</td>
+                                    <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
+                                    <td style="width:110px; border: 1px solid">'.$row->id_barang.'</td>
+                                    <td style="width:80px; border: 1px solid">'.$row->qty.'</td>
+                                    <td style="width:150px; border: 1px solid">'.$this->parse_age($row->umur).'</td>
+                            </tr>';
+                            if($i%50==0)
+                            {
+                                $body[] = $temp;
+                                $temp = '';
+                            }
+                            $total_qty += $row->qty;
+                        }
+                        $body[] = $temp;
+                        $footer = '</table>';
+                        $row_total = '<tr>
+                                        <td colspan="3" style="width: 270px; border: 1px solid"></td>
+                                        <td style="width:80px; border: 1px solid">'.$total_qty.'</td>
+                                        <td style="width:150px; border: 1px solid"></td>
+                                    </tr>';
+                        $this->data['table'] = $head.$body[0].$footer;
+                        if($this->input->post('submit_report_print'))
+                        {
+                            //echo 'masuk pdf';
+                            //var_dump($body);
+                            $this->cetak_pdf(6, $head, $body, $row_total, $footer);
+                        }
                     }
                 }
             }
+            $this->load->view('item-report',$this->data);
         }
+        else
+        {
+            //print menggunakan window.print
+            if($option=='preview')
+            {
+                $this->load->model('barang');
+                $type=$this->session->userdata('type');
+                //laporan data barang
+                if($type == 1)
+                {
+                    $param['from'] = $this->session->userdata('from');
+                    $param['to'] = $this->session->userdata('to');
 
-        $this->load->view('item-report',$this->data);
+                    $query = $this->barang->stat_item_cat($param);
+                    if($query->num_rows() >0)
+                    {
+                        $data = $query->result();
+                        $head = '<div id="header">
+                                        <img src="'.base_url().'css/images/logo_mode.png" />
+                                        <h2>MODE FASHION GROUP</h2>
+                                        <p>
+                                            Kantor Pusat: <br />
+                                            Jln. Laksana No. 68 ABC, Medan<br />
+                                            Telepon: (061) 372 592
+                                        </p>
+                                    </div>
+                                    <div id="content">
+                                    <h3 style="text-align:center;font-size: 14px">LAPORAN DATA BARANG </h3>
+                                     <h3 style="text-align:center;font-size: 14px"> PERIODE : '.$this->date_to_string($param['from']).' s.d. '.$this->date_to_string($param['to']).'</h3>
+                                    <table class="table-data" cellspacing="0" cellpadding="0" border="1">
+                                        <tr>
+                                            <td class="head">No</td>
+                                            <td class="head">Kelompok Barang</td>
+                                            <td class="head">Stok Terakhir</td>
+                                            <td class="head">Masuk Toko</td>
+                                            <td class="head">Terjual</td>
+                                        </tr>';
+                        $footer = '</table></div>';
+                        $i=0;$temp='';$total_stok=0;$body=array();
+                        $total_masuk=0;$total_jual=0;
+
+                        foreach($data as $row)
+                        {
+
+                            $temp .= '<tr>
+                                <td>'.++$i.'</td>
+                                <td>'.$row->kelompok_barang.'</td>
+                                <td>'.number_format($row->stok).'</td>
+                                <td>'.number_format($row->masuk).'</td>
+                                <td>'.number_format($row->jual).'</td>
+                            </tr>';
+                            if($i%50 == 0)
+                            {
+
+                                $body[] = $temp;
+                                $temp = '';
+                            }
+                            $total_masuk+= $row->masuk;
+                            $total_stok += $row->stok;
+                            $total_jual += $row->jual;
+                        }
+                        $body[] = $temp;
+                        $row_total = '<tr>
+                            <td colspan="2" >TOTAL</td>
+                            <td >'.number_format($total_stok).'</td>
+                            <td >'.number_format($total_masuk).'</td>
+                            <td >'.number_format($total_jual).'</td>
+                        </tr>';
+
+                        $content='';
+                        $i=0;
+                        foreach($body as $row)
+                        {
+                            if($i == count($body)-1)
+                                $footer = $row_total.$footer;
+                            $content .= $head.$row.$footer.'<br /><br />';
+                            $i++;
+                        }
+                        $this->data['content']=$content;
+                    }
+                }
+                //laporan umur barang
+                else if($type == 2)
+                {
+                    $umur = $this->session->userdata('umur');
+                    $param['umur'] = $umur;
+                    $this->session->set_userdata($param);
+                    if($umur == 1)
+                    {
+                        $to = '';
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                    }
+                    else if($umur == 2)
+                    {
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-1));
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                    }
+                    else if($umur == 3)
+                    {
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-2));
+                        $from = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                    }
+                    else if($umur == 4)
+                    {
+                        $from = '';
+                        $to = date('Y-m-d',mktime(0,0,0,date('m'),date('d'),date('Y')-3));
+                    }
+                    $query = $this->barang->stat_item_age(array('from'=>$from,'to'=>$to));
+                    if($query->num_rows() > 0)
+                    {
+                        $data = $query->result();
+                        $head = '<div id="header">
+                                        <img src="'.base_url().'css/images/logo_mode.png" />
+                                        <h2>MODE FASHION GROUP</h2>
+                                        <p>
+                                            Kantor Pusat: <br />
+                                            Jln. Laksana No. 68 ABC, Medan<br />
+                                            Telepon: (061) 372 592
+                                        </p>
+                                    </div>
+                                    <div id="content">
+                                    <h3 style="text-align:center;font-size: 14px">LAPORAN REKAP UMUR BARANG</h3><br />
+                                    <table class="table-data" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td class="head">No</td>
+                                            <td class="head">Kelompok Barang</td>
+                                            <td class="head">Kode Barang</td>
+                                            <td class="head">Qty</td>
+                                            <td class="head">Umur</td>
+                                        </tr>';
+                        $body='';$i=0;$j=0;$temp='';
+                        $total_qty=0;
+                        foreach($data as $row)
+                        {
+                            $temp .= '<tr>
+                                    <td>'.++$i.'</td>
+                                    <td>'.$row->kelompok_barang.'</td>
+                                    <td>'.$row->id_barang.'</td>
+                                    <td>'.$row->qty.'</td>
+                                    <td>'.$this->parse_age($row->umur).'</td>
+                            </tr>';
+                            if($i%50==0)
+                            {
+                                $body[] = $temp;
+                                $temp = '';
+                            }
+                            $total_qty += $row->qty;
+                        }
+                        $body[] = $temp;
+                        $footer = '</table></div>';
+                        $row_total = '<tr>
+                                        <td colspan="3"></td>
+                                        <td>'.$total_qty.'</td>
+                                        <td></td>
+                                    </tr>';
+                        $content='';
+                        $i=0;
+                        foreach($body as $row)
+                        {
+                            if($i == count($body)-1)
+                                $footer = $row_total.$footer;
+                            $content .= $head.$row.$footer.'<br /><br />';
+                            $i++;
+                        }
+                        $this->data['content']=$content;
+                    }
+                }
+                $this->load->view('print-template',$this->data);
+            }
+        }
     }
 
     /*
@@ -670,7 +847,7 @@ class Item extends Controller {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         //set some language-dependent strings
-        $pdf->setLanguageArray($l);
+        //$pdf->setLanguageArray($l);
 
         // ---------------------------------------------------------
 
@@ -815,7 +992,7 @@ class Item extends Controller {
         $pdf->setImageScale(PDF_IMAGE_SCALE_RATIO);
 
         //set some language-dependent strings
-        $pdf->setLanguageArray($l);
+        //$pdf->setLanguageArray($l);
 
         // ---------------------------------------------------------
 

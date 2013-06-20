@@ -2,6 +2,7 @@ body, table {
 	font-family: Arial, Helvetica;
 	font-size: 0.8em;
 }
+
 #container {
 	/*border: 1px solid;*/	
 	margin: 0px auto;
@@ -24,13 +25,15 @@ body, table {
 	margin: 0 0 0 2.5cm;
 	font-weight: normal;
 }
+table, table td {
+    border: #000000 1px solid;
+}
+table td.head {
+    height: 20px;
+    font-weight: bold;
+}
 .table-data {
 	margin:0 auto;
 	width:100%;
 	text-align:center
-}
-.table-data td.head {
-	background-color:#dedede;
-	text-transform: uppercase;
-	font-weight: bold;
 }

@@ -42,7 +42,10 @@
         </table>
         <p style="color:red"><?php if(isset($err_msg)) _e($err_msg) ?></p>        
         <?php _e(form_close()) ?>
-        <?php if(isset($table)) { echo $table; }?>
+        <?php if(isset($table)) {
+            echo $table;
+            echo '<a href="'.base_url().'item/report/preview" target="_new"><span class="button">&nbsp;<input type="button" value="Cetak" class="button"/></span></a>';
+        }?>
     </div>    
 </div>
 <?php include 'layout/footer.php'; ?>

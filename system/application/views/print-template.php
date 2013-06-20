@@ -4,9 +4,9 @@
 <link rel="stylesheet" href="<?php _e(base_url()) ?>css/print.css" type="text/css" media="print"/>
 <link rel="stylesheet" href="<?php _e(base_url()) ?>css/print.css" type="text/css" media="screen"/>
 </head>
-<body>
+<body onload="window.print()">
 <div id="container">
-    <div id="header">
+    <!--<div id="header">
         <img src="<?php _e(base_url()) ?>css/images/logo_mode.png" />   
         <h2>MODE FASHION GROUP</h2>
         <p>
@@ -15,9 +15,10 @@
             Telepon: (061) 372 592
         </p>                  
     </div>
-    <div id="content">
-        <?php _e($content)?></td>
-    </div>
+    <div id="content">-->
+        <?php echo isset($content)?$content:'' ?>
+    <!--
+    </div>-->
 </div>
 </body>
 </html>
