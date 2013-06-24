@@ -568,7 +568,7 @@ class Item extends Controller {
                                     <td style="width:50px; border: 1px solid">'.++$i.'</td>
                                     <td style="width:110px; border: 1px solid">'.$row->kelompok_barang.'</td>
                                     <td style="width:110px; border: 1px solid">'.$row->id_barang.'</td>
-                                    <td style="width:80px; border: 1px solid">'.$row->qty.'</td>
+                                    <td style="width:80px; border: 1px solid">'.$row->stok_barang.'</td>
                                     <td style="width:150px; border: 1px solid">'.$this->parse_age($row->umur).'</td>
                             </tr>';
                             if($i%50==0)
@@ -735,7 +735,7 @@ class Item extends Controller {
                                     <td>'.++$i.'</td>
                                     <td>'.$row->kelompok_barang.'</td>
                                     <td>'.$row->id_barang.'</td>
-                                    <td>'.$row->qty.'</td>
+                                    <td>'.$row->stok_barang.'</td>
                                     <td>'.$this->parse_age($row->umur).'</td>
                             </tr>';
                             if($i%50==0)
