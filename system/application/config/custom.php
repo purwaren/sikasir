@@ -30,6 +30,11 @@ $config['port'] =  20000;
  */
 $config['display'] = 2345;
 $config['base_url'] = '/sikasir/';
+/**
+ * Application version
+ */
+$config['version'] = '1.1 rev 101';
+$config['name']='Sikasir';
 
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */
