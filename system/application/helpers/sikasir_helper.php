@@ -107,5 +107,16 @@ if(!function_exists('month_to_string'))
         return $str;
     }
 }
+if(!function_exists('get_header_receipt'))
+{
+    function get_header_receipt()
+    {
+        $head= str_pad(config_item('shop_name'),34,' ',STR_PAD_RIGHT).'#';
+        $head.=str_pad(config_item('shop_address'),34,' ',STR_PAD_RIGHT).'#';
+        $head.=str_pad('Telp. '.config_item('shop_phone'),34,' ',STR_PAD_RIGHT);
+
+        return $head;
+    }
+}
 //Helper sikasir
 //Location: system/application/helper

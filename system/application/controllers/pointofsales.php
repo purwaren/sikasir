@@ -318,6 +318,7 @@ class PointOfSales extends Controller {
             }
             fclose($file);
             //masuk2in datanya
+            $report = str_replace('<header>',get_header_receipt(),$report);
             $report = str_replace('<tanggal>',date_to_string($now),$report);
             $report = str_replace('<omset>',number_format($sales->temp_sales,0,',','.').',-',$report);
             $report = str_replace('<total>',$total_qty,$report);
@@ -495,6 +496,7 @@ class PointOfSales extends Controller {
                     fclose($file);                   
                     
                     //do resi stuff ..hehe apalah namanya itu..nyusun resinye...
+                    $resi = str_replace('<header>',get_header_receipt(),$resi);
                     $resi = str_replace('<jam>',$transaksi->jam,$resi); //tulis no resi
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
                     $resi = str_replace('<detail>',$detail,$resi);//tulis detail transaksi                    
@@ -642,6 +644,7 @@ class PointOfSales extends Controller {
                     }
                     fclose($file);
                     //do resi stuff ..hehe apalah namanya itu..nyusun resinye...
+                    $resi = str_replace('<header>',get_header_receipt(),$resi);
                     $resi = str_replace('<jam>',$transaksi->jam,$resi); //tulis no resi
                     $resi = str_replace('<tanggal>',$transaksi->tanggal,$resi); //tulis tanggal resi
                     //$resi = str_replace('<tukar>',$tukar,$resi);//tulis detail barang ditukar
