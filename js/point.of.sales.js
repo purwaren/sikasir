@@ -1,6 +1,6 @@
 /**
 * Name : Point of Sales
-* Author : PuRwa Love IcHa
+* Author : PuRwa
 * Version : Beta
 * Desc: Program ini digunakan untuk menjalankan applikasi terkait point of sales
 */
@@ -1400,4 +1400,27 @@ function removeFocus(){
 */
 function setFocus(){
     searchFocus=true;    
+}
+
+
+/**
+ * Adding comma, formatting number
+ */
+function addCommas(nStr) {
+    nStr += '';
+    x = nStr.split('.');
+    x1 = x[0];
+    x2 = x.length > 1 ? '.' + x[1] : '';
+    var rgx = /(\d+)(\d{3})/;
+    while (rgx.test(x1)) {
+        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+    }
+    return x1 + x2;
+}
+
+/**
+ * Removing comma, get the number
+ */
+function removeCommas(nStr) {
+    return nStr.replace(/,/g,'');
 }
