@@ -17,14 +17,14 @@ class Barang extends Model
      */
     function stat_item_cat($data)
     {
-        $sql = 'select tbl1.kelompok_barang, sum(tbl1.stok_barang) as stok, sum(tbl1.qty) as masuk,sum(tbl2.qty) as jual
-                from (select b.kelompok_barang, b.id_barang, b.stok_barang, bm.tanggal, sum(bm.qty) as qty from barang b
-                    left join barang_masuk bm on b.id_barang = bm.id_barang
-                    where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by b.id_barang) tbl1
-                 left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as qty from transaksi_penjualan tp
-                 left join item_transaksi_penjualan itp on tp.id_transaksi= itp.id_transaksi
-                 where tp.tanggal >= "'.$data['from'].'" and tp.tanggal <= "'.$data['to'].'" group by itp.id_barang) tbl2
-                 on tbl1.id_barang=tbl2.id_barang group by tbl1.kelompok_barang';
+        $sql = 'select tbl1.kelompok_barang, sum(tbl1.stok_barang) as stok, sum(tbl1.masuk) as masuk,sum(tbl2.jual) as jual
+from (select b.id_barang, b.kelompok_barang, b.stok_barang, tbl_masuk.masuk from barang b left join (select bm.id_barang, bm.tanggal, sum(bm.qty) as masuk from barang_masuk bm
+where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by bm.id_barang) tbl_masuk
+on b.id_barang = tbl_masuk.id_barang) tbl1
+left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as jual from transaksi_penjualan tp
+			left join item_transaksi_penjualan itp on tp.id_transaksi= itp.id_transaksi
+			where tp.tanggal >= "'.$data['from'].'" and tp.tanggal <= "'.$data['to'].'" group by itp.id_barang) tbl2
+ on tbl1.id_barang=tbl2.id_barang group by tbl1.kelompok_barang';
         return $this->db->query($sql);
     }
 
