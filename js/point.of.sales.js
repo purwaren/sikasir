@@ -65,7 +65,7 @@ try {
 		*Listen event keyup, untuk shortcut dan lain lain.
 		*/        
 		$(window).keyup(function(event){               
-			$('#trigger').html(event.keyCode); 
+			//$('#trigger').html(event.keyCode); 
             //F2 -- fokus ke text box kode label / barcode
 			if(event.keyCode == 113) {
 				$('#barcode').focus();
@@ -519,7 +519,7 @@ function appendRow(data){
         }
         validateQtyById(data.id_barang,data.stok_barang);
         if(statusQty == true){
-           var row = '<tr class="row">';
+           var row = '<tr class="row" style="text-decoration:none">';
             row += '<td width="5%" style=" text-align: center;" class="num">'+ (num + 1)+ '</td>';
             row += '<td width="15%"style=" text-align: center;">'+data.id_barang+'</td>';
             row += '<td width="25%">'+data.nama+'</td>';
