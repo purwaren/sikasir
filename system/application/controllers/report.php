@@ -150,21 +150,33 @@ class Report extends Controller {
                         $total_disc = 0;
                         $total_infaq = 0;
                         $row = $query->result();
+                        //echo '<pre>'.print_r($row,true).'</pre>';exit;
                         foreach($query_per_bon->result() as $bon)
                         {
                             //handling kasus klo satu bon kepisah di dua halaman -- baris terakhir pada halaman sekarang
                             $ada = 30-($i%30);
                             $butuh = $bon->jml_item;
                             $kurang='';
+                            $page=0;
                             if($butuh > $ada)
                             {
                                 $kurang = $butuh - $ada;
-                                $n=$i+1;
-                                //echo $n.'-'.$ada.'-'.$butuh.'-'.$kurang.'<br />';
+                                $n=$i+1;//menandakan baris terakhir
+                                if($kurang <= 30)
+                                {                                	
+                                	$page=1;
+                                }
+                                else 
+                                {
+                                	$page=ceil($kurang/30)+1;
+                                }
+                                
                             }
+                                                        
                             $disc = 0;                            
                             for($k=$bon->jml_item;$k>0;$k--)
-                            {                                
+                            {    
+                            	                            
                                 $query_brg = $this->barang->get_barang($row[$i]->id_barang,2);
                                 if($query_brg->num_rows() > 0)
                                 {
@@ -176,87 +188,144 @@ class Report extends Controller {
                                     $jumlah = $jumlah * (1 - ($row[$i]->diskon_item/100));
                                     $jumlah = $jumlah * (1 - ($row[$i]->diskon/100));                           
                                     $total_jumlah += $jumlah_blm_diskon;                                    
-                                    $total_qty += $row[$i]->qty;
-                                    $temp .= '<tr>
-                                                    <td style="width:30px;border: 1px solid;">'.($i+1).'</td>';
-                                    if(!empty($kurang))
+                                    $total_qty += $row[$i]->qty;   
+                                    //$atas=false;                                 
+                                    if($page > 1)
                                     {
-                                        if(($i+1)>30 && ($i+1)%30==1)
-                                        {
-                                           $temp .='<td rowspan="'.$kurang.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$kurang.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                    <td rowspan="'.$kurang.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>'; 
-                                        }                                    
-                                        if(($i+1)==$n)
-                                        {
-                                            $temp .='<td rowspan="'.$ada.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$ada.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                    <td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
-                                        }
+                                   	 	
+                                    	$temp .= '<tr>
+                                    	             <td style="width:30px;border: 1px solid;">'.($i+1).'</td>';
+                                    	
+                                    	if(((($i+1)>30 && ($i+1)%30==1)) || ($i+1)==$n )
+                                    	{
+                                    		$temp .='<td rowspan="'.$ada.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
+                                    		     	<td rowspan="'.$ada.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+                                    		     	<td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+                                    	}
+                                    	
+                                    	$temp .= '<td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
+                                    		         <td style="width:110px;border: 1px solid;">'.$barang->nama.'</td>
+                                    		         <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>                                                                                              
+                                    		         <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($barang->harga),2,',','.').'&nbsp;&nbsp;</td>
+                                    		         <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
+                                    		         <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
+                                    	
+                                    	//itung diskon all
+                                    	if(((($i+1)>30 && ($i+1)%30==1)) || ($i+1)==$n )
+                                    	{
+	                                    	$temp_jumlah = $bon->total/(1-$bon->diskon/100);
+	                                    	$disc_all = ($bon->diskon/100)*$temp_jumlah;
+	                                    	$disc = $bon->rupiah_diskon + $disc_all;
+	                                    	$disc = ceil($disc/100)*100;
+	                                    	$temp .= '<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>
+	                                    		       <td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+	                                    		       <td rowspan="'.$ada.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+                                    	}
+                                    	$temp .='</tr>';
+                                    	$i++;
+                                    	if($i%30 == 0)
+                                    	{
+                                    		$list[$j] = $temp;
+                                    		$j++;
+                                    		$temp = "";                                    		
+                                    		//itung kurang dan ada
+                                    		$ada=30;
+                                    		if($kurang>30)
+                                    			$kurang = $kurang-$ada;                    		
+                                    		
+                                    		$page--;
+                                    		$n=30;
+                                    	}
+                                    	//echo $temp;
+                                    	//echo htmlentities($temp);
+                                    	//exit;
+                                    	
                                     }
                                     else
-                                    {
-                                        if($k==$bon->jml_item)
-                                        {
-                                            $temp .='<td rowspan="'.$bon->jml_item.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
-                                                    <td rowspan="'.$bon->jml_item.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
-                                                    <td rowspan="'.$bon->jml_item.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
-                                        }
-                                    }
-                                    $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
-                                                <td style="width:110px;border: 1px solid;">'.$barang->nama.'</td>
-                                                <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>                                                                                              
-                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($barang->harga),2,',','.').'&nbsp;&nbsp;</td>
-                                                <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
-                                                <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
-                                       
-                                    //menyisipkan total sebenarnya, dibuat colspan
-                                    if(!empty($kurang))
-                                    {
-                                        if(($i+1)>30 && ($i+1)%30==1)
-                                        {
-                                            //itung diskon all
-                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
-                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
-                                            $disc = $bon->rupiah_diskon + $disc_all;
-                                            $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                            		<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
-                                                    <td rowspan="'.$kurang.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
-                                        }
-                                        if(($i+1)==$n)
-                                        {
-                                            //itung diskon all
-                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
-                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
-                                            $disc = $bon->rupiah_diskon + $disc_all;
-                                            $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                            		<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
-                                                    <td rowspan="'.$ada.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
-                                        }
-                                    }
-                                    else 
-                                    {
-                                        if($k==$bon->jml_item)
-                                        {
-                                            //itung diskon all
-                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
-                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
-                                            $disc = $bon->rupiah_diskon + $disc_all;
-                                            $disc = ceil($disc/100)*100;
-                                            $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
-                                            		<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
-                                                    <td rowspan="'.$bon->jml_item.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
-                                        }
-                                    }
-                                    $temp .='</tr>';
-                                    $i++;                                
-                                    if($i%30 == 0)
-                                    {
-                                        $list[$j] = $temp;
-                                        $j++;
-                                        $temp = "";
+                                    {                  	
+                                    	
+                                    	$temp .= '<tr>
+                                    	              <td style="width:30px;border: 1px solid;">'.($i+1).'</td>';
+	                                    if(!empty($kurang))
+	                                    {                                    	
+	                                        if(($i+1)>30 && ($i+1)%30==1)
+	                                        {
+	                                           $temp .='<td rowspan="'.$kurang.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
+	                                                    <td rowspan="'.$kurang.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+	                                                    <td rowspan="'.$kurang.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>'; 
+	                                        }                                    
+	                                        if(($i+1)==$n)
+	                                        {
+	                                            $temp .='<td rowspan="'.$ada.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
+	                                                    <td rowspan="'.$ada.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+	                                                    <td rowspan="'.$ada.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+	                                        }
+	                                    }
+	                                    else
+	                                    {
+	                                        if($k==$bon->jml_item)
+	                                        {
+	                                            $temp .='<td rowspan="'.$bon->jml_item.'" style="width:30px;border: 1px solid;">'.$row[$i]->kassa.'</td>
+	                                                    <td rowspan="'.$bon->jml_item.'" style="width:40px;border: 1px solid;">'.$row[$i]->jam_transaksi.'</td>
+	                                                    <td rowspan="'.$bon->jml_item.'" style="width:90px;border: 1px solid;">'.ucwords($kasir->nama).'</td>';
+	                                        }
+	                                    }
+	                                    $temp .= '  <td style="width:75px;border: 1px solid;text-align: left;padding-left:5px;">&nbsp;&nbsp;'.$row[$i]->id_barang.'</td>
+	                                                <td style="width:110px;border: 1px solid;">'.$barang->nama.'</td>
+	                                                <td style="width:50px;border: 1px solid;">'.$barang->kelompok_barang.'</td>                                                                                              
+	                                                <td style="width:60px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format(floatval($barang->harga),2,',','.').'&nbsp;&nbsp;</td>
+	                                                <td style="width:30px;border: 1px solid;">'.$row[$i]->qty.'</td>
+	                                                <td style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($jumlah_blm_diskon,2,',','.').'&nbsp;&nbsp;</td>';
+	                                       
+	                                    //menyisipkan total sebenarnya, dibuat colspan
+	                                    if(!empty($kurang))
+	                                    {
+	                                        if(($i+1)>30 && ($i+1)%30==1)
+	                                        {
+	                                            //itung diskon all
+	                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
+	                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
+	                                            $disc = $bon->rupiah_diskon + $disc_all;
+	                                            $disc = ceil($disc/100)*100;
+	                                            $temp .= '<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+	                                            		<td rowspan="'.$kurang.'"  style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+	                                                    <td rowspan="'.$kurang.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">&nbsp;&nbsp;</td>';
+	                                        }
+	                                        if(($i+1)==$n)
+	                                        {
+	                                            //itung diskon all
+	                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
+	                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
+	                                            $disc = $bon->rupiah_diskon + $disc_all;
+	                                            $disc = ceil($disc/100)*100;
+	                                            $temp .= '<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+	                                            		<td rowspan="'.$ada.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+	                                                    <td rowspan="'.$ada.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+	                                        }
+	                                    }
+	                                    else 
+	                                    {
+	                                        if($k==$bon->jml_item)
+	                                        {
+	                                            //itung diskon all
+	                                            $temp_jumlah = $bon->total/(1-$bon->diskon/100);
+	                                            $disc_all = ($bon->diskon/100)*$temp_jumlah;
+	                                            $disc = $bon->rupiah_diskon + $disc_all;
+	                                            $disc = ceil($disc/100)*100;
+	                                            $temp .= '<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($disc,2,',','.').'&nbsp;&nbsp;</td>  
+	                                            		<td rowspan="'.$bon->jml_item.'" style="width:50px;border: 1px solid;;text-align:right;padding-right:10px;">'.number_format($bon->infaq,2,',','.').'&nbsp;&nbsp;</td>
+	                                                    <td rowspan="'.$bon->jml_item.'" style="width:70px;border: 1px solid;text-align:right;padding-right:10px;">'.number_format($bon->total,2,',','.').'&nbsp;&nbsp;</td>';
+	                                        }
+	                                    }
+	                                    $temp .='</tr>';
+	                                    
+	                                    $i++;                                
+	                                    if($i%30 == 0)
+	                                    {
+	                                        $list[$j] = $temp;
+	                                        $j++;
+	                                        $temp = "";
+	                                    }
                                     }
                                 }
                                 else
@@ -271,6 +340,7 @@ class Report extends Controller {
                             $total_disc += $disc;
                             $total_infaq += $bon->infaq;
                         }
+                       // echo htmlentities($list[8]);exit;
                         $list[$j] = $temp;
                         $row_total = '<tr><td colspan="8" style="width:485px;border: 1px solid;text-align:right">T O T A L &nbsp;&nbsp;</td>
                                         <td style="width:30px;border: 1px solid;">'.$total_qty.'</td>
