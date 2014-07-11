@@ -75,6 +75,8 @@ class PointOfSales extends Controller {
     
     function write_display()
     {
+    	if(!config_item('use_display'))
+    		return;
     	$str = $this->input->post('message');
     	if(!empty($str))
     	{

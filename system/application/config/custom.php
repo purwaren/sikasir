@@ -29,6 +29,7 @@ $config['port'] =  20000;
  * Display port
  */
 $config['display'] = 2345;
+$config['use_display'] = false;
 $config['base_url'] = '/sikasir/';
 /**
  * Application version
