@@ -81,6 +81,7 @@
     <input type="hidden" id="total_tukar" /><input type="hidden" id="total_pengganti" />
     <button id="button-refund" style="display:none" onclick="trigerButtonRefund()">REFUND</button>
 </div>
+
 <!--dialog untuk window utama POS -->
 <div id="dialog-form" title="Point of Sales :. Transaction Ready ">
 <div id="container">

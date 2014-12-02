@@ -794,6 +794,31 @@ class PointOfSales extends Controller {
         $item_code = $this->input->post('id_barang');
         $opsi = $this->input->post('opsi');    
         $this->load->model('barang');
+        $disc = $this->input->post('disc');
+        
+        //check if refund disc is in period and valid
+        if($disc = config_item('refund_disc')) 
+        {
+        	$today = new DateTime("now");
+        	$period = new DateTime(config_item('refund_period'));
+        	if($today < $period)
+        	{
+        		$cat = substr($item_code, 0, 3);
+        		if(!in_array($cat, config_item('refund')))
+        		{
+        			_e(0);
+        			exit;
+        		}
+        		
+        	}
+        	else 
+        	{
+        		_e(0);
+        		exit;
+        	}
+        	
+        }
+        
         if($opsi == 1)
         {
             $query = $this->barang->get_barang($item_code,3);

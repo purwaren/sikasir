@@ -40,3 +40,8 @@ defMsg[1] = 'Mode Fashion Group';
  * true -> open
  */
 var openPrice = false;
+
+/**
+ * Discount untuk refund event custom
+ */
+var discountRefund=20;

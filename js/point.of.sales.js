@@ -206,6 +206,22 @@ try {
                 });
                 $('#barang-tukar').focus();   
             }
+            //Ctrl - refund barang diskon khusus
+            if(event.keyCode == 17) {
+            	$('#disc_refund').empty();
+            	$('#disc_refund').append('<option value="'+discountRefund+'">'+discountRefund+'%</option>');
+            	$('#dialog-refund').dialog({
+                    width: 800,
+                    height: 600,
+                    modal: true,
+                    buttons: {
+                        Back: function() {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#barang-tukar').focus();   
+            }
             //Page Down - cut last two digit, make zero
             if(event.keyCode == 34) {
                 var total = parseFloat($('#total_val').val());
@@ -289,7 +305,7 @@ try {
 			//keycode : 46 -- delete            
 			//keycode : 48-57 && 96-105 -- numeric
             //keyCode : 27 -- escape
-			if(!((event.keyCode >= 112 && event.keyCode <= 123) || event.keyCode==18 || event.keyCode == 35 || event.keyCode == 33 ||event.keyCode == 34 || event.keyCode == 32 || event.keyCode == 45  || event.keyCode == 36 || event.keyCode == 46 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 27 || (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))){
+			if(!((event.keyCode >= 112 && event.keyCode <= 123) || event.keyCode == 17 ||event.keyCode==18 || event.keyCode == 35 || event.keyCode == 33 ||event.keyCode == 34 || event.keyCode == 32 || event.keyCode == 45  || event.keyCode == 36 || event.keyCode == 46 || event.keyCode == 13 || event.keyCode == 8 || event.keyCode == 27 || (event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 96 && event.keyCode <= 105))){
 				displayNotification('Hanya boleh diisi angka');				
 			}
 			else {
@@ -1213,6 +1229,7 @@ function searchItem() {
 function getItem(option) {
     //ambil id barang
     var id;
+    var disc=$('#disc_refund').val();
     if(option==1) {
         id = $('#barang-tukar').val();
     }
@@ -1222,7 +1239,7 @@ function getItem(option) {
     //ajax request ke server
     $.post(
         "get_item",
-        {'id_barang': id, 'opsi': option}, 
+        {'id_barang': id, 'opsi': option, 'disc': disc}, 
         function(data){
             //update ke table row
             if(data == 0) {

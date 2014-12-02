@@ -37,5 +37,12 @@ $config['base_url'] = '/sikasir/';
 $config['version'] = '1.1 rev 101';
 $config['name']='Sikasir';
 
+/**
+ * Refund khusus, kelompok barang yang boleh direfund
+ */
+$config['refund'] = array('016','017','018','019','052');
+$config['refund_period'] = '2014-12-31';
+$config['refund_disc'] = '20';
+
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */
