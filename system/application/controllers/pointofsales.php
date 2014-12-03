@@ -797,7 +797,7 @@ class PointOfSales extends Controller {
         $disc = $this->input->post('disc');
         
         //check if refund disc is in period and valid
-        if($disc = config_item('refund_disc')) 
+        if($disc == config_item('refund_disc')) 
         {
         	$today = new DateTime("now");
         	$period = new DateTime(config_item('refund_period'));
