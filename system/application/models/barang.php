@@ -18,13 +18,13 @@ class Barang extends Model
     function stat_item_cat($data)
     {
         $sql = 'select tbl1.kelompok_barang, sum(tbl1.stok_barang) as stok, sum(tbl1.masuk) as masuk,sum(tbl2.jual) as jual
-from (select b.id_barang, b.kelompok_barang, b.stok_barang, tbl_masuk.masuk from barang b left join (select bm.id_barang, bm.tanggal, sum(bm.qty) as masuk from barang_masuk bm
-where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by bm.id_barang) tbl_masuk
-on b.id_barang = tbl_masuk.id_barang) tbl1
-left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as jual from transaksi_penjualan tp
-			left join item_transaksi_penjualan itp on tp.id_transaksi= itp.id_transaksi
-			where tp.tanggal >= "'.$data['from'].'" and tp.tanggal <= "'.$data['to'].'" group by itp.id_barang) tbl2
- on tbl1.id_barang=tbl2.id_barang group by tbl1.kelompok_barang';
+			from (select b.id_barang, b.kelompok_barang, b.stok_barang, tbl_masuk.masuk from barang b left join (select bm.id_barang, bm.tanggal, sum(bm.qty) as masuk from barang_masuk bm
+			where bm.tanggal >= "'.$data['from'].'" and bm.tanggal <= "'.$data['to'].'" group by bm.id_barang) tbl_masuk
+			on b.id_barang = tbl_masuk.id_barang) tbl1
+			left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as jual from transaksi_penjualan tp
+						left join item_transaksi_penjualan itp on tp.id_transaksi= itp.id_transaksi
+						where tp.tanggal >= "'.$data['from'].'" and tp.tanggal <= "'.$data['to'].'" group by itp.id_barang) tbl2
+			 on tbl1.id_barang=tbl2.id_barang group by tbl1.kelompok_barang';
         return $this->db->query($sql);
     }
 
@@ -285,6 +285,14 @@ left join (select itp.id_barang, tp.tanggal, sum(itp.qty) as jual from transaksi
     function get_barang_retur($kode_bon)
     {
         return $this->db->get_where('retur_barang',array('id_retur'=>$kode_bon));
+    }
+    /**
+     *Ambil data retur barang berdasarkan kode bon untuk csv
+     */
+    function get_barang_retur_for_csv($kode_bon)
+    {
+    	$sql='select r.id_barang as item_code, b.nama as item_name, b.kelompok_barang as cat_code, harga as item_hj, diskon as item_disc, r.qty as quantity, r.tujuan from retur_barang r left join barang b on r.id_barang=b.id_barang where r.id_retur = ?';
+    	return $this->db->query($sql, array($kode_bon));
     }
     /**
     *check apakah barang udah pernah diretur untuk bon tersebut

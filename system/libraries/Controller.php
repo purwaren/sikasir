@@ -42,6 +42,7 @@ class Controller extends CI_Base {
 		parent::CI_Base();
 		$this->_ci_initialize();
 		log_message('debug', "Controller Class Initialized");
+		date_default_timezone_set('Asia/Jakarta');
 	}
 
 	// --------------------------------------------------------------------

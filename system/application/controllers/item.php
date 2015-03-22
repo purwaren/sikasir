@@ -164,10 +164,11 @@ class Item extends Controller {
         {
             $id_mutasi_keluar = $this->input->post('id_bon');
             $tanggal = $this->input->post('date_bon');
+            $tujuan = $this->input->post('tujuan');
             $this->load->model('barang');
             $sukses = '';
             $gagal = '';
-            if(!empty($id_mutasi_keluar) && !empty($tanggal))
+            if(!empty($id_mutasi_keluar) && !empty($tanggal) && !empty($tujuan))
             {
                 $id_barang = $this->input->post('id_barang');
                 $qty= $this->input->post('qty');
@@ -177,7 +178,8 @@ class Item extends Controller {
                         'id_retur'=>$id_mutasi_keluar,
                         'id_barang'=>$id_barang[$i],
                         'tanggal'=>$tanggal,
-                        'qty'=>$qty[$i]
+                        'qty'=>$qty[$i],
+                    	'tujuan'=>$tujuan
                     );
                     if($this->validate_data($data) && ($data['qty'] > 0))
                     {
@@ -228,18 +230,20 @@ class Item extends Controller {
                 $this->data['err_msg'] = '';
                 if(!empty($sukses))
                 {
-                    $this->data['err_msg'] .= '<span style="color:green">Kode barang: '.$sukses.' berhasil dimutasikan keluar</span><br />';
+                    $this->data['err_msg'] .= '<span style="color:green">Kode barang: '.$sukses.' berhasil dimutasikan keluar / retur</span><br />';
                 }
                 if(!empty($gagal)) 
                 {
-                    $this->data['err_msg'] .= '<span style="color:red">Kode barang: '.$gagal.' gagal dimutasikan keluar</span><br />';
+                    $this->data['err_msg'] .= '<span style="color:red">Kode barang: '.$gagal.' gagal dimutasikan keluar / retur</span><br />';
                 }
             }
             else
             {
-                $this->data['err_msg'] = '<span style="color:red">Kode bon dan tanggal tidak boleh dikosongkan</spon>';
+                $this->data['err_msg'] = '<span style="color:red">Kode bon, tanggal dan tujuan tidak boleh dikosongkan</spon>';
             }
         }
+        //get list of shop
+        $this->data['list_toko'] = $this->list_toko_tujuan_retur();
         $this->load->view('item-retur',$this->data);
     }
     /**
@@ -1065,28 +1069,36 @@ class Item extends Controller {
                 $this->load->library('csvreader');
                 $file_name = 'data/temp.csv';
                 $item = $this->csvreader->parse_file($file_name);
-                $this->data['row_data'] = '';
-                $i=0;
-                $total_qty = 0;
-                $total = 0;
-                foreach($item as $row)
+                if($item[0]['tujuan']==config_item('shop_code'))
                 {
-                    $jumlah = $row['item_hj']*$row['quantity'];
-                    $total += $jumlah;
-                    $total_qty += $row['quantity'];
-                    $this->data['row_data'] .= '<tr>
-                                                    <td>'.++$i.'</td>
-                                                    <td>'.$row['item_code'].'</td>
-                                                    <td>'.$row['item_name'].'</td>
-                                                    <td>'.$row['cat_code'].'</td>
-                                                    <td>'.$row['item_disc'].'</td>
-                                                    <td style="text-align:right;padding-right:10px;"><input type="hidden" id="item_hj_'.$i.'" value="'.$row['item_hj'].'">'.number_format($row['item_hj'],0,',','.').',-</td>
-                                                    <td>'.$row['quantity'].'</td>
-                                                    <td>'.number_format($jumlah,0,',','.').',-</td>
-                                                    <td><span class="button"><input type="button" class="button" value="O K" onclick="saveImport('.$i.')"/></span></td>
-                                                </tr>';
+	                $this->data['row_data'] = '';
+	                $i=0;
+	                $total_qty = 0;
+	                $total = 0;
+	                foreach($item as $row)
+	                {
+	                    $jumlah = $row['item_hj']*$row['quantity'];
+	                    $total += $jumlah;
+	                    $total_qty += $row['quantity'];
+	                    $this->data['row_data'] .= '<tr>
+	                                                    <td>'.++$i.'</td>
+	                                                    <td>'.$row['item_code'].'</td>
+	                                                    <td>'.$row['item_name'].'</td>
+	                                                    <td>'.$row['cat_code'].'</td>
+	                                                    <td>'.$row['item_disc'].'</td>
+	                                                    <td style="text-align:right;padding-right:10px;"><input type="hidden" id="item_hj_'.$i.'" value="'.$row['item_hj'].'">'.number_format($row['item_hj'],0,',','.').',-</td>
+	                                                    <td>'.$row['quantity'].'</td>
+	                                                    <td>'.number_format($jumlah,0,',','.').',-</td>
+	                                                    <td><span class="button"><input type="button" class="button" value="O K" onclick="saveImport('.$i.')"/></span></td>
+	                                                </tr>';
+	                }
+	                $this->data['row_data'] .= '<tr><td colspan="6" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total,0,',','.').',-</td><td></td></tr>';
+            
                 }
-                $this->data['row_data'] .= '<tr><td colspan="6" style="text-align:right">T O T A L</td><td>'.$total_qty.'</td><td>'.number_format($total,0,',','.').',-</td><td></td></tr>';
+                else
+                {
+                	$this->data['err_msg'] = '<span style="color:red">File yang diupload bukan diperuntukan untuk toko ini.</span>';
+                }
             }
             else
             {
@@ -1270,6 +1282,23 @@ class Item extends Controller {
             }           
         }        
         return $status;
+    }
+    
+    /**
+     * Get list of toko
+     */
+    function list_toko_tujuan_retur() 
+    {
+    	$shop = config_item('refund_shop');
+    	$options = '';
+    	foreach ($shop as $key => $val)
+    	{
+    		$options .= '<option value="'.$key.'">'.$val.'</option>';
+    	}
+    	return '<select name="tujuan">
+    				<option value="">Pilih Toko Tujuan</option>
+    				'.$options.'
+    			</select>';
     }
 }
 //End of file item.php

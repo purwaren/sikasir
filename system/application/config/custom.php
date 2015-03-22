@@ -44,5 +44,31 @@ $config['refund'] = array('016','017','018','019','052');
 $config['refund_period'] = '2014-12-31';
 $config['refund_disc'] = '20';
 
+/**
+ * Daftar toko tujuan retur
+ */
+$config['refund_shop'] = array(
+		'99'=>'Gudang Pusat',
+		'01'=>'Mode Dept.Store Kisaran',
+		'02'=>'Mode Dept.Store Tembung',
+		'11'=>'Mode Nibung',
+// 		'13'=>'',
+		'14'=>'Mode Stabat',
+		'15'=>'Mode Binjai',
+		'16'=>'Mode Rampah',
+		'17'=>'Mode Perbaungan',
+		'18'=>'Modiest Perbaungan',
+		'19'=>'Mode Titipapan',
+		'20'=>'Mode Tanjung Morawa',
+		'21'=>'Mode Kisaran',
+		'22'=>'Modiest Stabat',
+		'23'=>'Mode Tembung',
+// 		'24'=>'',
+		'25'=>'Mode Marelan',
+// 		'26'=>'',
+		'27'=>'Modiest Halat',
+// 		'28'
+);
+
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */

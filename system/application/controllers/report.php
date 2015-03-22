@@ -966,7 +966,10 @@ class Report extends Controller {
                                     <td>'.$row->id_retur.'</td>
                                     <td>'.$row->jml_item.' jenis</td>
                                     <td>'.$row->total_item.' item </td>
-                                    <td><span class="button"><input type="button" value="Print" class="button" onclick="cetakBon('.$row->id_retur.')"/></span></td>
+                                    <td>
+                                    	<span class="button"><input type="button" value="Print" class="button" onclick="cetakBon('.$row->id_retur.')"/></span>
+                                    	<span class="button"><a href="'.base_url().'report/csv/'.$row->id_retur.'" ><input type="button" value="Ekspor" class="button"/></a></span>
+                                    </td>
                                 </tr>';
                     }
                     $this->data['search_result'] = $row_tr;
@@ -1056,6 +1059,24 @@ class Report extends Controller {
         }
         $this->load->view('report-retur',$this->data);
     }
+    
+    /**
+     * Simpan retur jadi file csv
+     * @param String $kode_retur
+     */
+    function csv($kode_retur='') 
+    {
+    	if(!empty($kode_retur))
+    	{
+    		//ambil data retur berdasarkan kode bon
+    		$this->load->model('barang');
+    		$query = $this->barang->get_barang_retur_for_csv($kode_retur);
+    		$retur = $this->barang->get_barang_retur($kode_retur)->row();
+    		$this->load->helper('csv');
+    		query_to_csv($query,true,$retur->id_retur.'.csv');
+    	}
+    }
+    
     /**
     * Laporan penggantian barang setelah checking
     */

@@ -15,7 +15,10 @@
             </tr>
             <tr>
                 <td>Tanggal </td><td class="head"> : <input type="text" name="date_bon" id="date_bon" readonly="readonly"/> </td>
-            </tr>                    
+            </tr>   
+            <tr>
+                <td>Tujuan </td><td class="head"> : <?php _e($list_toko)?> </td>
+            </tr>                 
         </table><br/>
         <?php if(isset($err_msg)) _e($err_msg) ?>
         <table cellspacing="0" cellpadding="0" class="table-data" style="width: 850px; margin: 0px;">
