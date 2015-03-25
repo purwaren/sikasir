@@ -3,7 +3,7 @@
 /**
 * Configuration for shop
 */
-$config['shop_code'] = "17";
+$config['shop_code'] = "01";
 $config['shop_name'] = "MODE FASHION PERBAUNGAN";
 $config['shop_address'] = "Jl. Serdang No. 141";
 $config['shop_phone'] = "(061) 799 0009";

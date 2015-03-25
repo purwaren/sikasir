@@ -1069,8 +1069,10 @@ class Item extends Controller {
                 $this->load->library('csvreader');
                 $file_name = 'data/temp.csv';
                 $item = $this->csvreader->parse_file($file_name);
-                if($item[0]['tujuan']==config_item('shop_code'))
+                //var_dump($item[0]);exit;
+                if(!isset($item[0]['tujuan']) || (isset($item[0]['tujuan']) && trim($item[0]['tujuan'])==config_item('shop_code')))
                 {
+                	
 	                $this->data['row_data'] = '';
 	                $i=0;
 	                $total_qty = 0;
