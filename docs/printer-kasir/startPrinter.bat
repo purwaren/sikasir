@@ -1,0 +1,1 @@
+start java -jar printer.jar

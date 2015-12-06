@@ -757,6 +757,8 @@ function saveImport(line) {
     var item_hj = $('#item_hj_'+line).val();
     var kode_bon = $('#kode_bon').val();
     var tgl_bon = $('#date_bon').val();
+    //hide button
+    $('.table-data tr:nth-child('+idx_save+') td:last-child span input').attr('disabled',true);
     //do post
     if(kode_bon != "" && tgl_bon != "") {
         $.post(
