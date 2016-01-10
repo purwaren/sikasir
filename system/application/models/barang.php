@@ -137,7 +137,8 @@ class Barang extends Model
     */
     function update_barang($cond,$data) 
     {
-        $this->db->query('update barang set stok_barang = stok_barang - '.$data['jumlah_terjual'].', jumlah_terjual = jumlah_terjual + '.$data['jumlah_terjual'].', mutasi_keluar = mutasi_keluar + '.$data['jumlah_terjual'].'  where id_barang = "'.$cond['id_barang'].'"');
+        $sql = 'CALL update_barang(?, ?)';
+        $this->db->query($sql, array($cond['id_barang'], $data['jumlah_terjual']));
     }    
     /**
     *update data barang, semuanya, bukan stok aja, edit barang
@@ -152,6 +153,7 @@ class Barang extends Model
                   mutasi_masuk = mutasi_masuk + '.$data['beda'].'
                   where id_barang ="'.$data['id_barang'].'"';                  
         $this->db->query($query);
+
         $query = 'update barang_masuk set qty='.$data['qty'].' where id_mutasi_masuk="'.$id_mutasi_masuk.'" and id_barang="'.$id_barang.'"';
         $this->db->query($query);
         if ($this->db->trans_status() === FALSE)

@@ -21,8 +21,7 @@ class Home extends Controller {
             $this->data['userinfo'] = $data_karyawan->nama;
             $this->data['jabatan'] = $this->session->userdata('jabatan');
             $this->data['now'] = strtoupper(date('M')).'<br />'.date('d'); 
-        }       
-        
+        }
 	}
 	/**
     *Default method to be called
