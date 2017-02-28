@@ -115,8 +115,8 @@ class Graph extends Controller {
                         }                        
                     }
                     $total_omset += $row->omset;
-                    $total_qty += $qty_sales[$i-1]->total;
-                    $total_disc += $row_disc[$i-1]->total_diskon;
+                    $total_qty += isset($qty_sales[$i-1]) ? $qty_sales[$i-1]->total : 0;
+                    $total_disc += isset($row_disc[$i-1]) ? $row_disc[$i-1]->total_diskon: 0;
                     $total_infaq += $row->total_infaq;
                 }                
                 $row_total = '<tr><td colspan="2" style="width:70px;">T O T A L</td><td style="width:50px">'.$total_qty.'</td><td style="width:100px">'.number_format($total_disc,'0',',','.').',-</td><td style="width:100px">'.number_format($total_infaq,'0',',','.').',-</td><td style="width:100px">'.number_format($total_omset,'0',',','.').',-</td></tr>';
