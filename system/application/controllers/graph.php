@@ -55,7 +55,9 @@ class Graph extends Controller {
             //retrieve data sales
             $bulan = $this->input->post('bulan');            
             $tahun = $this->input->post('tahun');
-            $query = $this->transaksi->get_omset($bulan,$tahun);            
+            $query = $this->transaksi->get_omset($bulan,$tahun);
+            $row_disc = array();
+            $qty_sales = array();
             if($query->num_rows() > 0)
             {
                 //ambil total qty sales untuk perbulan
@@ -86,8 +88,8 @@ class Graph extends Controller {
                     $row_data .= '<tr>
                                     <td style="width:20px">'.++$i.'</td>
                                     <td style="width:50px">'.$row->tgl.'</td>
-                                    <td style="width:50px">'.$qty_sales[$i-1]->total.'</td>
-                                    <td style="width:100px">'.number_format($row_disc[$i-1]->total_diskon,'0',',','.').',-</td>
+                                    <td style="width:50px">'.(isset($qty_sales[$i-1]) ? $qty_sales[$i-1]->total : 0).'</td>
+                                    <td style="width:100px">'.number_format((isset($row_disc[$i-1]) ? $row_disc[$i-1]->total_diskon: 0),'0',',','.').',-</td>
                                     <td style="width:100px">'.number_format($row->total_infaq,'0',',','.').',-</td>
                                     <td style="width:100px">'.number_format($row->omset,'0',',','.').',-</td></tr>';
                     $line .= $row->tgl.','.($row->omset/1000). chr(10);
