@@ -20,7 +20,7 @@ class Report extends Controller {
             $this->data['userinfo'] = $data_karyawan->nama;
             $this->data['jabatan'] = $this->session->userdata('jabatan');
             $this->data['now'] = strtoupper(date('M')).'<br />'.date('d');
-            if($this->data['jabatan'] != 'supervisor')
+            if(!($this->data['jabatan'] == 'supervisor' || $this->data['jabatan'] == 'manajer'))
             {
                 redirect('home/error');
             }
@@ -117,6 +117,7 @@ class Report extends Controller {
                      //ambil data transaksi hari yang diminta, 
                     $query = $this->transaksi->trans_a_day($tanggal); 
                     $query_per_bon = $this->transaksi->trans_based_bon($tanggal);
+                    $list_trx_tax = $this->get_list_transaction_for_tax($tanggal);
                     if(isset($query_per_bon) && $query_per_bon->num_rows() > 0) {
                                               
                         $head ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN PENJUALAN HARIAN</h3>
@@ -153,6 +154,11 @@ class Report extends Controller {
                         //echo '<pre>'.print_r($row,true).'</pre>';exit;
                         foreach($query_per_bon->result() as $bon)
                         {
+                            //if not in list pajak, skip
+                            if ($this->data['jabatan'] == 'manajer' && !in_array($bon->id_transaksi, $list_trx_tax))
+                            {
+                                continue;
+                            }
                             //handling kasus klo satu bon kepisah di dua halaman -- baris terakhir pada halaman sekarang
                             $ada = 30-($i%30);
                             $butuh = $bon->jml_item;
@@ -1561,6 +1567,26 @@ class Report extends Controller {
             case '12': $month = 'Desember';break;
         }
         return $date_arr[2].' '.$month.' '.$date_arr[0];
+    }
+
+    function get_list_transaction_for_tax($tgl)
+    {
+        $list = array();
+        $this->load->model('transaksi');
+        $query = $this->transaksi->total_trans_tax_shown($tgl);
+        if ($query->num_rows() > 0)
+        {
+            $qty = $query->row()->total_shown;
+            $query = $this->transaksi->trans_a_day_for_tax($tgl, $qty);
+            if ($query->num_rows() > 0)
+            {
+                foreach ($query->result() as $row)
+                {
+                   $list[] = $row->id_transaksi;
+                }
+            }
+        }
+        return $list;
     }
 }
 //End of file Report.php

@@ -8,11 +8,13 @@
       <li><a class="<?php if($page=='checking') echo 'current' ?>" href="<?php _e(base_url().'checking/add') ?>" accesskey="c"><span class="key">C</span>hecking</a></li>
       <?php } if($jabatan=='kasir') { ?>
       <li><a class="<?php if($page=='pos') echo 'current' ?>" href="<?php _e(base_url().'pointofsales') ?>" accesskey="v"><span class="key">L</span>aunch POS</a></li>
-      <?php } if($jabatan=='supervisor') { ?>      
+      <?php } if($jabatan=='supervisor') { ?>
       <li><a class="<?php if($page=='item') echo 'current' ?>" href="<?php _e(base_url().'item/add') ?>" accesskey="d"><span class="key">D</span>ata</a></li>
       <li><a class="<?php if($page=='report') echo 'current' ?>" href="<?php _e(base_url().'report/sales')?>" accesskey="i"><span class="key">R</span>eporting</a></li>
       <li><a class="<?php if($page=='graph') echo 'current' ?>" href="<?php _e(base_url().'graph/sales')?>" href="#" accesskey="r"><span class="key">G</span>raph</a></li>
-      <?php } ?>
+      <?php } if($jabatan=='manajer') { ?>
+        <li><a class="<?php if($page=='report') echo 'current' ?>" href="<?php _e(base_url().'report/sales')?>" accesskey="i"><span class="key">R</span>eporting</a></li>
+        <?php } ?>
       <li><a href="#" accesskey="h"><span class="key">H</span>elp</a></li>
     </ul>    
     <div id="search">
@@ -26,7 +28,7 @@
 </div>
   <div class="gboxtop"></div>
   <div class="gbox" style="height: 35px;">
-    <?php if($page =='report') { ?>
+    <?php if($page =='report' && $jabatan =='supervisor') { ?>
     <p style="float:left;text-align: left; padding-right: 20px;">
         <a href="<?php _e(base_url().'report/search')?>">Cari Penjualan</a> .:.
         <a href="<?php _e(base_url().'report/sales')?>">Laporan Penjualan</a> .:. 
@@ -35,6 +37,12 @@
         <a href="<?php _e(base_url().'report/checking')?>">Laporan Penggantian Barang</a> .:. 
         <a href="<?php _e(base_url().'report/infaq')?>">Rekap Infaq</a>
     </p>
+  <?php } if($page =='report' && $jabatan =='manajer') { ?>
+      <p style="float:left;text-align: left; padding-right: 20px;">
+          <a href="<?php _e(base_url().'report/sales')?>">Laporan Penjualan</a> .:.
+          <a href="<?php _e(base_url().'report/stok')?>">Laporan Stok Barang</a> .:.
+          <a href="<?php _e(base_url().'report/retur')?>">Laporan Retur Barang</a> .:.
+      </p>
     <? } if($page == 'pos') { ?>
     
     <?php } if($page == 'item') {?>

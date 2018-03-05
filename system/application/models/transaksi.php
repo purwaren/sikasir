@@ -86,6 +86,17 @@ class Transaksi extends Model
                 order by jam_transaksi asc';
         return $this->db->query($query);
     }
+
+    function trans_a_day_for_tax($date, $total) {
+        $sql = 'SELECT id_transaksi FROM transaksi_penjualan WHERE tanggal = ? ORDER BY total DESC LIMIT '.$total;
+        return $this->db->query($sql, array($date));
+    }
+
+    function total_trans_tax_shown($date) {
+        $margin = config_item('tax_shown');
+        $sql = 'SELECT FLOOR('.$margin.'*COUNT(*)) AS total_shown FROM transaksi_penjualan WHERE tanggal= ?';
+        return $this->db->query($sql, array($date));
+    }
     /**
     *Ambil transaksi dalam satu hari berdasarkan kode BON
     */

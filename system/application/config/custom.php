@@ -30,7 +30,7 @@ $config['port'] =  20000;
  */
 $config['display'] = 2345;
 $config['use_display'] = false;
-$config['base_url'] = '/sikasir/';
+$config['base_url'] = '/mode/sikasir/';
 /**
  * Application version
  */
@@ -69,6 +69,9 @@ $config['refund_shop'] = array(
 		'27'=>'Modiest Halat',
 // 		'28'
 );
+
+//jumlah yang mau dimunculkan ke orang pajak
+$config['tax_shown'] = 0.78;
 
 /* End of file doctypes.php */
 /* Location: application/config/doctypes.php */

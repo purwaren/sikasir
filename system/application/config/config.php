@@ -11,7 +11,7 @@
 |	http://example.com/
 |
 */
-$config['base_url']	= "/sikasir/";
+$config['base_url']	= "/mode/sikasir/";
 
 /*
 |--------------------------------------------------------------------------
