@@ -1,0 +1,6 @@
+syntax: glob
+
+.idea/*
+.DS_Store
+docs/.DS_Store
+lib/*.txt
