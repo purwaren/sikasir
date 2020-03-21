@@ -947,6 +947,33 @@ class Report extends Controller {
                     $this->data['total_qty'] += $row->stok_barang;
                 }
             }
+            else if ($this->input->post('opsi') == 3)
+            {
+                $query = $this->barang->get_stok_by_kb_with_price();
+                $this->data['row_data'] = '';
+                $i=0;
+                $total=0;
+                $nominal=0;
+                foreach($query->result() as $row)
+                {
+                    if ($row->stok > 0) 
+                    {
+                        $this->data['row_data'] .= '<tr>
+                                                    <td>'.++$i.'</td><td>'.$row->kelompok_barang.'</td><td>'.$row->total_stok.'</td><td>'.$row->terjual.'</td>
+                                                    <td>'.$row->stok.'</td><td>'.number_format($row->nominal).'</td>               
+                                                </tr>';
+                        $total += $row->stok;
+                        $nominal += $row->nominal;
+                    }
+                    
+                }
+                $this->data['row_data'] .= '<tr>
+                    <td class="head" colspan="4">TOTAL</td>
+                    <td class="head">'.number_format($total).'</td>
+                    <td class="head">'.number_format($nominal).'</td>
+                </tr>';
+                $this->session->unset_userdata('opsi');
+            }
         }
         else 
         {

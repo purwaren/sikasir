@@ -250,6 +250,11 @@ class Barang extends Model
         $query = 'select kelompok_barang,sum(stok_barang) as stok, sum(jumlah_terjual) as terjual, sum(total_barang) as total_stok, sum(mutasi_masuk) as masuk, sum(mutasi_keluar) as keluar from barang group by kelompok_barang';
         return $this->db->query($query);
     }
+    function get_stok_by_kb_with_price()
+    {
+        $query = 'select kelompok_barang,sum(stok_barang) as stok, sum(jumlah_terjual) as terjual, sum(total_barang) as total_stok, sum(mutasi_masuk) as masuk, sum(mutasi_keluar) as keluar, sum(stok_barang*harga) as nominal  from barang group by kelompok_barang';
+        return $this->db->query($query);
+    }
     /**
     *Check apakah ada duplikat di barang masuk, (kode bon - id barang)=> unik
     */

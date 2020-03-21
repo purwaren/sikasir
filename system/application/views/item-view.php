@@ -15,7 +15,8 @@
                 <td>: 
                 <select name="opsi" id="opsi_search">
                     <option value="1">Kelompok Barang</option>
-                    <option value="2">Kode Barang</option>                    
+                    <option value="2">Kode Barang</option>   
+                    <option value="3">Kelompok Barang Dengan Nilai Rupiah</option>                 
                 </select>
                 <span class="button">&nbsp;<input type="submit" name="submit_item_view" value="Display" class="button"/></span>            
             </td></tr>
@@ -38,6 +39,21 @@
             <tr>
                 <td class="head"> No </td><td class="head"> Kelompok Barang </td><td class="head"> Total Barang </td><td class="head"> Jumlah Terjual </td>
                 <td class="head"> Mutasi Masuk </td><td class="head">Mutasi Keluar</td><td class="head">Stok Barang </td>              
+            </tr>
+            <?php _e($row_data) ?>            
+        </table>
+        <?php } else if($this->input->post('opsi') == 3) { ?>
+            <p>Catatan : <br />
+            1. Stok Barang = Jumlah barang yang terdapat di komputer. <br />
+            2. Jumlah Terjual = Jumlah total barang yang telah berhasil terjual. <br />
+            3. Total Barang = Jumlah total barang yang tercatat ditoko baik yang sudah terjual atau belum.<br />
+            4. Mutasi Masuk = Jumlah barang yang masuk toko selama satu periode checking barang.<br />
+            5. Mutasi Keluar = Jumlah barang yang terjual oleh toko selama satu periode checking barang.<br />
+        </p>
+        <table class="table-data" cellspacing="0" cellpadding="0" style="width:100%">
+            <tr>
+                <td class="head"> No </td><td class="head"> Kelompok Barang </td><td class="head"> Total Barang </td><td class="head"> Jumlah Terjual </td>
+                <td class="head">Stok Barang </td><td class="head">Nominal (Rp)</td>              
             </tr>
             <?php _e($row_data) ?>            
         </table>
