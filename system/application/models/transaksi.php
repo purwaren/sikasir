@@ -171,6 +171,15 @@ class Transaksi extends Model
                     from transaksi_penjualan tp left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi 
                     where tanggal = "'.$date.'" group by id_barang)as trans left join barang b on trans.id_barang = b.id_barang group by b.kelompok_barang';
         }
+        else if ($opsi==3) 
+        {
+            $query = 'select t.kelompok_barang, sum(t.jml_terjual) as jml_terjual, sum(nilai) as nilai from 
+            (select b.id_barang, b.kelompok_barang, sum(qty) as jml_terjual, (b.harga*sum(qty)) as nilai 
+            from transaksi_penjualan tp 
+            left join item_transaksi_penjualan itp on tp.id_transaksi = itp.id_transaksi
+            left join barang b on itp.id_barang = b.id_barang
+            where tanggal = "'.$date.'" group by itp.id_barang) t group by t.kelompok_barang';
+        }
         return $this->db->query($query);
     }
     /**
