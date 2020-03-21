@@ -18,7 +18,8 @@
                 <option value="4">Laporan Rekap Transaksi Harian</option>              
                 <option value="5">Laporan Rekap Kelompok Harian</option><!--per kode kel barang -->   
                 <option value="2">Laporan Akumulasi Penjualan Harian</option><!--per kode barang -->                      
-                <option value="3">Laporan Akumulasi Penjualan Bulanan</option><!--per kode kel barang -->             
+                <option value="3">Laporan Akumulasi Penjualan Bulanan</option><!--per kode kel barang -->    
+                <option value="6">Laporan Akumulasi Bulanan Per Kelompok Barang</option><!--per kode kel barang -->            
             </select>
             <span class="button">&nbsp;<input type="submit" name="submit_report_sales" value="Preview" class="button"/></span>
             <span class="button">&nbsp;<input type="submit" name="submit_report_sales_pdf" value="Cetak" class="button"/></span>

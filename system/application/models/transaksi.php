@@ -204,6 +204,16 @@ class Transaksi extends Model
             left join barang on trans_month.id_barang=barang.id_barang where barang.kelompok_barang="'.$kb.'" group by trans_month.tanggal, barang.kelompok_barang ';
         return $this->db->query($query);
     }
+    function acc_sales_a_month_with_price($month, $year)
+    {
+        $query = 'select t3.kelompok_barang, sum(qty) as jml_terjual, sum(t3.harga*qty) as nominal 
+        from transaksi_penjualan t1 
+        left join item_transaksi_penjualan t2 on t1.id_transaksi=t2.id_transaksi
+        left join barang t3 on t2.id_barang = t3.id_barang
+        where month(t1.tanggal) = '.$month.' and year(t1.tanggal) = '.$year.'
+        group by t3.kelompok_barang';
+        return $this->db->query($query);
+    }
     /**
     *Ambil bulan terjadinya transaksi
     */

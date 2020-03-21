@@ -191,7 +191,7 @@ function deleteBarang(row,id_barang) {
 }
 //show month
 function showMonth() {    
-    if($('#report-type').val() == '3') {
+    if($('#report-type').val() == '3' || $('#report-type').val() == '6') {
         $('#bulanan').css('display','table-row');
         $('#harian').css('display','none');
     }

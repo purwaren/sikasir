@@ -844,6 +844,62 @@ class Report extends Controller {
                         }
                     }
                 }
+                else if($tipe == 6)
+                {
+                    //akumulasi per kelompok barang + ada nilai rupiah
+                    //ambil parameter bulan dan tahun
+                    $bulan = $this->input->post('bulan');
+                    $tahun = $this->input->post('tahun');
+                	$query = $this->transaksi->acc_sales_a_month_with_price($bulan, $tahun);
+                	$temp ='';                	
+                	$i=0;
+                	$j=0;                	
+                    $total_terjual = 0;
+                    $total_nilai = 0;
+                    if ($query->num_rows() > 0)
+                    {
+                        $head[0] ='<div id="report-sales"><h3 style="text-align:center;font-size: 14px">LAPORAN REKAP BULANAN </h3>
+                                    <table style="text-align:left">
+                                        <tr><td style="width: 50px">CABANG</td><td>: '.config_item('shop_name').'</td></tr>
+                                        <tr><td style="width: 50px">BULAN </td><td>: '.$bulan.' / '.$tahun.'</td></tr>
+                                        <tr><td style="width: 50px">TIPE</td><td>: REKAP PER KELOMPOK BARANG</td></tr>
+                                    </table>
+                                    <br />
+                                    <table style="width: 940px;border: 1px solid;text-align: center;margin: 0px auto;" cellspacing="0" cellpadding="0">
+                                        <tr>
+                                            <td style="width:30px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">No</td>
+                                            <td style="width:50px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Kelompok <br />Barang</td>                                                                               
+                                            <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Jumlah Terjual</td>          
+                                            <td style="width:75px;background-color:  #dedede;font-weight: bold;text-transform: uppercase;border:1px solid;">Nominal (Rp)</td>                                   
+                                        </tr>';
+                        foreach ($query->result() as $row) 
+                        {
+                            $temp .= '<tr>
+                                <td style="border:1px solid;">'.++$i.'</td>
+                                <td style="border:1px solid;">'.$row->kelompok_barang.'</td>
+                                <td style="border:1px solid;">'.number_format($row->jml_terjual).'</td>
+                                <td style="border:1px solid;">'.number_format($row->nominal).'</td>
+                            </tr>';
+                            $total_terjual += $row->jml_terjual;
+                            $total_nilai += $row->nominal;
+                        }
+                        $row_total[0] = '<tr>
+                            <td style="border:1px solid;" colspan="2">TOTAL AKUMULASI</td>
+                            <td style="border:1px solid;">'.number_format($total_terjual).'</td>
+                            <td style="border:1px solid;">'.number_format($total_nilai).'</td>
+                        </tr>';
+                        $list[] = $temp;
+                        if(isset($list))
+                        {
+                            $this->data['report_sales']=$head[0];
+                            foreach($list as $row)
+                            {
+                                $this->data['report_sales'] .= $row;
+                            }
+                            $this->data['report_sales'] .= $row_total[0].'</table></div>';                       
+                        }
+                    }
+                }
             }
             else
             {
